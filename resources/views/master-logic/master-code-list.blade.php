@@ -63,9 +63,59 @@
             <div class="card">
                 <div class="col-md-12 p-4">
                     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+                        rel="stylesheet">
+
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+                        rel="stylesheet">
+
+                    <style>
+                        .form-builder-section {
+                            position: relative;
+                            margin-bottom: 20px;
+                            padding: 15px;
+                            border: 1px solid #dee2e6;
+                            border-radius: 5px;
+                            background-color: #f8f9fa;
+                        }
+
+                        .delete-btn {
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            color: #dc3545;
+                        }
+
+                        .delete-btn:hover {
+                            color: #a71d2a;
+                        }
+
+                        .option-wrapper {
+                            position: relative;
+                            margin-bottom: 10px;
+                        }
+
+                        .delete-option-btn {
+                            position: absolute;
+                            right: 10px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            color: #dc3545;
+                            font-size: 1.2rem;
+                            cursor: pointer;
+                        }
+
+                        .dropdown-options-list li {
+                            font-size: 0.95rem;
+                        }
+
+                        .dropdown-options-list .btn {
+                            font-size: 0.75rem;
+                            padding: 2px 6px;
+                        }
+                    </style>
 
                     <section id="Approved_suppliers">
                         <button id="addCodeBtn" class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Add
@@ -74,12 +124,11 @@
                             <h3 class="heading text-primary">Add Record</h3>
 
                             <form id="myForm" action="{{ route('add-new-record') }}" method="POST">
-
                                 @csrf
+                                <meta name="csrf-token" content="{{ csrf_token() }}">
+
                                 <div class="formSep">
-
                                     <div class="row">
-
                                         <div class="col-sm-3 col-md-3">
                                             <label for="">Master Code</label>
                                             <select name="master_code_id" id="master_code_id" class="form-control">
@@ -94,13 +143,11 @@
                                             </select>
                                         </div>
 
-
                                         <div class="col-sm-3 col-md-3">
                                             <label for="">Master Data Code</label>
                                             <input class="form-control" type="text" name="md_code" id="md_code"
                                                 required>
                                         </div>
-
 
                                         <div class="col-sm-6 col-md-6">
                                             <label for="mask_product">Master Data Name</label>
@@ -113,29 +160,311 @@
                                             <textarea class="form-control" name="md_description" id="md_description"></textarea>
                                         </div>
 
-
                                         <div class="col-sm-3 col-md-3 margTp" style="display: none">
                                             <label for="">md_date_added</label>
                                             <input class="form-control" type="text" name="md_date_added"
                                                 id="md_date_added">
                                         </div>
 
-
                                         <div class="col-sm-3 col-md-3 margTp" style="display: none">
                                             <label for="mask_product">md_added_by</label>
                                             <input class="form-control" type="text" name="md_added_by" id="md_added_by">
                                         </div>
 
+                                        <div class="container mt-4">
+                                            <div class="form-group mb-3">
+                                                <select id="elementType" class="form-control">
+                                                    <option value="">-- Choose Element --</option>
+                                                    <option value="input">Input</option>
+                                                    <option value="textarea">Textarea</option>
+                                                    <option value="select">Dropdown</option>
+                                                </select>
+                                            </div>
+
+                                            <div id="elementOptions" class="mt-3" style="display: none;"></div>
+                                            <button type="button" id="addElement" class="btn btn-success mb-3">
+                                                <i class="bi bi-plus-circle"></i> Add Element
+                                            </button>
+
+                                            <hr>
+
+                                            <div id="formElements"></div>
+                                        </div>
 
                                         <div class="clearfix"></div>
                                         <br>
                                         <div class="mt-5 col-sm-3 col-md-3">
-                                            <button class="btn btn-primary" id="add_new_data"><i
-                                                    class="fa fa-fw fa-save"></i> Save</button>
+                                            <button class="btn btn-primary" type="submit" id="add_new_data">
+                                                <i class="fa fa-fw fa-save"></i> Save
+                                            </button>
                                         </div>
-
+                                    </div>
+                                </div>
                             </form>
                         </div>
+
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                        <script>
+                            $(document).ready(function() { // Ensure DOM is ready
+
+                                $('#elementType').on('change', function() {
+                                    const selected = $(this).val();
+                                    const $optionsDiv = $('#elementOptions').empty().hide();
+
+                                    if (selected === 'select') {
+                                        $optionsDiv.show().append(`
+                        <label><strong>Add Dropdown Options</strong></label>
+                        <div id="dropdownOptions">
+                            <div class="option-wrapper">
+                                <input type="text" class="form-control option-input" placeholder="Option 1">
+                                <span class="delete-option-btn bi bi-x-circle-fill"></span>
+                            </div>
+                            <div class="option-wrapper">
+                                <input type="text" class="form-control option-input" placeholder="Option 2">
+                                <span class="delete-option-btn bi bi-x-circle-fill"></span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mt-2 mb-2" id="addDropdownOption">
+                            <i class="bi bi-plus"></i> Add More Option
+                        </button>
+                    `);
+                                    }
+                                });
+
+                                $('#elementOptions').on('click', '#addDropdownOption', function() {
+                                    $('#dropdownOptions').append(`
+                    <div class="option-wrapper">
+                        <input type="text" class="form-control option-input" placeholder="New Option">
+                        <span class="delete-option-btn bi bi-x-circle-fill"></span>
+                    </div>
+                `);
+                                });
+
+                                $('#elementOptions').on('click', '.delete-option-btn', function() {
+                                    $(this).closest('.option-wrapper').remove();
+                                });
+
+                                $('#addElement').on('click', function() {
+                                    const selected = $('#elementType').val();
+                                    if (!selected) {
+                                        Swal.fire('Warning', 'Please select a form element type.', 'warning');
+                                        return;
+                                    }
+
+                                    const index = $('#formElements .form-builder-section').length + 1;
+                                    const deleteButton =
+                                        `<button type="button" class="btn btn-sm delete-btn" title="Delete Section"><i class="bi bi-trash3-fill"></i></button>`;
+                                    let elementHtml = '';
+
+                                    if (selected === 'input') {
+                                        elementHtml = `
+                        <div class="form-builder-section">
+                            ${deleteButton}
+                            <label>Input Field ${index}</label>
+                            <input type="text" name="dynamic_input_${index}" class="form-control">
+                        </div>`;
+                                    }
+
+                                    if (selected === 'textarea') {
+                                        elementHtml = `
+                        <div class="form-builder-section">
+                            ${deleteButton}
+                            <label>Textarea ${index}</label>
+                            <textarea name="dynamic_textarea_${index}" class="form-control" rows="3"></textarea>
+                        </div>`;
+                                    }
+
+                                    if (selected === 'select') {
+                                        const options = [];
+                                        $('#dropdownOptions .option-input').each(function() {
+                                            const val = $(this).val().trim();
+                                            if (val) options.push(val);
+                                        });
+
+                                        if (options.length === 0) {
+                                            Swal.fire('Error', 'You must add at least one non-empty option for the dropdown.',
+                                                'error');
+                                            return;
+                                        }
+
+                                        // Build the options HTML for the select tag
+                                        let selectOptionsHtml = options.map(opt => `<option value="${opt}">${opt}</option>`)
+                                            .join('');
+
+                                        // Build the list of initial options for display/management
+                                        let optionListHtml = options.map(opt => `
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ${opt}
+                            <button type="button" class="btn btn-sm btn-danger btn-delete-option">
+                                <i class="bi bi-x-circle-fill"></i>
+                            </button>
+                        </li>
+                    `).join('');
+
+                                        elementHtml = `
+                        <div class="form-builder-section">
+                            ${deleteButton}
+                            <label>Dropdown ${index}</label>
+                            <div class="dropdown-section" data-field-name="dynamic_select_${index}">
+                                <select name="dynamic_select_${index}" class="form-control mb-2">
+                                    ${selectOptionsHtml}
+                                </select>
+                                <ul class="list-group dropdown-options-list">
+                                    ${optionListHtml}
+                                </ul>
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control new-dropdown-option" placeholder="Add new option">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary add-new-option">
+                                        <i class="bi bi-plus-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
+                                    }
+
+                                    $('#formElements').append(elementHtml);
+                                    $('#elementType').val('');
+                                    $('#elementOptions').hide().empty();
+                                });
+
+                                $('#formElements').on('click', '.delete-btn', function() {
+                                    $(this).closest('.form-builder-section').remove();
+                                    renumberElements();
+                                });
+
+                                function renumberElements() {
+                                    $('#formElements .form-builder-section').each(function(index) {
+                                        const number = index + 1;
+                                        const label = $(this).find('label').first();
+                                        const inputField = $(this).find('input[type="text"], textarea, select');
+
+                                        let currentName = inputField.attr('name');
+                                        let newName = '';
+
+                                        if (currentName.includes('dynamic_input_')) {
+                                            newName = `dynamic_input_${number}`;
+                                            label.text(`Input Field ${number}`);
+                                        } else if (currentName.includes('dynamic_textarea_')) {
+                                            newName = `dynamic_textarea_${number}`;
+                                            label.text(`Textarea ${number}`);
+                                        } else if (currentName.includes('dynamic_select_')) {
+                                            newName = `dynamic_select_${number}`;
+                                            label.text(`Dropdown ${number}`);
+                                            $(this).find('.dropdown-section').attr('data-field-name', newName);
+                                        }
+                                        inputField.attr('name', newName); // Update name attribute
+                                    });
+                                }
+
+                                $('#formElements').on('click', '.add-new-option', function() {
+                                    const container = $(this).closest('.dropdown-section');
+                                    const input = container.find('.new-dropdown-option');
+                                    const value = input.val().trim();
+                                    const select = container.find('select');
+                                    const optionList = container.find('.dropdown-options-list');
+
+                                    if (!value) {
+                                        Swal.fire('Error', 'Option cannot be empty.', 'error');
+                                        return;
+                                    }
+
+                                    select.append(`<option value="${value}">${value}</option>`);
+                                    optionList.append(`
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${value}
+                        <button type="button" class="btn btn-sm btn-danger btn-delete-option">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </button>
+                    </li>`);
+
+                                    input.val('');
+                                });
+
+                                $('#formElements').on('click', '.btn-delete-option', function() {
+                                    const listItem = $(this).closest('li');
+                                    const optionText = listItem.contents().get(0).nodeValue.trim(); // Get the text content
+                                    const select = $(this).closest('.dropdown-section').find('select');
+
+                                    select.find('option').filter(function() {
+                                        return $(this).text() === optionText;
+                                    }).remove();
+
+                                    listItem.remove();
+                                });
+
+                                $('#myForm').on('submit', function(e) {
+                                    e.preventDefault();
+
+                                    const $form = $(this);
+                                    const url = $form.attr('action');
+                                    const method = $form.attr('method');
+
+                                    const formData = new FormData($form[0]);
+
+                                    const dynamicElementsData = {};
+
+                                    $('#formElements .form-builder-section').each(function() {
+                                        const $this = $(this);
+                                        const inputField = $this.find('input[type="text"], textarea, select');
+
+                                        if (inputField.length > 0) {
+                                            const name = inputField.attr('name');
+                                            const value = inputField.val();
+
+                                            if (inputField.is('select')) {
+                                                const options = [];
+                                                inputField.find('option').each(function() {
+                                                    options.push({
+                                                        value: $(this).val(),
+                                                        text: $(this).text()
+                                                    });
+                                                });
+                                                dynamicElementsData[name] = {
+                                                    value: value,
+                                                    options: options
+                                                };
+                                            } else {
+                                                dynamicElementsData[name] = value;
+                                            }
+                                        }
+                                    });
+
+                                    formData.append('dynamic_form_elements', JSON.stringify(dynamicElementsData));
+
+                                    $.ajax({
+                                        url: url,
+                                        method: method,
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        success: function(response) {
+                                            if (response.success) {
+                                                Swal.fire('Success!', response.message, 'success').then(() => {
+                                                    window.location.href = response.redirect_url;
+                                                });
+                                            } else {
+                                                Swal.fire('Error!', response.message, 'error');
+                                            }
+                                        },
+                                        // error: function(xhr) {
+                                        //     let errorMessage = 'An unknown error occurred.';
+                                        //     if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        //         errorMessage = xhr.responseJSON.message;
+                                        //     } else if (xhr.responseText) {
+                                        //         errorMessage = xhr.responseText;
+                                        //     }
+                                        //     Swal.fire('Error!', errorMessage, 'error');
+                                        //     console.error(xhr.responseText);
+                                        // }
+                                        error: function(data) {
+                                            $('body').html(data.responseText);
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
                     </section>
 
                 </div>
@@ -180,8 +509,6 @@
 
 
     <script type="text/javascript">
-       
-
         $(document).ready(function() {
             var mcId = $('#mc_id').val();
             if (!mcId) {
@@ -195,10 +522,13 @@
                 ajax: {
                     url: '{{ route('master-code-list', ['id' => '__mc_id__']) }}'.replace("__mc_id__", $(
                         '#mc_id').val()),
-                    error: function(xhr, error, thrown) {
-                        // Log the error response to display it
-                        console.error('AJAX Error:', xhr.status, error, thrown);
-                        $('body').html(xhr.responseText); // Show the raw response from the server
+                    // error: function(xhr, error, thrown) {
+                    //     // Log the error response to display it
+                    //     console.error('AJAX Error:', xhr.status, error, thrown);
+                    //     $('body').html(xhr.responseText); // Show the raw response from the server
+                    // }
+                    error: function(data) {
+                        $('body').html(data.responseText);
                     }
                 },
                 columns: [{

@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\DynamicFormValue;
+use App\Models\MasterData;
 use App\Models\School;
 use App\Models\SchoolProfile;
 use App\Models\UpdateTracker;
@@ -124,6 +126,39 @@ class SchoolController extends Controller
         return view('School.school-profile', compact('school', 'profile'));
     }
 
+    public function schoolOptions($id)
+    {
+        $school  = School::findOrFail($id);
+        $profile = SchoolProfile::where('school_id', $id)->first();
+
+        $genderMasterDataCollection = MasterData::where('md_master_code_id', config('constants.options.SCHOOL_OPTIONALS'))->get();
+
+        $allDynamicFields  = collect();
+        $masterDataDetails = collect();
+
+        if ($genderMasterDataCollection->isNotEmpty()) {
+            foreach ($genderMasterDataCollection as $masterData) {
+                $masterDataId = $masterData->md_id;
+
+                $dynamicFieldsForThisMasterData = DynamicFormValue::where('master_data_id', $masterDataId)->get();
+
+                $allDynamicFields = $allDynamicFields->merge($dynamicFieldsForThisMasterData);
+
+                $masterDataDetails->push([
+                    'name'        => $masterData->md_name,
+                    'description' => $masterData->md_description ?? 'N/A',
+                ]);
+            }
+        }
+
+        return view('School.school-options', compact(
+            'school',
+            'profile',
+            'masterDataDetails',
+            'allDynamicFields'
+        ));
+    }
+
     public function storeSchoolProfile(Request $request)
     {
         $validated = $request->validate([
@@ -141,7 +176,7 @@ class SchoolController extends Controller
             'admission_prefix'  => 'nullable|string|max:50',
             'admission_start'   => 'nullable|string|max:50',
             'admission_suffix'  => 'nullable|string|max:50',
-            'logo'              => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // max 2MB
+            'logo'              => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $profile = SchoolProfile::where('school_id', $validated['school_id'])->first();
@@ -176,6 +211,11 @@ class SchoolController extends Controller
             'success' => true,
             'message' => $message,
         ]);
+    }
+
+    public function configureSchoolOptions(Request $request)
+    {
+        dd($request->all());
     }
 
 }

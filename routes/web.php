@@ -288,12 +288,14 @@ Route::controller(SchoolController::class)->group(function () {
     Route::get('all-schools', 'allSchools')->name('school.allSchools');
     Route::get('/edit-school/{id}/', 'editSchool')->name('edit.school');
     Route::get('/school-profile/{id}/', 'schoolProfile')->name('profile.school');
+    Route::get('/school-options/{id}/', 'schoolOptions')->name('school.options');
 
     Route::delete('/school/{schoolId}', 'deleteSchool')->name('school.delete');
 
     Route::post('/schools/store', 'storeSchool')->name('schools.store');
     Route::post('/update-school', 'updateSchool')->name('update.school');
     Route::post('/store-school-profile', 'storeSchoolProfile')->name('schools.store.profile');
+    Route::post('/school/configure',  'configureSchoolOptions')->name('school.configure');
 
     Route::get('admin-user', 'adminUser')->name('admin.user');
     Route::get('student-user', 'studentUser')->name('student.user');

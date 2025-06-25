@@ -17,14 +17,14 @@ $controller = new Controller();
     <div class="container mt-5">
         <div class="row">
             <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
-                <div class="card">
+                <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title mb-0">Edit School Information</h4>
+                        <h4 class="card-title mb-0 text-white">Edit School Information</h4>
                         <a href="{{ route('school.allSchools') }}" class="btn btn-secondary">
                             <i class="fas fa-school me-2"></i> All Schools
                         </a>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body bg-light">
                         <form id="updateSchoolForm">
                             <div class="row">
                                 <input type="hidden" name="school_id" value="{{ $school_id }}">

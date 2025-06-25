@@ -1,16 +1,16 @@
 <?php
-use App\Http\Controllers\Helper;
-use App\Http\Controllers\Controller;
-$controller = new Controller();
+// Removed: use App\Http\Controllers\Controller; $controller = new Controller(); (unnecessary instantiation)
+use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used or for other helpers
 ?>
 @extends('layouts-side-bar.master')
+
 @section('css')
-    <!---jvectormap css-->
-    <link href="{{ URL::asset('assets/plugins/jvectormap/jqvmap.css') }}" rel="stylesheet" />
-    <!-- Data table css -->
-    <link href="{{ URL::asset('assets/plugins/datatable/dataTables.bootstrap4.min.css') }}" rel="stylesheet" />
-    <!--Daterangepicker css-->
-    <link href="{{ URL::asset('assets/plugins/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet" />
+    {{-- Only include essential CSS for the table and layout --}}
+    {{-- DataTables CSS (using Bootstrap 5 version for consistency) --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    {{-- DataTables Buttons CSS --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
+    {{-- Add any other CSS specific to master layout/styling if not already in master.blade.php --}}
 @endsection
 
 @section('content')
@@ -46,7 +46,8 @@ $controller = new Controller();
                         <tbody>
                             @forelse ($schools as $key => $school)
                                 <tr>
-                                    <td class="fw-bold" style="width: 1px;"s>{{ $key + 1 }}</td>
+
+                                    <td class="fw-bold" style="width: 1px;">{{ $key + 1 }}</td>
                                     <td class="fw-bold">{{ $school->name }}</td>
                                     <td class="fw-bold">{{ $school->registration_code }}</td>
                                     <td class="fw-bold">{{ Helper::recordMdname($school->school_type) }}</td>
@@ -55,7 +56,12 @@ $controller = new Controller();
                                     <td class="d-flex align-items-center gap-1">
                                         <a href="{{ route('profile.school', $school->id) }}"
                                             class="btn btn-sm btn-outline-info" title="View School Profile">
-                                            <i class="fas fa-user-graduate"></i>
+                                            <i class="fas fa-university"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a href="{{ route('school.options', $school->id) }}"
+                                            class="btn btn-sm btn-outline-success" title="View School Profile">
+                                            <i class="fas fa-cogs"></i>
                                         </a>
                                         &nbsp;
                                         <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-edit"
@@ -69,11 +75,10 @@ $controller = new Controller();
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
                                     </td>
-
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted py-4">No products found.</td>
+                                    <td colspan="6" class="text-center text-muted py-4">No schools found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -82,8 +87,11 @@ $controller = new Controller();
             </div>
         </div>
     </div>
+    </div>
+    </div>
+    </div>
 
-
+    {{-- Keep your custom styles here --}}
     <style>
         .table-hover tbody tr:hover {
             background-color: #f8f9fa !important;
@@ -113,47 +121,48 @@ $controller = new Controller();
         }
     </style>
 
-    </div>
-    </div>
-    </div>
+    {{-- Removed extra closing divs, assuming they are part of master layout --}}
+    {{-- </div> </div> </div> --}}
 
+    {{-- SweetAlert2 and Bootstrap JS moved to the bottom of the @section('content') or master layout's body end --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 @endsection
+
 @section('js')
+    {{-- jQuery is typically loaded in the master layout before other scripts that depend on it --}}
+    {{-- Ensure jQuery is loaded *before* DataTables, either here or in your master.blade.php --}}
+
+    {{-- DataTables JS (using CDN for consistency) --}}
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    {{-- DataTables Buttons JS --}}
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+
+    {{-- Export libraries (only if you intend to use export buttons like Excel, PDF) --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    {{-- Buttons HTML5 export, print and column visibility (only if used) --}}
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+
     <script>
         $(document).ready(function() {
             var table = $('#schoolsTable').DataTable({
-                responsive: false,
+                responsive: false, // Ensure this is compatible with your CSS/layout
                 pageLength: 10,
                 order: [
                     [0, 'desc']
                 ],
-                dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'copy',
-                        className: 'btn btn-sm btn-outline-secondary'
-                    },
-                    {
-                        extend: 'csv',
-                        className: 'btn btn-sm btn-outline-secondary'
-                    },
-                    {
-                        extend: 'excel',
-                        className: 'btn btn-sm btn-outline-secondary'
-                    },
-                    {
-                        extend: 'pdf',
-                        className: 'btn btn-sm btn-outline-secondary'
-                    },
-                    {
-                        extend: 'print',
-                        className: 'btn btn-sm btn-outline-secondary'
-                    }
-                ],
+                dom: 'frtip', // Defines table controls (Filter, Row length, Table, Info, Paging)
                 columnDefs: [{
                         orderable: false,
-                        targets: [1, 4, 5]
+                        targets: [1, 4, 5] // Adjust these target indices if columns change
                     },
                     {
                         className: 'text-center',
@@ -166,8 +175,8 @@ $controller = new Controller();
                 }
             });
 
+            // Delete functionality
             $('#schoolsTable tbody').on('click', '.btn-delete', function() {
-
                 var schoolId = $(this).data('id');
                 var row = table.row($(this).parents('tr'));
 
@@ -188,7 +197,8 @@ $controller = new Controller();
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                row.remove().draw();
+                                row.remove()
+                                    .draw(); // Remove row from DataTable and redraw
 
                                 Swal.fire(
                                     'Deleted!',
@@ -199,7 +209,7 @@ $controller = new Controller();
                             error: function(xhr) {
                                 Swal.fire(
                                     'Error!',
-                                    'Something went wrong deleting the product.',
+                                    'Something went wrong deleting the school.',
                                     'error'
                                 );
                             }
@@ -208,6 +218,7 @@ $controller = new Controller();
                 });
             });
 
+            // Edit functionality
             $('#schoolsTable tbody').on('click', '.btn-edit', function() {
                 var editUrl = $(this).data('edit-url');
 
@@ -225,75 +236,6 @@ $controller = new Controller();
                     }
                 });
             });
-
         });
     </script>
-
-
-    <!-- DataTables + Buttons JS -->
-
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
-    <!-- Buttons CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
-
-    <!-- Buttons JS -->
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
-
-    <!-- Export libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
-    <!-- Buttons HTML5 export, print and column visibility -->
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
-
-    <!-- ECharts js -->
-    <script src="{{ URL::asset('assets2/plugins/echarts/echarts.js') }}"></script>
-    <!-- Peitychart js-->
-    <script src="{{ URL::asset('assets2/plugins/peitychart/jquery.peity.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/peitychart/peitychart.init.js') }}"></script>
-    <!-- Apexchart js-->
-    <script src="{{ URL::asset('assets2/js/apexcharts.js') }}"></script>
-    <!--Moment js-->
-    <script src="{{ URL::asset('assets2/plugins/moment/moment.js') }}"></script>
-    <!-- Daterangepicker js-->
-    <script src="{{ URL::asset('assets2/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ URL::asset('assets2/js/daterange.js') }}"></script>
-    <!---jvectormap js-->
-    <script src="{{ URL::asset('assets2/plugins/jvectormap/jquery.vmap.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/jvectormap/jquery.vmap.world.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/jvectormap/jquery.vmap.sampledata.js') }}"></script>
-    <!-- P-scroll js-->
-    <script src="{{ URL::asset('assets2/plugins/p-scrollbar/p-scrollbar.js') }}"></script>
-    <!-- Index js-->
-    <script src="{{ URL::asset('assets2/js/index1.js') }}"></script>
-    <!-- Data tables js-->
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/jquery.dataTables.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/jszip.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/pdfmake.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/vfs_fonts.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/buttons.print.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/datatable/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/js/datatables.js') }}"></script>
-    <!--Counters -->
-    <script src="{{ URL::asset('assets2/plugins/counters/counterup.min.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/counters/waypoints.min.js') }}"></script>
-    <!--Chart js -->
-    <script src="{{ URL::asset('assets2/plugins/chart/chart.bundle.js') }}"></script>
-    <script src="{{ URL::asset('assets2/plugins/chart/utils.js') }}"></script>
 @endsection

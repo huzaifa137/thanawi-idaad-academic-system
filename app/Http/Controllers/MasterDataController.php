@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\MasterData;
+use App\Models\DynamicFormValue;
 use App\Models\master_code;
 use App\Models\User;
 use DB;
@@ -300,7 +300,7 @@ class MasterDataController extends Controller
             ->where("mc_id", $id)
             ->first();
 
-        $mc_name = $name->mc_name;
+        $mc_name = @$name->mc_name;
 
         if ($request->ajax()) {
             return DataTables::of($mc_code)
@@ -346,40 +346,95 @@ class MasterDataController extends Controller
 
     public function addNewRecord(Request $request)
     {
+        try {
+            $request->validate([
+                'master_code_id' => 'required|integer|exists:master_codes,id',
+                'md_code'        => 'required|string|max:255',
+                'md_name'        => 'required|string|max:255',
+                'md_description' => 'nullable|string',
+            ]);
 
-        $recordsave = new MasterData();
+            $date    = time();
+            $session = Helper::user_id();
 
-        // $date = time();
-        // $session = Helper::user_id();
-        // $recordsave->md_master_code_id = $request->master_code_id;
-        // $recordsave->md_code = $request->md_code;
-        // $recordsave->md_name = $request->md_name;
-        // $recordsave->md_description = $request->md_description;
-        // $recordsave->md_date_added = $date;
-        // $recordsave->md_added_by = $session;
-        // $recordsave->save();
+            $masterDataId = DB::table('master_datas')->insertGetId([
+                'md_master_code_id' => $request->master_code_id,
+                'md_code'           => $request->md_code,
+                'md_name'           => $request->md_name,
+                'md_description'    => $request->md_description,
+                'md_date_added'     => $date,
+                'md_added_by'       => $session,
+            ]);
 
-        $date           = time();
-        $session        = Helper::user_id();
-        $master_code_id = $request->master_code_id;
-        $md_code        = $request->md_code;
-        $md_name        = $request->md_name;
-        $md_description = $request->md_description;
+            $dynamicFormElementsJson = $request->input('dynamic_form_elements');
 
-        DB::table('master_datas')->insert([
-            'md_master_code_id' => $master_code_id,
-            'md_code'           => $md_code,
-            'md_name'           => $md_name,
-            'md_description'    => $md_description,
-            'md_date_added'     => $date,
-            'md_added_by'       => $session,
-        ]);
+            $dynamicFormElements = json_decode($dynamicFormElementsJson, true); 
 
-        Alert::success('success', 'New Document has been added successfully');
+            if (is_array($dynamicFormElements) && ! empty($dynamicFormElements)) {
+                foreach ($dynamicFormElements as $fieldName => $fieldData) {
+                    $value   = null;
+                    $type    = null;
+                    $options = null; 
 
-        $list_id = $this->rgf('master_codes', $request->master_code_id, "id", "mc_code");
+                    if (is_array($fieldData)) {
+                        $value = $fieldData['value'] ?? null;
+                        if (isset($fieldData['options'])) {
+                            $type = 'select';
+                                                              
+                            $options = $fieldData['options']; 
+                                                              
+                        }
+                    } else {
+                        $value = $fieldData;
+                        if (str_contains($fieldName, 'dynamic_input_')) {
+                            $type = 'input';
+                        } elseif (str_contains($fieldName, 'dynamic_textarea_')) {
+                            $type = 'textarea';
+                        }
+                    }
 
-        return redirect('master-data/master-code-list/' . $list_id)->with('success', 'Record has been added successfully');
+                    if ($type === null) {
+                        if (str_contains($fieldName, 'dynamic_input_')) {
+                            $type = 'input';
+                        } elseif (str_contains($fieldName, 'dynamic_textarea_')) {
+                            $type = 'textarea';
+                        } elseif (str_contains($fieldName, 'dynamic_select_')) {
+                            $type = 'select';
+                        }
+                    }
+
+                    if ($type) {
+                        DynamicFormValue::create([
+                            'master_data_id' => $masterDataId,
+                            'field_name'     => $fieldName,
+                            'field_value'    => $value,
+                            'field_type'     => $type,
+                            'field_options'  => $options, 
+                        ]);
+                    }
+                }
+            }
+
+            return response()->json([
+                'success'      => true,
+                'message'      => 'Record and dynamic data saved successfully!',
+                'redirect_url' => url('master-data/master-code-list/' . $request->master_code_id),
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation Error',
+                'errors'  => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Error saving record with dynamic elements: ' . $e->getMessage(), ['exception' => $e]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while saving the record: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function deleteRecord($md_id)

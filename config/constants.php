@@ -9,5 +9,6 @@ return [
         'REGIONAL_LEVEL'    => 4,
         'SCHOOL_POPULATION' => 5,
         'SCHOOL_TYPE'       => 6,
+        'SCHOOL_OPTIONALS'  => 7,
     ],
 ];
