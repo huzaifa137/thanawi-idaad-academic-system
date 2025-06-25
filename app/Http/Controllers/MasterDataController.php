@@ -299,6 +299,7 @@ class MasterDataController extends Controller
         $name = DB::table('master_codes')
             ->where("mc_id", $id)
             ->first();
+
         $mc_name = $name->mc_name;
 
         if ($request->ajax()) {

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Models\contactUs;
 use App\Models\Course;
 use App\Models\Lesson;
-use App\Models\Module;
 use App\Models\Quiz;
 use App\Models\User;
 use App\Models\UserQuizAnswer;
@@ -101,7 +100,7 @@ class StudentController extends Controller
             $useremail = $registeredUser->email;
 
             $data = [
-                'subject'      => 'UGANDAN PROGRAMMER REGISTRATION OTP',
+                'subject'      => 'Smart Schools REGISTRATION OTP',
                 'body'         => 'Enter the Sent OTP to confirm registration : ',
                 'generatedOTP' => $generatedOTP,
                 'username'     => $username,
@@ -199,81 +198,9 @@ class StudentController extends Controller
     public function studentDashboard()
     {
         $studentId = session('LoggedStudent');
+        $student = DB::table('users')->where('id',$studentId)->first();
 
-        $coursesCount = DB::table('enrollments')
-            ->where('user_id', $studentId)
-            ->count();
-
-        $moduleIds = Module::whereHas('course.students', function ($q) use ($studentId) {
-            $q->where('users.id', $studentId);
-        })->pluck('id');
-
-        $modulesCount = $moduleIds->count();
-
-        $lessonIds    = Lesson::whereIn('module_id', $moduleIds)->pluck('id');
-        $totalLessons = $lessonIds->count();
-
-        $completedLessons = DB::table('lesson_user')
-            ->where('user_id', $studentId)
-            ->whereIn('lesson_id', $lessonIds)
-            ->count();
-
-        $quizzesTaken  = DB::table('quiz_user')->where('user_id', $studentId)->count();
-        $quizzesPassed = DB::table('quiz_user')->where('user_id', $studentId)->where('score', '>=', 50)->count();
-
-        $student = User::find($studentId);
-
-        $totalCourses = \App\Models\Course::count();
-
-        $enrolledCourses = \App\Models\Enrollment::where('user_id', $studentId)
-            ->with('course.modules.lessons.usersCompleted')
-            ->get();
-
-        $chartData      = [];
-        $courseProgress = [];
-
-        foreach ($enrolledCourses as $enrollment) {
-            $course = $enrollment->course;
-
-            $allLessons         = $course->modules->flatMap->lessons;
-            $totalCourseLessons = $allLessons->count();
-
-            $completedCount = $allLessons->filter(function ($lesson) use ($studentId) {
-                return $lesson->usersCompleted->contains($studentId);
-            })->count();
-
-            $percentage  = $totalCourseLessons > 0 ? round(($completedCount / $totalCourseLessons) * 100) : 0;
-            $isCompleted = $percentage >= 100; // ✅ Fix here
-
-            $chartData[] = [$course->title, $percentage];
-
-            $courseProgress[] = [
-                'title'       => $course->title,
-                'percentage'  => $percentage,
-                'isCompleted' => $isCompleted,
-                'course'      => $course,
-            ];
-        }
-
-        $enrolledCourseCount = count($chartData);
-        $notEnrolled         = $totalCourses - $enrolledCourseCount;
-
-        $remainingPercent = 100 - collect($chartData)->sum(function ($item) {
-            return $item[1];
-        });
-
-        if ($remainingPercent > 0) {
-            $chartData[] = ['Not Enrolled', $remainingPercent];
-        }
-
-        return view('student.dashboard', compact(
-            'coursesCount', 'modulesCount', 'totalLessons',
-            'completedLessons', 'quizzesTaken', 'quizzesPassed',
-            'student'
-        ))->with([
-            'chartData'      => $chartData,
-            'courseProgress' => $courseProgress,
-        ]);
+        return view('student.dashboard', compact('student'));
     }
 
     public function studentProfile(Request $request)
@@ -914,8 +841,7 @@ class StudentController extends Controller
         ]);
     }
 
-
-        public function viewCourseInformation($courseId)
+    public function viewCourseInformation($courseId)
     {
         $studentId = session('LoggedStudent');
 

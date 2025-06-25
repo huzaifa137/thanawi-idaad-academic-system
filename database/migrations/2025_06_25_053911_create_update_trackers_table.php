@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('modules', function (Blueprint $table) {
+        Schema::create('update_trackers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->constrained()->onDelete('cascade');
-            $table->string('title');
-            $table->text('description');
-            $table->integer('order')->default(0);
+            $table->unsignedBigInteger('item_id');
+            $table->text('item_category');
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->dateTime('date_updated_on')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('modules');
+        Schema::dropIfExists('update_trackers');
     }
 };

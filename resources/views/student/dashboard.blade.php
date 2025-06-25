@@ -20,11 +20,11 @@ $controller = new Controller();
         <div class="page-header">
             <h1 class="page-title">
                 Welcome,
-                @if (!empty($student->firstname) && !empty($student->lastname))
+                {{-- @if (!empty($student->firstname) && !empty($student->lastname))
                     {{ $student->firstname }} {{ $student->lastname }}
                 @else
                     {{ $student->username }}
-                @endif
+                @endif --}}
             </h1>
         </div>
 
@@ -108,7 +108,7 @@ $controller = new Controller();
                         </div>
                         <div>
                             <div class="card-title">&nbsp;&nbsp;Courses &nbsp;&nbsp;Enrolled</div>
-                            <div class="card-metric">&nbsp;&nbsp;{{ $coursesCount }}</div>
+                            <div class="card-metric">&nbsp;&nbsp;0</div>
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,7 @@ $controller = new Controller();
                         </div>
                         <div>
                             <div class="card-title">&nbsp;&nbsp;Modules</div>
-                            <div class="card-metric">&nbsp;&nbsp;{{ $modulesCount }}</div>
+                            <div class="card-metric">&nbsp;&nbsp;0</div>
                         </div>
                     </div>
                 </div>
@@ -140,11 +140,11 @@ $controller = new Controller();
                         </div>
                         <div>
                             <div class="card-title">&nbsp;&nbsp;Lessons &nbsp;&nbsp;Completed</div>
-                            <div class="card-metric">&nbsp;&nbsp;{{ $completedLessons }}/{{ $totalLessons }}</div>
+                            <div class="card-metric">&nbsp;&nbsp;0</div>
                             <div class="label-sub">
                                 &nbsp;&nbsp;Progress :
-                                @if ($totalLessons > 0)
-                                    {{ round(($completedLessons / $totalLessons) * 100, 1) }}%
+                                @if (true)
+                                    100%
                                 @else
                                     0%
                                 @endif
@@ -164,7 +164,7 @@ $controller = new Controller();
                         </div>
                         <div>
                             <div class="card-title">&nbsp;&nbsp;Quizzes Done</div>
-                            <div class="card-metric">&nbsp;&nbsp;{{ $quizzesTaken }}</div>
+                            <div class="card-metric">&nbsp;&nbsp;0</div>
                             <div class="label-sub">
                                 &nbsp;&nbsp;Performance : 100%
                             </div>
@@ -192,137 +192,12 @@ $controller = new Controller();
         <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css" rel="stylesheet">
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var chart = c3.generate({
-                    bindto: '#chart-pie2',
-                    data: {
-                        columns: @json($chartData),
-                        type: 'pie',
-                        colors: {
-                            'Enrolled': '#5ed94c',
-                            'Not Enrolled': '#f72d66'
-                        }
-                    },
-                    legend: {
-                        show: true
-                    },
-                    padding: {
-                        top: 0,
-                        bottom: 0
-                    }
-                });
-            });
-        </script>
-
-        <div class="row">
-            <div class="col-lg-12 col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4>Course Certifications</h4>
-
-                        @if (count($courseProgress) > 0)
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 1px;">No</th>
-                                        <th>Course Name</th>
-                                        <th>Completion</th>
-                                        <th>Certificate</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($courseProgress as $key => $data)
-                                        <tr>
-                                            <td>{{ $key + 1 }}</td>
-                                            <td>{{ $data['title'] }}</td>
-                                            <td>{{ $data['percentage'] }}%</td>
-                                            <td>
-                                                @if ($data['isCompleted'])
-                                                    <a href="{{ route('certificate.download', $data['course']->id) }}"
-                                                        class="btn btn-success btn-sm">
-                                                        <i class="fa fa-download me-1"></i> Download Certificate
-                                                    </a>
-                                                @else
-                                                    <button class="btn btn-secondary btn-sm" disabled>
-                                                        <i class="fa fa-lock me-1"></i> Incomplete
-                                                    </button>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        @else
-                            <div class="col-sm-12 col-md-12">
-                                <div class="alert alert-warning mt-3" role="alert">
-                                    No Enrolled course progress data available.
-                                </div>
-                        @endif
-
-                    </div>
-                </div>
-            </div>
-        </div>
 
     </div>
     </div>
     </div>
 @endsection
 @section('js')
-    <script>
-        var lessonsChart = echarts.init(document.getElementById('lessonsPieChart'));
-        var lessonsOption = {
-            tooltip: {
-                trigger: 'item'
-            },
-            legend: {
-                top: '5%',
-                left: 'center'
-            },
-            series: [{
-                name: 'Lessons',
-                type: 'pie',
-                radius: '50%',
-                data: [{
-                        value: {{ $completedLessons }},
-                        name: 'Completed'
-                    },
-                    {
-                        value: {{ $totalLessons - $completedLessons }},
-                        name: 'Remaining'
-                    }
-                ],
-                emphasis: {
-                    itemStyle: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                }
-            }]
-        };
-        lessonsChart.setOption(lessonsOption);
-
-        var assignmentsChart = echarts.init(document.getElementById('assignmentsBarChart'));
-        var assignmentsOption = {
-            xAxis: {
-                type: 'category',
-                data: ['Total', 'Submitted', 'Pending']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                data: [{{ $quizzesTaken }}, {{ $quizzesPassed }},
-                    {{ $quizzesTaken - $quizzesPassed }}
-                ],
-                type: 'bar',
-                color: '#007bff'
-            }]
-        };
-        assignmentsChart.setOption(assignmentsOption);
-    </script>
 
     <!-- c3.js Charts js-->
     <script src="{{ URL::asset('assets/plugins/charts-c3/d3.v5.min.js') }}"></script>

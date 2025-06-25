@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('mc_date_added');
             $table->string('mc_added_by');
             $table->timestamps(0);
-
             $table->primary('id');
         });
     }

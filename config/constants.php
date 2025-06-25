@@ -3,8 +3,11 @@
 return [
     'options' => [
 
-        'COURSE_INSTRUCTORS' => 1,
-        'COURSE_CATEGORIES'  => 2,
-        'COURSE_LANGUAGES'   => 3,
+        'SCHOOL_PRODUCTS'   => 1,
+        'SCHOOL_GENDER'     => 2,
+        'SCHOOL_OWNERSHIP'  => 3,
+        'REGIONAL_LEVEL'    => 4,
+        'SCHOOL_POPULATION' => 5,
+        'SCHOOL_TYPE'       => 6,
     ],
 ];

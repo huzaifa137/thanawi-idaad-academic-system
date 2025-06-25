@@ -14,7 +14,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
-
     public static $page = "USERS";
 
     public static function links()
@@ -440,7 +439,7 @@ class UserController extends Controller
     public function homePage()
     {
 
-        $allCourses = Course::orderBy('id', 'desc')->paginate(9);
+        $allCourses = [];
 
         return view('home-page', compact(['allCourses']));
     }
@@ -777,6 +776,5 @@ class UserController extends Controller
 
             return back()->with('success', 'User account has been updated successfully');
         }
-
     }
 }

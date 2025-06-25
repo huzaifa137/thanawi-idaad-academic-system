@@ -5,7 +5,7 @@
     <!-- Meta data -->
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
-    <meta content="UP - Ugandan Programmer" name="description">
+    <meta content="Smart Schools" name="description">
     <meta content="Spruko Technologies Private Limited" name="author">
     <meta name="keywords" content="UP" />
     @include('layouts.custom-head')

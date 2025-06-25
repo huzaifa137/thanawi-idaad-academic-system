@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>UP - Ugandan Programmer</title>
+    <title>Smart Schools</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
@@ -76,7 +76,7 @@
         <div class="container">
 
             <a href="{{ url('users/home-page') }}">
-                <img src="{{ asset('assets007/images/logo_no_bg.png') }}" alt="Ugandan Programmer Logo"
+                <img src="{{ asset('assets007/images/logo_no_bg.png') }}" alt="Smart Schools Logo"
                     style="height: 5rem;">
             </a>
 
@@ -117,7 +117,7 @@
         <div class="container">
             <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
                 <div class="col-md-7 ftco-animate">
-                    <span class="subheading">Welcome to Ugandan Programmer</span>
+                    <span class="subheading">Welcome to Smart Schools</span>
                     <h1 class="mb-4">We Are Online Platform For Make Learn</h1>
                     <p class="caps">
                         The best place to master programming — designed for Uganda’s junior developers and students.
@@ -182,10 +182,10 @@
             <div class="row d-flex">
                 <div class="col-md-6 heading-section pr-md-5 ftco-animate d-flex align-items-center">
                     <div class="w-100 mb-4 mb-md-0">
-                        <span class="subheading">Welcome to Ugandan Programmer</span>
+                        <span class="subheading">Welcome to Smart Schools</span>
                         <h2 class="mb-4">Uganda’s Premier Online Learning Center for Programming</h2>
                         <p>
-                            Ugandan Programmer is dedicated to empowering junior developers and students by providing
+                            Smart Schools is dedicated to empowering junior developers and students by providing
                             high-quality, accessible programming courses in Luganda and English.
                         </p>
                         <p>
@@ -200,7 +200,7 @@
                                 <span class="fa fa-play-circle"></span>
                             </a>
 
-                            <h4 class="ml-4">Discover programming with Ugandan Programmer — Watch our introduction
+                            <h4 class="ml-4">Discover programming with Smart Schools — Watch our introduction
                                 video</h4>
                         </div>
                     </div>
@@ -232,7 +232,7 @@
                                 <div class="media-body">
                                     <h3 class="heading mb-3">Experienced Instructors</h3>
                                     <p>
-                                        Learn from skilled Ugandan programmers who understand local challenges and
+                                        Learn from skilled Smart Schoolss who understand local challenges and
                                         opportunities.
                                     </p>
                                 </div>
@@ -317,16 +317,12 @@
                     </div>
                 @endforeach
 
-
-                <div class="col-md-12 text-center mt-5">
-                    {{ $allCourses->links('pagination::bootstrap-4') }}
-                </div>
             </div>
-
 
             <div class="col-md-12 text-center mt-5">
                 <a href="{{ url('/student/courses-and-lessons') }} " class="btn btn-primary">See All Courses</a>
             </div>
+            
         </div>
     </section>
 
@@ -394,7 +390,7 @@
                                     <span class="subheading">Enhance Your Skills</span>
                                     <h2 class="mb-4">Start Learning Programming Today</h2>
                                     <p>
-                                        Ugandan Programmer gives you the opportunity to learn programming in a simple,
+                                        Smart Schools gives you the opportunity to learn programming in a simple,
                                         practical, and local way — no matter your background or where you are.
                                     </p>
                                     <p>
@@ -511,7 +507,7 @@
                                     </p>
                                     <p class="mb-4">
                                         The courses are very clear and beginner-friendly. I'm confident I can become a
-                                        developer with Ugandan Programmer.
+                                        developer with Smart Schools.
                                     </p>
                                     <div class="d-flex align-items-center">
                                         <div class="user-img"
@@ -635,7 +631,7 @@
                     <div class="ftco-footer-widget pt-md-5 mb-4">
                         <h2 class="ftco-heading-2">About</h2>
                         <p>
-                            Ugandan Programmer is an online platform that teaches programming and tech skills in a
+                            Smart Schools is an online platform that teaches programming and tech skills in a
                             simple and accessible way — using both English and Luganda. We aim to empower the next
                             generation of Ugandan developers.
                         </p>
@@ -726,7 +722,7 @@
                         &copy;
                         <script>
                             document.write(new Date().getFullYear());
-                        </script> Ugandan Programmer. All rights reserved. Built for Ugandan
+                        </script> Smart Schools. All rights reserved. Built for Ugandan
                         developers.
                     </p>
                 </div>

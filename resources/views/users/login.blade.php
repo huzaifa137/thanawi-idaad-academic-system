@@ -64,7 +64,7 @@
                     <div class="row">
                         <div class="col-md-8 mx-auto d-block">
                             <div class="">
-                                <h1 class="mb-2">Ugandan Programmer Login</h1>
+                                <h1 class="mb-2">Smart Schools Login</h1>
                                 <p class="text-muted">Sign into your account</p>
                             </div>
 

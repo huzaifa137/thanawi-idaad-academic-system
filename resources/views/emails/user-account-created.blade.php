@@ -12,7 +12,7 @@
 
     <p><strong>Dear {{ $username }},</strong></p>
 
-    <p>We are thrilled to inform you that your account has been successfully created on our Ugandan Programmer! Welcome
+    <p>We are thrilled to inform you that your account has been successfully created on our Smart Schools! Welcome
         aboard!</p>
     <p><strong>Account Details</strong></p>
     <ol>

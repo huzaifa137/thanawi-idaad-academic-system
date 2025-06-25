@@ -23,6 +23,13 @@
         </li>
 
         <li class="slide">
+            <a class="side-menu__item" href="{{ route('school.create-school') }}">
+                <i class="fa fa-school fa-2x mr-3"></i>
+                Create School
+            </a>
+        </li>
+
+        <li class="slide">
             <a class="side-menu__item" href="{{ url('student/courses-and-lessons') }}">
                 <i class="fa fa-book fa-2x mr-3"></i>
                 Course Enrollment

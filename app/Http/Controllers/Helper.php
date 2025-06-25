@@ -127,4 +127,75 @@ class Helper extends Controller
         return $string;
     }
 
+    public static function DropMasterDataAsc($code_id = "", $selected = "", $id = "", $part = 2, $disabled = 0)
+    {
+
+        if (! $code_id) {
+            $select = DB::table("master_datas")->get();
+        } else {
+            $select = DB::table("master_datas")->where("md_master_code_id", $code_id)->orderBy("md_id", "asc")->get();
+        }
+
+        $disabled = ($disabled) ? "disabled" : "";
+
+        $string = "";
+        $string .= '<select name="' . $id . '" id="' . $id . '" class="form-control" ' . $disabled . '>';
+        $string .= '<option value=""> -- Select -- </option>';
+        foreach ($select as $row) {
+            if ($part == 1) {
+                if ($row->md_id == $selected) {
+                    $string .= '<option selected value="' . $row->md_id . '">' . $row->md_name . '</option>';
+                } else {
+                    $string .= '<option value="' . $row->md_id . '">' . $row->md_name . '</option>';
+                }
+
+            } else if ($part == 2) {
+                if ($row->md_id == $selected) {
+                    $string .= '<option selected value="' . $row->md_id . '">' . $row->md_name . ' (' . $row->md_code . ')</option>';
+                } else {
+                    $string .= '<option value="' . $row->md_id . '">' . $row->md_name . ' (' . $row->md_code . ')</option>';
+                }
+
+            }
+        }
+
+        $string .= '</select>';
+
+        return $string;
+    }
+
+    public static function MasterRecord($md_master_code_id, $md_id)
+    {
+
+        $md_id = (string) $md_id;
+
+        $masterRecord = DB::table('master_datas')
+            ->where('md_master_code_id', $md_master_code_id)
+            ->where('md_id', operator: $md_id)
+            ->value('md_name');
+
+        return $masterRecord;
+
+    }
+
+    public static function MasterRecordMdId($md_id)
+    {
+        $md_id        = (string) $md_id;
+        $masterRecord = DB::table('master_datas')
+            ->where('md_id', operator: $md_id)
+            ->value('md_name');
+
+        return $masterRecord;
+
+    }
+
+    public static function recordMdname($md_id)
+    {
+        $recordName = DB::table('master_datas')
+            ->where('md_id', operator: $md_id)
+            ->value('md_name');
+
+        return $recordName;
+    }
+
 }

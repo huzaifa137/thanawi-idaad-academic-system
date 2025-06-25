@@ -281,3 +281,21 @@ Route::controller(StudentController::class)->group(function () {
     Route::get('/student/view-course-information/{id}', 'viewCourseInformation')->name('view.course.information');
 
 });
+
+Route::controller(SchoolController::class)->group(function () {
+
+    Route::get('create-school', 'createSchool')->name('school.create-school');
+    Route::get('all-schools', 'allSchools')->name('school.allSchools');
+    Route::get('/edit-school/{id}/', 'editSchool')->name('edit.school');
+    Route::get('/school-profile/{id}/', 'schoolProfile')->name('profile.school');
+
+    Route::delete('/school/{schoolId}', 'deleteSchool')->name('school.delete');
+
+    Route::post('/schools/store', 'storeSchool')->name('schools.store');
+    Route::post('/update-school', 'updateSchool')->name('update.school');
+    Route::post('/store-school-profile', 'storeSchoolProfile')->name('schools.store.profile');
+
+    Route::get('admin-user', 'adminUser')->name('admin.user');
+    Route::get('student-user', 'studentUser')->name('student.user');
+
+});

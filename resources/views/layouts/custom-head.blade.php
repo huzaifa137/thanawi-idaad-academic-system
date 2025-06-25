@@ -1,5 +1,5 @@
 <!-- Title -->
-<title>UP - Ugandan Programmer</title>
+<title>Smart Schools</title>
 <!--Favicon -->
 <link rel="icon" href="{{URL::asset('assets/images/brand/favicon.ico')}}" type="image/x-icon"/>
 <!-- Bootstrap css -->

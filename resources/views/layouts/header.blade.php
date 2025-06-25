@@ -67,7 +67,7 @@ use App\Http\Controllers\Helper;
                 <div class="dropdown profile-dropdown">
 
 
-                    @php
+                    {{-- @php
                         $user = null;
 
                         if (session()->has('LoggedAdmin')) {
@@ -79,11 +79,11 @@ use App\Http\Controllers\Helper;
                         $initial = strtoupper(substr($user->username, 0, 1));
                         $FL = strtoupper(substr($user->firstname, 0, 1));
                         $LL = strtoupper(substr($user->lastname, 0, 1));
-                    @endphp
+                    @endphp --}}
 
                     <a href="#" class="nav-link pr-0 leading-none text-primary" data-toggle="dropdown">
                         <span>
-                            @if ($user->firstname && $user->lastname)
+                            {{-- @if ($user->firstname && $user->lastname)
                                 <div class="google-avatar-sm">
                                     {{ $FL }}{{ $LL }}
                                 </div>
@@ -91,7 +91,7 @@ use App\Http\Controllers\Helper;
                                 <div class="google-avatar-sm">
                                     {{ $initial }}
                                 </div>
-                            @endif
+                            @endif --}}
                         </span>
                     </a>
 
@@ -99,11 +99,11 @@ use App\Http\Controllers\Helper;
                         <div class="text-center">
                             <a href="#"
                                 class="dropdown-item text-center user pb-0 font-weight-bold">{{ Helper::active_user() }}</a>
-                            @if ($user->user_role == 1)
+                            {{-- @if ($user->user_role == 1)
                                 <span class="text-center user-semi-title">Enrolled Student</span>
                             @else
                                 <span class="text-center user-semi-title">Admin</span>
-                            @endif
+                            @endif --}}
                             <div class="dropdown-divider"></div>
                         </div>
                         <a class="dropdown-item d-flex" href="{{ route('users-profile') }}">
