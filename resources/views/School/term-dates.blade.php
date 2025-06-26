@@ -31,14 +31,23 @@ $controller = new Controller();
                         </a>
                     </div>
                     <div class="card-body bg-light">
-                        <form id="createSchoolForm">
+                        <form id="createSchoolTerm">
                             <div class="row">
                                 <div class="col-lg-6 col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Academic Year</label>
-                                        <select name="academic_year" id="academic_year" class="form-control">
-                                            <option value="1">Sunday</option>
-                                            <option value="2">Monday</option>
+                                        <select name="academic_year_id" id="academic_year" class="form-control" required>
+                                            @if ($academicYears->isEmpty())
+                                                <option value="" disabled selected>No active academic year set
+                                                </option>
+                                            @else
+                                                @foreach ($academicYears as $year)
+                                                    <option value="{{ $year->id }}"
+                                                        {{ $year->is_active ? 'selected' : '' }}>
+                                                        {{ $year->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
                                 </div>
@@ -47,22 +56,31 @@ $controller = new Controller();
                                     <div class="form-group">
                                         <label class="form-label">Term</label>
                                         <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_TERMS'), '', 'academic_term', 1);
+                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_TERMS'), '', 'term', 1);
                                         ?>
                                     </div>
                                 </div>
 
+                                @php
+                                    $currentYear = date('Y');
+                                    $minDate = $currentYear . '-01-01';
+                                    $maxDate = $currentYear . '-12-31';
+                                @endphp
+
                                 <div class="col-lg-6 col-md-6">
+                                    <input type="hidden" name="school_id" value="{{ $school_id }}">
                                     <div class="form-group">
-                                        <label class="form-label">Start Date</label>
-                                        <input class="form-control" type="date" name="start_date" id="start_date">
+                                        <label class="form-label">Term Start Date</label>
+                                        <input type="date" name="start_date" id="start_date" class="form-control"
+                                            required min="{{ $minDate }}" max="{{ $maxDate }}">
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6 col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">End Date</label>
-                                        <input class="form-control" type="date" name="end_date" id="end_date">
+                                        <label class="form-label">Term End Date</label>
+                                        <input type="date" name="end_date" id="end_date" class="form-control" required
+                                            min="{{ $minDate }}" max="{{ $maxDate }}">
                                     </div>
                                 </div>
 
@@ -86,6 +104,66 @@ $controller = new Controller();
                     </div>
                 </div>
             </div>
+
+            <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Term Dates</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped card-table table-vcenter text-nowrap mb-0"
+                                id="termDatesTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Term</th>
+                                        <th>Term Start Date</th>
+                                        <th>Term End Date</th>
+                                        <th>Week Starts On</th>
+                                        <th colspan="1" style="text-align: center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($termDates as $key => $term)
+                                        <tr data-id="{{ $term->id }}">
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ Helper::recordMdname($term->term) }}</td>
+                                            <td>{{ $term->start_date }}</td>
+                                            <td>{{ $term->end_date }}</td>
+                                            @php
+                                                $daysOfWeek = [
+                                                    1 => 'Sunday',
+                                                    2 => 'Monday',
+                                                    3 => 'Tuesday',
+                                                    4 => 'Wednesday',
+                                                    4 => 'Thursday',
+                                                    6 => 'Friday',
+                                                    7 => 'Saturday',
+                                                ];
+                                            @endphp
+
+                                            <td>{{ $daysOfWeek[$term->week_starts_on] ?? 'Unknown' }}</td>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <button class="btn btn-sm btn-outline-danger btn-delete-term-date"
+                                                    title="Delete" data-id="{{ $term->id }}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="8" class="text-center">No term dates found.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     </div>
@@ -96,48 +174,8 @@ $controller = new Controller();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const today = new Date().toISOString().split('T')[0];
-            const startDate = document.getElementById('start_date');
-            const endDate = document.getElementById('end_date');
-
-            startDate.setAttribute('min', today);
-            endDate.setAttribute('min', today);
-
-            startDate.addEventListener('change', function() {
-                endDate.setAttribute('min', this.value);
-            });
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const today = new Date().toISOString().split('T')[0];
-            const startDate = document.getElementById('start_date');
-            const endDate = document.getElementById('end_date');
-
-            startDate.setAttribute('min', today);
-            endDate.setAttribute('min', today);
-
-            startDate.addEventListener('change', function() {
-                endDate.setAttribute('min', this.value);
-
-                if (endDate.value && this.value > endDate.value) {
-                    endDate.value = this.value;
-                }
-            });
-
-            endDate.addEventListener('change', function() {
-                startDate.setAttribute('max', this.value);
-
-                if (startDate.value && this.value < startDate.value) {
-                    startDate.value = this.value;
-                }
-            });
-        });
-    </script>
-
-    <script>
         $(document).ready(function() {
-            $('#createSchoolForm').on('submit', function(e) {
+            $('#createSchoolTerm').on('submit', function(e) {
                 e.preventDefault();
 
                 let isValid = true;
@@ -145,6 +183,7 @@ $controller = new Controller();
                 let $submitBtn = $form.find('button[type="submit"]');
 
                 $form.find('.form-control, select').removeClass('is-invalid');
+                $form.find('.invalid-feedback').remove();
 
                 $form.find('input, select').each(function() {
                     if (!$(this).val().trim()) {
@@ -170,7 +209,7 @@ $controller = new Controller();
 
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You are about to submit the school data.",
+                    text: "You are about to submit the term data.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, submit it!',
@@ -183,7 +222,7 @@ $controller = new Controller();
                         $submitBtn.html('Saving...<i class="fas fa-spinner fa-spin"></i>');
 
                         $.ajax({
-                            url: '{{ route('schools.store') }}',
+                            url: '{{ route('term-dates.store') }}',
                             method: 'POST',
                             data: $form.serialize(),
                             headers: {
@@ -191,14 +230,39 @@ $controller = new Controller();
                             },
                             success: function(response) {
                                 Swal.fire(
-                                    'Submitted!',
-                                    'School has been created successfully.',
+                                    'Success!',
+                                    response.message,
                                     'success'
-                                );
+                                ).then(() => {
+                                    // Wait for alert to close before reloading
+                                    location.reload();
+                                });
+
                                 $form[0].reset();
                             },
-                            error: function(data) {
-                                $('body').html(data.responseText);
+                            error: function(xhr) {
+                                if (xhr.status === 422) {
+                                    let errors = xhr.responseJSON.errors;
+                                    for (const field in errors) {
+                                        let input = $form.find(`[name="${field}"]`);
+                                        input.addClass('is-invalid');
+                                        input.after(
+                                            `<div class="invalid-feedback">${errors[field][0]}</div>`
+                                        );
+                                    }
+                                } else if (xhr.status === 409) {
+                                    Swal.fire(
+                                        'Duplicate Entry',
+                                        xhr.responseJSON.message,
+                                        'warning'
+                                    );
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'An unexpected error occurred. Please try again.',
+                                        'error'
+                                    );
+                                }
                             },
                             complete: function() {
                                 $submitBtn.prop('disabled', false).html(
@@ -207,6 +271,46 @@ $controller = new Controller();
                         });
                     }
                 });
+            });
+        });
+    </script>
+
+
+    <script>
+        // Delete academic year functionality
+        $('tbody').on('click', '.btn-delete-term-date', function() {
+            var yearId = $(this).data('id');
+            var row = $(this).closest('tr');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Please confirm you want to delete Term !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/academic-years/' + yearId,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            row.remove();
+                            Swal.fire(
+                                'Deleted!',
+                                'Academic Term has been deleted.',
+                                'success'
+                            );
+                        },
+                        error: function(data) {
+                            $('body').html(data.responseText);
+                        }
+                    });
+                }
             });
         });
     </script>

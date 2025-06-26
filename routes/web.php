@@ -302,7 +302,15 @@ Route::controller(SchoolController::class)->group(function () {
     Route::get('student-user', 'studentUser')->name('student.user');
 
     Route::get('/add-academic-year', 'addAcademicYear')->name('add-academic-year');
-    Route::post('/', 'store')->name('store');
-    Route::get('/', 'index')->name('index');
+    Route::post('/academic-years', 'storeYear')->name('academic-years.store');
+
+    Route::patch('/academic-years/{id}/activate', 'activate')->name('academic-years.activate');
+    Route::patch('/academic-years/{id}/deactivate', 'deactivate')->name('academic-years.deactivate');
+
+    Route::delete('/academic-years/{id}', 'destroy')->name('academic-years.destroy');
+    Route::put('/academic-years/{id}', 'updateYear')->name('academic-years.update');
+
+    Route::delete('/academic-years/{id}', 'destroyTerm')->name('academic-years.destroy');
+    Route::post('/store-term-dates', 'storeTermDate')->name('term-dates.store');
 
 });

@@ -64,9 +64,21 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                             <i class="fas fa-cogs"></i>
                                         </a>
                                         &nbsp;
-                                        <a href="{{ route('school.term-dates', $school->id) }}" class="btn btn-sm"
-                                            style="color: rgb(250, 12, 115); border: 1px solid rgb(250, 12, 115); background-color: transparent;"
-                                            title="Select Date">
+                                        <style>
+                                            .btn-inline-pink {
+                                                color: rgb(250, 12, 115);
+                                                border: 1px solid rgb(250, 12, 115);
+                                                background-color: transparent;
+                                            }
+
+                                            .btn-inline-pink:hover {
+                                                background-color: rgb(250, 12, 115);
+                                                color: white;
+                                            }
+                                        </style>
+
+                                        <a href="{{ route('school.term-dates', $school->id) }}"
+                                            class="btn btn-sm btn-inline-pink" title="Select Date">
                                             <i class="fas fa-calendar-alt"></i>
                                         </a>
                                         &nbsp;

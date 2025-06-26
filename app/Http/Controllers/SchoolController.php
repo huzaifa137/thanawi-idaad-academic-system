@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\AcademicYear;
 use App\Models\DynamicFormValue;
 use App\Models\MasterData;
 use App\Models\School;
 use App\Models\SchoolProfile;
+use App\Models\TermDate;
 use App\Models\UpdateTracker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -42,9 +44,11 @@ class SchoolController extends Controller
 
     public function termDates($id)
     {
-        $school_id = $id;
+        $school_id     = $id;
+        $academicYears = AcademicYear::orderBy('id', 'desc')->where('is_active',1)->get();
+        $termDates     = TermDate::where('school_id', $school_id)->orderBy('term', 'asc')->get();
 
-        return view('School.term-dates', compact('school_id'));
+        return view('School.term-dates', compact('school_id', 'academicYears', 'termDates'));
     }
 
     public function storeSchool(Request $request)
@@ -227,26 +231,118 @@ class SchoolController extends Controller
 
     public function addAcademicYear()
     {
-        return view('AcademicYear.add-year');
+
+        $academicYears = AcademicYear::orderBy('id', 'desc')->get();
+
+        return view('AcademicYear.add-year', compact(['academicYears']));
     }
 
-    public function store(Request $request)
+    public function storeYear(Request $request)
     {
         $validated = $request->validate([
-            'name'       => 'required|string|unique:academic_years,name',
+            'name'       => 'required|string|max:255|unique:academic_years,name',
             'start_date' => 'required|date',
             'end_date'   => 'required|date|after_or_equal:start_date',
             'is_active'  => 'required|boolean',
         ]);
 
-        AcademicYear::create($validated);
+        $academicYear = AcademicYear::create($validated);
 
-        return redirect()->route('academic_years.index')->with('success', 'Academic year created successfully.');
+        return response()->json([
+            'message' => 'Academic Year created successfully.',
+            'data'    => $academicYear,
+        ], 201);
     }
 
-    public function index()
+    public function activate($id)
     {
-        $academicYears = AcademicYear::orderBy('start_date', 'desc')->get();
-        return view('academic_years.index', compact('academicYears'));
+        AcademicYear::query()->update(['is_active' => false]); // Deactivate all
+        $year = AcademicYear::findOrFail($id);
+        $year->update(['is_active' => true]);
+
+        return response()->json(['message' => 'Academic year activated.']);
     }
+
+    public function deactivate($id)
+    {
+        $year = AcademicYear::findOrFail($id);
+        $year->update(['is_active' => false]);
+
+        return response()->json(['message' => 'Academic year deactivated.']);
+    }
+
+    public function destroy($id)
+    {
+        $academicYear = AcademicYear::findOrFail($id);
+
+        if ($academicYear->is_active) {
+            return response()->json(['error' => 'Cannot delete an active academic year.'], 403);
+        }
+
+        $academicYear->delete();
+
+        return response()->json(['message' => 'Academic year deleted successfully.']);
+    }
+
+    public function updateYear(Request $request, $id)
+    {
+        $academicYear = AcademicYear::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'      => 'required|string|max:255|unique:academic_years,name,' . $id,
+            'is_active' => 'required|boolean',
+        ]);
+
+        if ($request->is_active == 1) {
+            AcademicYear::query()->update(['is_active' => false]);
+            $year = AcademicYear::findOrFail($id);
+            $year->update(['is_active' => true]);
+        }
+
+        $academicYear->update($validated);
+
+        return response()->json([
+            'message' => 'Academic Year updated successfully.',
+            'data'    => $academicYear,
+        ]);
+    }
+
+    public function storeTermDate(Request $request)
+    {
+        $validated = $request->validate([
+            'academic_year_id' => 'required|exists:academic_years,id',
+            'term'             => 'required|string|max:255',
+            'start_date'       => 'required|date',
+            'school_id'        => 'required',
+            'end_date'         => 'required|date|after_or_equal:start_date',
+            'week_starts_on'   => 'required|in:1,2',
+        ]);
+
+        $exists = TermDate::where('school_id', $validated['school_id'])
+            ->where('term', $validated['term'])
+            ->where('academic_year_id', $validated['academic_year_id'])
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => 'This term already exists for the selected school.',
+            ], 409); 
+        }
+
+        $termDate = TermDate::create($validated);
+
+        return response()->json([
+            'message' => 'Term date added successfully.',
+            'data'    => $termDate,
+        ], 201);
+    }
+
+    public function destroyTerm($id)
+    {
+        $academicTerm = TermDate::findOrFail($id);
+        $academicTerm->delete();
+
+        return response()->json(['message' => 'Term deleted successfully.']);
+    }
+
 }
