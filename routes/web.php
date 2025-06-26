@@ -285,6 +285,7 @@ Route::controller(StudentController::class)->group(function () {
 Route::controller(SchoolController::class)->group(function () {
 
     Route::get('create-school', 'createSchool')->name('school.create-school');
+    Route::get('term-dates/{id}/', 'termDates')->name('school.term-dates');
     Route::get('all-schools', 'allSchools')->name('school.allSchools');
     Route::get('/edit-school/{id}/', 'editSchool')->name('edit.school');
     Route::get('/school-profile/{id}/', 'schoolProfile')->name('profile.school');
@@ -295,9 +296,13 @@ Route::controller(SchoolController::class)->group(function () {
     Route::post('/schools/store', 'storeSchool')->name('schools.store');
     Route::post('/update-school', 'updateSchool')->name('update.school');
     Route::post('/store-school-profile', 'storeSchoolProfile')->name('schools.store.profile');
-    Route::post('/school/configure',  'configureSchoolOptions')->name('school.configure');
+    Route::post('/school/configure', 'configureSchoolOptions')->name('school.configure');
 
     Route::get('admin-user', 'adminUser')->name('admin.user');
     Route::get('student-user', 'studentUser')->name('student.user');
+
+    Route::get('/add-academic-year', 'addAcademicYear')->name('add-academic-year');
+    Route::post('/', 'store')->name('store');
+    Route::get('/', 'index')->name('index');
 
 });

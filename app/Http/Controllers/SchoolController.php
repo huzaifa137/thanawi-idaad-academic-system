@@ -40,6 +40,13 @@ class SchoolController extends Controller
         return view('School.all-schools', compact('schools'));
     }
 
+    public function termDates($id)
+    {
+        $school_id = $id;
+
+        return view('School.term-dates', compact('school_id'));
+    }
+
     public function storeSchool(Request $request)
     {
 
@@ -218,4 +225,28 @@ class SchoolController extends Controller
         dd($request->all());
     }
 
+    public function addAcademicYear()
+    {
+        return view('AcademicYear.add-year');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name'       => 'required|string|unique:academic_years,name',
+            'start_date' => 'required|date',
+            'end_date'   => 'required|date|after_or_equal:start_date',
+            'is_active'  => 'required|boolean',
+        ]);
+
+        AcademicYear::create($validated);
+
+        return redirect()->route('academic_years.index')->with('success', 'Academic year created successfully.');
+    }
+
+    public function index()
+    {
+        $academicYears = AcademicYear::orderBy('start_date', 'desc')->get();
+        return view('academic_years.index', compact('academicYears'));
+    }
 }

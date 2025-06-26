@@ -17,8 +17,11 @@ $controller = new Controller();
     <div class="side-app">
 
         <div class="card shadow-lg border-0 rounded-3">
-            <div class="card-header bg-gradient-primary text-white text-center py-4 rounded-top-3">
-                <h4 class="mb-0 fw-bold">Configure School Options</h4>
+            <div class="card-header d-flex justify-content-between align-items-center  bg-primary">
+                <h4 class="card-title mb-0 text-white">Configure School Options</h4>
+                <a href="{{ route('school.allSchools') }}" class="btn btn-secondary">
+                    <i class="fas fa-school me-2"></i> All Schools
+                </a>
             </div>
             <div class="card-body p-5">
                 <div class="row gx-5">
