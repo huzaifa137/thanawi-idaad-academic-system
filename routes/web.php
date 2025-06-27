@@ -314,3 +314,18 @@ Route::controller(SchoolController::class)->group(function () {
     Route::post('/store-term-dates', 'storeTermDate')->name('term-dates.store');
 
 });
+
+Route::controller(TeacherController::class)->group(function () {
+
+    Route::get('add-teachers/{id}/', 'addTeachers')->name('school.add-teachers');
+    Route::get('/teachers', 'allTeachers')->name('teachers.all');
+    Route::get('/school-teachers/{id}', 'schoolTeachers')->name('school.teachers');
+    Route::get('/teacher-profile/{id}', 'teacherProfile')->name('teacher.profile');
+    Route::get('/update-teacher-profile/{id}', 'updateteacherProfile')->name('update.teacher.profile');
+
+    Route::post('/store-teachers', 'storeTeacher')->name('teachers.store');
+    Route::post('/teachers/update/{teacher}', 'storeUpdatedTeacherProfile')->name('teachers.update');
+
+    Route::delete('/teachers/{id}', 'destroyTeacher')->name('teachers.destroy');
+
+});

@@ -45,7 +45,7 @@ class SchoolController extends Controller
     public function termDates($id)
     {
         $school_id     = $id;
-        $academicYears = AcademicYear::orderBy('id', 'desc')->where('is_active',1)->get();
+        $academicYears = AcademicYear::orderBy('id', 'desc')->where('is_active', 1)->get();
         $termDates     = TermDate::where('school_id', $school_id)->orderBy('term', 'asc')->get();
 
         return view('School.term-dates', compact('school_id', 'academicYears', 'termDates'));
@@ -326,7 +326,7 @@ class SchoolController extends Controller
         if ($exists) {
             return response()->json([
                 'message' => 'This term already exists for the selected school.',
-            ], 409); 
+            ], 409);
         }
 
         $termDate = TermDate::create($validated);

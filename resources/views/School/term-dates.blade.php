@@ -23,10 +23,10 @@ $controller = new Controller();
                 <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0 text-white">Set Term Dates</h4>
-                        <a href="{{ route('add-academic-year') }}" class="btn btn-secondary">
+                        <a href="{{ route('add-academic-year') }}" class="btn btn-info">
                             <i class="fas fa-calendar-alt me-2"></i> All Academic Years
                         </a>
-                        <a href="{{ route('school.allSchools') }}" class="btn btn-secondary">
+                        <a href="{{ route('school.allSchools') }}" class="btn btn-info">
                             <i class="fas fa-school me-2"></i> All Schools
                         </a>
                     </div>

@@ -20,9 +20,9 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
         <div class="card shadow-sm border-0">
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">All Schools</h5>
-                <a href="{{ route('school.create-school') }}" class="btn btn-sm btn-secondary">
+                <a href="{{ route('school.create-school') }}" class="btn btn-sm btn-info">
                     <span
-                        class="rounded-circle bg-white text-secondary d-inline-flex align-items-center justify-content-center me-1"
+                        class="rounded-circle bg-white text-info d-inline-flex align-items-center justify-content-center me-1"
                         style="width: 20px; height: 20px;">
                         <i class="fas fa-plus" style="font-size: 12px;"></i>
                     </span>
@@ -59,11 +59,6 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                             <i class="fas fa-university"></i>
                                         </a>
                                         &nbsp;
-                                        <a href="{{ route('school.options', $school->id) }}"
-                                            class="btn btn-sm btn-outline-success" title="View School Profile">
-                                            <i class="fas fa-cogs"></i>
-                                        </a>
-                                        &nbsp;
                                         <style>
                                             .btn-inline-pink {
                                                 color: rgb(250, 12, 115);
@@ -75,12 +70,37 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                                 background-color: rgb(250, 12, 115);
                                                 color: white;
                                             }
+
+                                            .btn-inline-orange {
+                                                color: #FF9800;
+                                                border: 1px solid #FF9800;
+                                                ;
+                                                background-color: transparent;
+                                            }
+
+                                            .btn-inline-orange:hover {
+                                                background-color: #FF9800;
+                                                ;
+                                                color: white;
+                                            }
                                         </style>
 
                                         <a href="{{ route('school.term-dates', $school->id) }}"
                                             class="btn btn-sm btn-inline-pink" title="Select Date">
                                             <i class="fas fa-calendar-alt"></i>
                                         </a>
+                                        &nbsp;
+
+                                        <a href="{{ route('school.teachers', $school->id) }}"
+                                            class="btn btn-sm btn-inline-orange" title="Teachers">
+                                            <i class="fas fa-chalkboard-teacher"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a href="{{ route('school.options', $school->id) }}"
+                                            class="btn btn-sm btn-outline-success" title="View School Profile">
+                                            <i class="fas fa-cogs"></i>
+                                        </a>
+
                                         &nbsp;
                                         <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-edit"
                                             data-id="{{ $school->id }}"

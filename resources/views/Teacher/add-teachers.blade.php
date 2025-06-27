@@ -22,78 +22,86 @@ $controller = new Controller();
             <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
                 <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title mb-0 text-white">Create New School</h4>
-                        <a href="{{ route('school.allSchools') }}" class="btn btn-info">
-                            <i class="fas fa-school me-2"></i> All Schools
+                        <h4 class="card-title mb-0 text-white">Add Teacher</h4>
+                        <a href="{{ route('school.teachers', $school_id) }}" class="btn btn-info">
+                            <i class="fas fa-chalkboard-teacher"></i> All Teachers
                         </a>
                     </div>
                     <div class="card-body bg-light">
-                        <form id="createSchoolForm">
+                        <form id="createSchoolTeacher">
                             <div class="row">
+                                <input type="hidden" name="school_id" id="school_id" value="{{ $school_id }}">
                                 <div class="col-lg-6 col-md-12">
                                     <div class="form-group">
-                                        <label class="form-label">School Type</label>
-                                        <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_TYPE'), '', 'school_type');
-                                        ?>
+                                        <label class="form-label" for="surname">Surname</label>
+                                        <input type="text" id="surname" name="surname" class="form-control"
+                                            placeholder="Enter surname">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label" for="example-email">Email</label>
-                                        <input type="email" id="example-email" name="email" class="form-control"
-                                            placeholder="Email">
+                                        <label class="form-label" for="firstname">Firstname</label>
+                                        <input type="text" id="firstname" name="firstname" class="form-control"
+                                            placeholder="Enter firstname">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Gender</label>
-                                        <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_GENDER'), '', 'gender');
-                                        ?>
+                                        <label class="form-label" for="othername">Othername</label>
+                                        <input type="text" id="othername" name="othername" class="form-control"
+                                            placeholder="Enter other name(s)">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Regional Level</label>
-                                        <?php
-                                        echo Helper::DropMasterData(config('constants.options.REGIONAL_LEVEL'), '', 'regional_level');
-                                        ?>
+                                        <label class="form-label" for="initials">Initials</label>
+                                        <input type="text" id="initials" name="initials" class="form-control"
+                                            placeholder="Enter initials">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">School Ownership</label>
-                                        <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_OWNERSHIP'), '', 'school_ownership', 1);
-                                        ?>
+                                        <label class="form-label" for="phonenumber">Phone Number</label>
+                                        <input type="tel" id="phonenumber" name="phonenumber" class="form-control"
+                                            placeholder="Enter phone number">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Boarding Status</label>
-                                        <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_GENDER'), '', 'boarding_status', 1);
-                                        ?>
+                                        <label class="form-label" for="registration_number">Reg. No</label>
+                                        <input type="text" id="registration_number" name="registration_number"
+                                            class="form-control" placeholder="Enter registration number">
                                     </div>
                                 </div>
+
                                 <div class="col-lg-6 col-md-12">
                                     <div class="form-group">
-                                        <label class="form-label">School Name</label>
-                                        <input class="form-control" type="text" name="name">
+                                        <label class="form-label" for="gender">Gender</label>
+                                        <select id="gender" name="gender" class="form-control">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">School Products</label>
-                                        <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_PRODUCTS'), '', 'school_product', 1);
-                                        ?>
+                                        <label class="form-label" for="national_id">National ID No.</label>
+                                        <input type="text" id="national_id" name="national_id" class="form-control"
+                                            placeholder="Enter national ID number">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Registration Code</label>
-                                        <input class="form-control" type="search" name="registration_code">
+                                        <label class="form-label" for="address">Address</label>
+                                        <input type="text" id="address" name="address" class="form-control"
+                                            placeholder="Enter address">
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">Contact Phone Number</label>
-                                        <input class="form-control" type="tel" name="phone">
+                                        <label class="form-label" for="employee_number">Employee Number</label>
+                                        <input type="text" id="employee_number" name="employee_number"
+                                            class="form-control" placeholder="Enter employee number">
                                     </div>
                                     <div class="form-group mb-0">
-                                        <label class="form-label">Population</label>
-                                        <?php
-                                        echo Helper::DropMasterDataAsc(config('constants.options.SCHOOL_POPULATION'), '', 'population', 1);
-                                        ?>
+                                        <label class="form-label" for="group_teacher">Group Teacher Groups
+                                            (1,2,3,4,5)</label>
+                                        <select id="group_teacher" name="group_teacher" class="form-control">
+                                            <option value="" disabled selected>Select group</option>
+                                            <option value="1">Group 1</option>
+                                            <option value="2">Group 2</option>
+                                            <option value="3">Group 3</option>
+                                            <option value="4">Group 4</option>
+                                            <option value="5">Group 5</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="mt-4 text-left">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-paper-plane"></i> Submit
@@ -114,7 +122,7 @@ $controller = new Controller();
 
     <script>
         $(document).ready(function() {
-            $('#createSchoolForm').on('submit', function(e) {
+            $('#createSchoolTeacher').on('submit', function(e) {
                 e.preventDefault();
 
                 let isValid = true;
@@ -123,12 +131,15 @@ $controller = new Controller();
 
                 $form.find('.form-control, select').removeClass('is-invalid');
 
-                $form.find('input, select').each(function() {
-                    if (!$(this).val().trim()) {
-                        $(this).addClass('is-invalid');
+                const requiredFields = ['surname', 'firstname', 'phonenumber'];
 
-                        if ($(this).next('.invalid-feedback').length === 0) {
-                            $(this).after(
+                requiredFields.forEach(function(field) {
+                    let input = $form.find(`[name="${field}"]`);
+                    if (!input.val().trim()) {
+                        input.addClass('is-invalid');
+
+                        if (input.next('.invalid-feedback').length === 0) {
+                            input.after(
                                 '<div class="invalid-feedback">This field is required.</div>');
                         }
 
@@ -147,20 +158,19 @@ $controller = new Controller();
 
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You are about to submit the school data.",
+                    text: "You are about to submit the teacher data.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, submit it!',
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-
                         $submitBtn.prop('disabled', true);
                         const originalBtnHtml = $submitBtn.html();
                         $submitBtn.html('Saving...<i class="fas fa-spinner fa-spin"></i>');
 
                         $.ajax({
-                            url: '{{ route('schools.store') }}',
+                            url: '{{ route('teachers.store') }}',
                             method: 'POST',
                             data: $form.serialize(),
                             headers: {
@@ -169,14 +179,40 @@ $controller = new Controller();
                             success: function(response) {
                                 Swal.fire(
                                     'Submitted!',
-                                    'School has been created successfully.',
+                                    response.message,
                                     'success'
                                 );
                                 $form[0].reset();
                             },
-                            error: function(data) {
-                                $('body').html(data.responseText);
+                            error: function(xhr) {
+                                if (xhr.status === 422) {
+                                    let errors = xhr.responseJSON.errors;
+                                    for (let field in errors) {
+                                        let input = $form.find(`[name="${field}"]`);
+                                        input.addClass('is-invalid');
+                                        if (input.next('.invalid-feedback').length ===
+                                            0) {
+                                            input.after(
+                                                `<div class="invalid-feedback">${errors[field][0]}</div>`
+                                                );
+                                        }
+                                    }
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Validation Error',
+                                        text: 'Please fix the errors and try again.'
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An unexpected error occurred.'
+                                    });
+                                }
                             },
+                            // error: function(data) {
+                            //     $('body').html(data.responseText);
+                            // },
                             complete: function() {
                                 $submitBtn.prop('disabled', false).html(
                                     originalBtnHtml);

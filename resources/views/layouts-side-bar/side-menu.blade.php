@@ -23,9 +23,9 @@
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ route('school.create-school') }}">
+            <a class="side-menu__item" href="{{ route('school.allSchools') }}">
                 <i class="fa fa-school fa-2x mr-3"></i>
-                Create School
+                Schools
             </a>
         </li>
 
