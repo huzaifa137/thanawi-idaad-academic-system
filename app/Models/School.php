@@ -21,4 +21,9 @@ class School extends Model
         'date_added',
     ];
 
+    public function classrooms()
+    {
+        return $this->hasMany(Classroom::class);
+    }
+
 }

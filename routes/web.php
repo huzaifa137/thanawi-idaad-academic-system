@@ -106,11 +106,11 @@ Route::controller(StudentController::class)->group(function () {
             Route::get('/register', 'register')->name('users.register');
             Route::get('/terms-and-conditions', 'user_terms_and_conditions')->name('users.terms-and-conditions');
             Route::get('/user-otp', function () {
-                $userId       = session('userId');
-                $userEmail    = session('userEmail');
+                $userId = session('userId');
+                $userEmail = session('userEmail');
                 $userPassword = session('userPassword');
 
-                if (! $userId || ! $userEmail) {
+                if (!$userId || !$userEmail) {
                     return redirect()->route('users.login')->with('fail', 'You must be logged in');
                 }
 
@@ -327,5 +327,13 @@ Route::controller(TeacherController::class)->group(function () {
     Route::post('/teachers/update/{teacher}', 'storeUpdatedTeacherProfile')->name('teachers.update');
 
     Route::delete('/teachers/{id}', 'destroyTeacher')->name('teachers.destroy');
+
+});
+
+Route::controller(ClassandSubjectController::class)->group(function () {
+
+    Route::get('create-class', 'createClass')->name('school.create-class');
+
+    Route::post('/schools/store', 'storeSchool')->name('schools.store');
 
 });

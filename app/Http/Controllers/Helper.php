@@ -198,4 +198,29 @@ class Helper extends Controller
         return $recordName;
     }
 
+
+        public static function MasterRecordMerge($item1, $item2)
+        {
+            $items = [$item1, $item2];
+
+            $records = DB::table('master_datas')
+                ->whereIn('md_master_code_id', $items)
+                ->get(); 
+
+            return $records; 
+        }
+
+
+    public static function MasterRecords($md_master_code_id)
+    {
+
+        $records = DB::table('master_datas')
+                ->where('md_master_code_id', $md_master_code_id)
+                ->get(); 
+
+        return $records;
+
+    }
+
+
 }
