@@ -19,6 +19,8 @@ class SchoolController extends Controller
         session()->flush();
         $request->session()->put('LoggedAdmin', 1);
 
+        $request->session()->put('LoggedSchool', 457);
+
         return view('dashboard');
     }
 
@@ -26,6 +28,8 @@ class SchoolController extends Controller
     {
         session()->flush();
         $request->session()->put('LoggedStudent', 1);
+        $request->session()->put('LoggedAdmin', 1);
+        $request->session()->put('LoggedSchool', value: 2);
 
         return view('student.dashboard');
     }
@@ -44,9 +48,9 @@ class SchoolController extends Controller
 
     public function termDates($id)
     {
-        $school_id     = $id;
+        $school_id = $id;
         $academicYears = AcademicYear::orderBy('id', 'desc')->where('is_active', 1)->get();
-        $termDates     = TermDate::where('school_id', $school_id)->orderBy('term', 'asc')->get();
+        $termDates = TermDate::where('school_id', $school_id)->orderBy('term', 'asc')->get();
 
         return view('School.term-dates', compact('school_id', 'academicYears', 'termDates'));
     }
@@ -55,20 +59,20 @@ class SchoolController extends Controller
     {
 
         $validated = $request->validate([
-            'school_type'       => 'required|string|max:255',
-            'email'             => 'required|email',
-            'gender'            => 'required|string|max:50',
-            'regional_level'    => 'required|string|max:100',
-            'school_ownership'  => 'required|string|max:100',
-            'boarding_status'   => 'required|string|max:100',
-            'name'              => 'required|string|max:255',
-            'school_product'    => 'required',
+            'school_type' => 'required|string|max:255',
+            'email' => 'required|email',
+            'gender' => 'required|string|max:50',
+            'regional_level' => 'required|string|max:100',
+            'school_ownership' => 'required|string|max:100',
+            'boarding_status' => 'required|string|max:100',
+            'name' => 'required|string|max:255',
+            'school_product' => 'required',
             'registration_code' => 'required|string|max:50',
-            'phone'             => 'required|string|max:20',
-            'population'        => 'required|string',
+            'phone' => 'required|string|max:20',
+            'population' => 'required|string',
         ]);
 
-        $validated['added_by']   = Session('LoggedStudent');
+        $validated['added_by'] = Session('LoggedStudent');
         $validated['date_added'] = now();
 
         School::create($validated);
@@ -78,7 +82,7 @@ class SchoolController extends Controller
 
     public function editSchool($id)
     {
-        $school    = School::findOrFail($id);
+        $school = School::findOrFail($id);
         $school_id = $id;
 
         return view('School.edit-school', compact(['school', 'school_id']));
@@ -89,25 +93,25 @@ class SchoolController extends Controller
         $school = School::findOrFail($request->school_id);
 
         $validated = $request->validate([
-            'school_type'       => 'required|string|max:255',
-            'email'             => 'required|email',
-            'gender'            => 'required|string|max:50',
-            'regional_level'    => 'required|string|max:100',
-            'school_ownership'  => 'required|string|max:100',
-            'boarding_status'   => 'required|string|max:100',
-            'name'              => 'required|string|max:255',
-            'school_product'    => 'required',
+            'school_type' => 'required|string|max:255',
+            'email' => 'required|email',
+            'gender' => 'required|string|max:50',
+            'regional_level' => 'required|string|max:100',
+            'school_ownership' => 'required|string|max:100',
+            'boarding_status' => 'required|string|max:100',
+            'name' => 'required|string|max:255',
+            'school_product' => 'required',
             'registration_code' => 'required|string|max:50',
-            'phone'             => 'required|string|max:20',
-            'population'        => 'required|string',
+            'phone' => 'required|string|max:20',
+            'population' => 'required|string',
         ]);
 
         $school->update($validated);
 
         UpdateTracker::create([
-            'item_id'         => $request->school_id,
-            'item_category'   => 'School Information Updated',
-            'updated_by'      => session('LoggedStudent'),
+            'item_id' => $request->school_id,
+            'item_category' => 'School Information Updated',
+            'updated_by' => session('LoggedStudent'),
             'date_updated_on' => now(),
         ]);
 
@@ -131,7 +135,7 @@ class SchoolController extends Controller
 
     public function schoolProfile($id)
     {
-        $school  = School::findOrFail($id);
+        $school = School::findOrFail($id);
         $profile = SchoolProfile::where('school_id', $id)->first();
 
         return view('School.school-profile', compact('school', 'profile'));
@@ -139,12 +143,12 @@ class SchoolController extends Controller
 
     public function schoolOptions($id)
     {
-        $school  = School::findOrFail($id);
+        $school = School::findOrFail($id);
         $profile = SchoolProfile::where('school_id', $id)->first();
 
         $genderMasterDataCollection = MasterData::where('md_master_code_id', config('constants.options.SCHOOL_OPTIONALS'))->get();
 
-        $allDynamicFields  = collect();
+        $allDynamicFields = collect();
         $masterDataDetails = collect();
 
         if ($genderMasterDataCollection->isNotEmpty()) {
@@ -156,7 +160,7 @@ class SchoolController extends Controller
                 $allDynamicFields = $allDynamicFields->merge($dynamicFieldsForThisMasterData);
 
                 $masterDataDetails->push([
-                    'name'        => $masterData->md_name,
+                    'name' => $masterData->md_name,
                     'description' => $masterData->md_description ?? 'N/A',
                 ]);
             }
@@ -173,21 +177,21 @@ class SchoolController extends Controller
     public function storeSchoolProfile(Request $request)
     {
         $validated = $request->validate([
-            'school_id'         => 'required|integer|exists:schools,id',
-            'school_type'       => 'required|string|max:255',
-            'email'             => 'required|email|max:255',
-            'gender'            => 'required|string|max:50',
-            'boarding_status'   => 'required|string|max:100',
-            'name'              => 'required|string|max:255',
+            'school_id' => 'required|integer|exists:schools,id',
+            'school_type' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'gender' => 'required|string|max:50',
+            'boarding_status' => 'required|string|max:100',
+            'name' => 'required|string|max:255',
             'registration_code' => 'required|string|max:50',
-            'phone'             => 'required|string|max:20',
-            'population'        => 'required|string',
-            'motto'             => 'nullable|string|max:255',
-            'vision'            => 'nullable|string|max:255',
-            'admission_prefix'  => 'nullable|string|max:50',
-            'admission_start'   => 'nullable|string|max:50',
-            'admission_suffix'  => 'nullable|string|max:50',
-            'logo'              => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'phone' => 'required|string|max:20',
+            'population' => 'required|string',
+            'motto' => 'nullable|string|max:255',
+            'vision' => 'nullable|string|max:255',
+            'admission_prefix' => 'nullable|string|max:50',
+            'admission_start' => 'nullable|string|max:50',
+            'admission_suffix' => 'nullable|string|max:50',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $profile = SchoolProfile::where('school_id', $validated['school_id'])->first();
@@ -198,8 +202,8 @@ class SchoolController extends Controller
                 Storage::disk('public')->delete($profile->logo);
             }
 
-            $logoFile          = $request->file('logo');
-            $logoPath          = $logoFile->store('logos', 'public');
+            $logoFile = $request->file('logo');
+            $logoPath = $logoFile->store('logos', 'public');
             $validated['logo'] = $logoPath;
         } else if ($profile) {
             $validated['logo'] = $profile->logo;
@@ -240,17 +244,17 @@ class SchoolController extends Controller
     public function storeYear(Request $request)
     {
         $validated = $request->validate([
-            'name'       => 'required|string|max:255|unique:academic_years,name',
+            'name' => 'required|string|max:255|unique:academic_years,name',
             'start_date' => 'required|date',
-            'end_date'   => 'required|date|after_or_equal:start_date',
-            'is_active'  => 'required|boolean',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'is_active' => 'required|boolean',
         ]);
 
         $academicYear = AcademicYear::create($validated);
 
         return response()->json([
             'message' => 'Academic Year created successfully.',
-            'data'    => $academicYear,
+            'data' => $academicYear,
         ], 201);
     }
 
@@ -289,7 +293,7 @@ class SchoolController extends Controller
         $academicYear = AcademicYear::findOrFail($id);
 
         $validated = $request->validate([
-            'name'      => 'required|string|max:255|unique:academic_years,name,' . $id,
+            'name' => 'required|string|max:255|unique:academic_years,name,' . $id,
             'is_active' => 'required|boolean',
         ]);
 
@@ -303,7 +307,7 @@ class SchoolController extends Controller
 
         return response()->json([
             'message' => 'Academic Year updated successfully.',
-            'data'    => $academicYear,
+            'data' => $academicYear,
         ]);
     }
 
@@ -311,11 +315,11 @@ class SchoolController extends Controller
     {
         $validated = $request->validate([
             'academic_year_id' => 'required|exists:academic_years,id',
-            'term'             => 'required|string|max:255',
-            'start_date'       => 'required|date',
-            'school_id'        => 'required',
-            'end_date'         => 'required|date|after_or_equal:start_date',
-            'week_starts_on'   => 'required|in:1,2',
+            'term' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'school_id' => 'required',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'week_starts_on' => 'required|in:1,2',
         ]);
 
         $exists = TermDate::where('school_id', $validated['school_id'])
@@ -333,7 +337,7 @@ class SchoolController extends Controller
 
         return response()->json([
             'message' => 'Term date added successfully.',
-            'data'    => $termDate,
+            'data' => $termDate,
         ], 201);
     }
 

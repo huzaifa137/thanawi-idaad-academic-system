@@ -19,7 +19,7 @@ $controller = new Controller();
         <div class="card shadow-lg border-0 rounded-3">
             <div class="card-header d-flex justify-content-between align-items-center  bg-primary">
                 <h4 class="card-title mb-0 text-white">Configure School Options</h4>
-                <a href="{{ route('school.allSchools') }}" class="btn btn-secondary">
+                <a href="{{ route('school.allSchools') }}" class="btn btn-info">
                     <i class="fas fa-school me-2"></i> All Schools
                 </a>
             </div>

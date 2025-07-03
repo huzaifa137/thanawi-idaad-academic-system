@@ -21,7 +21,7 @@ $controller = new Controller();
                 <div class="card shadow-lg">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">{{ $school->name }} Profile</h4>
-                        <a href="{{ route('school.allSchools') }}" class="btn btn-secondary">
+                        <a href="{{ route('school.allSchools') }}" class="btn btn-info">
                             <i class="fas fa-school me-2"></i> All Schools
                         </a>
                     </div>

@@ -51,25 +51,37 @@ $controller = new Controller();
                         </div>
                     </div>
                     <div class="card-body bg-light">
-                        <form id="createSchoolForm">
+                        {{-- Form action will point to the update route, using the assignment's ID --}}
+                        <form id="editSubjectAssignmentForm" action="{{ route('assign.subjects.update', $assignment->id) }}" method="POST">
+                            @csrf
+                            @method('PUT') {{-- Required for PUT/PATCH requests in Laravel forms --}}
+
                             <div class="row">
                                 <div class="col-lg-6 col-md-12">
                                     <div class="form-group">
                                         <label class="form-label">Senior</label>
-                                        <select class="form-control select2" id="class_id" name="class_id">
+                                        <select class="form-control select2" id="class_id" name="class_id" disabled>
                                             <option value="">-- Select --</option>
                                             @foreach ($SecondaryClasses as $class)
-                                                <option value="{{ $class->md_id }}">{{ $class->md_name }}</option>
+                                                <option value="{{ $class->md_id }}" {{ $assignment->class_id == $class->md_id ? 'selected' : '' }}>
+                                                    {{ $class->md_name }}
+                                                </option>
                                             @endforeach
                                         </select>
+                                        {{-- Hidden field to still send the value if the select is disabled --}}
+                                        <input type="hidden" name="class_id" value="{{ $assignment->class_id }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-12">
                                     <div class="form-group">
                                         <label class="form-label">Stream</label>
                                         <?php
-    echo Helper::DropMasterData(config('constants.options.CLASS_STREAMS'), '', 'class_stream', 1);
-                                                                                                                                    ?>
+                                            // Assuming Helper::DropMasterData can accept a selected value as its second argument
+                                            // and an options array as its last argument to add 'disabled'
+                                            echo Helper::DropMasterData(config('constants.options.CLASS_STREAMS'), $assignment->stream_id, 'class_stream', 1, ['disabled' => true]);
+                                        ?>
+                                        {{-- Hidden field to still send the value if the select is disabled --}}
+                                        <input type="hidden" name="class_stream" value="{{ $assignment->stream_id }}">
                                     </div>
                                 </div>
                             </div>
@@ -79,12 +91,13 @@ $controller = new Controller();
                                     <label class="form-label">Technical Subjects</label>
                                     @foreach ($TECHNICAL_SUBJECTS as $subject)
                                         <div class="form-check">
-                                            {{-- Ensure unique IDs for checkboxes within each loop --}}
                                             <input class="form-check-input" type="checkbox"
-                                                id="technical-subject-{{ $loop->index }}" value="{{$subject->md_id}}">
-                                            {{-- Link label's 'for' attribute to the unique checkbox ID --}}
+                                                id="technical-subject-{{ $subject->md_id }}"
+                                                name="technical_subjects[]" {{-- IMPORTANT: Use array syntax for name --}}
+                                                value="{{ $subject->md_id }}"
+                                                {{ in_array($subject->md_id, $assignedSubjects['technical'] ?? []) ? 'checked' : '' }}>
                                             <label class="form-check-label"
-                                                for="technical-subject-{{ $loop->index }}">{{$subject->md_name}}</label>
+                                                for="technical-subject-{{ $subject->md_id }}">{{ $subject->md_name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -94,9 +107,12 @@ $controller = new Controller();
                                     @foreach ($OPTIONALS as $subject)
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
-                                                id="optional-subject-{{ $loop->index }}" value="{{$subject->md_id}}">
+                                                id="optional-subject-{{ $subject->md_id }}"
+                                                name="optionals[]" {{-- IMPORTANT: Use array syntax for name --}}
+                                                value="{{ $subject->md_id }}"
+                                                {{ in_array($subject->md_id, $assignedSubjects['optional'] ?? []) ? 'checked' : '' }}>
                                             <label class="form-check-label"
-                                                for="optional-subject-{{ $loop->index }}">{{$subject->md_name}}</label>
+                                                for="optional-subject-{{ $subject->md_id }}">{{ $subject->md_name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -106,9 +122,12 @@ $controller = new Controller();
                                     @foreach ($VOCATIONALS as $subject)
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
-                                                id="vocational-subject-{{ $loop->index }}" value="{{$subject->md_id}}">
+                                                id="vocational-subject-{{ $subject->md_id }}"
+                                                name="vocationals[]" {{-- IMPORTANT: Use array syntax for name --}}
+                                                value="{{ $subject->md_id }}"
+                                                {{ in_array($subject->md_id, $assignedSubjects['vocational'] ?? []) ? 'checked' : '' }}>
                                             <label class="form-check-label"
-                                                for="vocational-subject-{{ $loop->index }}">{{$subject->md_name}}</label>
+                                                for="vocational-subject-{{ $subject->md_id }}">{{ $subject->md_name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -117,10 +136,13 @@ $controller = new Controller();
                                     <label class="form-label">Mathematics</label>
                                     @foreach ($MATHEMATICS as $subject)
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="math-subject-{{ $loop->index }}"
-                                                value="{{$subject->md_id}}">
+                                            <input class="form-check-input" type="checkbox"
+                                                id="math-subject-{{ $subject->md_id }}"
+                                                name="mathematics[]" {{-- IMPORTANT: Use array syntax for name --}}
+                                                value="{{ $subject->md_id }}"
+                                                {{ in_array($subject->md_id, $assignedSubjects['mathematics'] ?? []) ? 'checked' : '' }}>
                                             <label class="form-check-label"
-                                                for="math-subject-{{ $loop->index }}">{{$subject->md_name}}</label>
+                                                for="math-subject-{{ $subject->md_id }}">{{ $subject->md_name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -134,9 +156,12 @@ $controller = new Controller();
                                     @foreach ($LANGUAGES as $subject)
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
-                                                id="language-subject-{{ $loop->index }}" value="{{$subject->md_id}}">
+                                                id="language-subject-{{ $subject->md_id }}"
+                                                name="languages[]" {{-- IMPORTANT: Use array syntax for name --}}
+                                                value="{{ $subject->md_id }}"
+                                                {{ in_array($subject->md_id, $assignedSubjects['language'] ?? []) ? 'checked' : '' }}>
                                             <label class="form-check-label"
-                                                for="language-subject-{{ $loop->index }}">{{$subject->md_name}}</label>
+                                                for="language-subject-{{ $subject->md_id }}">{{ $subject->md_name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -146,9 +171,12 @@ $controller = new Controller();
                                     @foreach ($SCIENCES as $subject)
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
-                                                id="science-subject-{{ $loop->index }}" value="{{$subject->md_id}}">
+                                                id="science-subject-{{ $subject->md_id }}"
+                                                name="sciences[]" {{-- IMPORTANT: Use array syntax for name --}}
+                                                value="{{ $subject->md_id }}"
+                                                {{ in_array($subject->md_id, $assignedSubjects['science'] ?? []) ? 'checked' : '' }}>
                                             <label class="form-check-label"
-                                                for="science-subject-{{ $loop->index }}">{{$subject->md_name}}</label>
+                                                for="science-subject-{{ $subject->md_id }}">{{ $subject->md_name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -158,9 +186,12 @@ $controller = new Controller();
                                     @foreach ($HUMANITIES as $subject)
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox"
-                                                id="humanity-subject-{{ $loop->index }}" value="{{$subject->md_id}}">
+                                                id="humanity-subject-{{ $subject->md_id }}"
+                                                name="humanities[]" {{-- IMPORTANT: Use array syntax for name --}}
+                                                value="{{ $subject->md_id }}"
+                                                {{ in_array($subject->md_id, $assignedSubjects['humanities'] ?? []) ? 'checked' : '' }}>
                                             <label class="form-check-label"
-                                                for="humanity-subject-{{ $loop->index }}">{{$subject->md_name}}</label>
+                                                for="humanity-subject-{{ $subject->md_id }}">{{ $subject->md_name }}</label>
                                         </div>
                                     @endforeach
                                 </div>
@@ -168,7 +199,7 @@ $controller = new Controller();
 
                             <div class="mt-4 text-left">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-paper-plane"></i> Submit
+                                    <i class="fas fa-save"></i> Update Assignment
                                 </button>
                             </div>
                         </form>

@@ -30,7 +30,7 @@
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ route('school.create-class') }}">
+            <a class="side-menu__item" href="{{ route('manage.classes') }}">
                 <i class="fa fa-chalkboard-teacher fa-2x mr-3"></i>
                 Classes
             </a>

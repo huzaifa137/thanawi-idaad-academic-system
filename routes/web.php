@@ -333,7 +333,24 @@ Route::controller(TeacherController::class)->group(function () {
 Route::controller(ClassandSubjectController::class)->group(function () {
 
     Route::get('create-class', 'createClass')->name('school.create-class');
+    Route::get('manage-classes', 'manageClasses')->name('manage.classes');
+    Route::get('manage-class-streams/{id}', 'manageClassStreams')->name('manage.class.streams');
+    Route::get('/class-stream-subjects/{classId}/{streamId}', 'attachedStreamSubjects')->name('class.stream.subjects');
+    Route::get('edit-class-subjects', 'editClassSubjects')->name('school.edit-class-subject');
 
     Route::post('/schools/store', 'storeSchool')->name('schools.store');
+    Route::post('/assign-class-supervisor', 'assignSupervisor')->name('class.assignSupervisor');
+    Route::post('/remove-class-supervisor', 'removeSupervisor')->name('class.removeSupervisor');
+    Route::post('/remove-class-teacher', 'removeClassTeacher')->name('class.removeClassTeacher');
+    Route::post('/assign-class-teacher', 'assignClassTeacher')->name('class.assignClassTeacher');
+
+    Route::delete('/streams/{stream}', 'deleteStream')->name('streams.delete');
+
+
+    // Route to display the edit form for a specific assignment
+    Route::get('/assign-subjects/{assignmentId}/edit', [ClassandSubjectController::class, 'edit'])->name('assign.subjects.edit');
+
+    // Route to handle the update submission for a specific assignment
+    Route::put('/assign-subjects/{assignmentId}', [ClassandSubjectController::class, 'update'])->name('assign.subjects.update');
 
 });
