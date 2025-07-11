@@ -30,6 +30,13 @@
         </li>
 
         <li class="slide">
+            <a class="side-menu__item" href="{{ route('school.teachers') }}">
+                <i class="fa fa-user-tie fa-2x mr-3"></i>
+                Teachers
+            </a>
+        </li>
+
+        <li class="slide">
             <a class="side-menu__item" href="{{ route('manage.classes') }}">
                 <i class="fa fa-chalkboard-teacher fa-2x mr-3"></i>
                 Classes
@@ -67,7 +74,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            document.getElementById('logoutMenu').addEventListener('click', function(event) {
+            document.getElementById('logoutMenu').addEventListener('click', function (event) {
                 event.preventDefault();
 
                 Swal.fire({

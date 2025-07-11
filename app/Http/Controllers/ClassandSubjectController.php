@@ -46,9 +46,8 @@ class ClassandSubjectController extends Controller
         ));
     }
 
-    public function storeSchool(Request $request)
+    public function storeClass(Request $request)
     {
-
         $request->validate([
             'class_id' => 'required',
             'class_stream' => 'required',
@@ -165,6 +164,91 @@ class ClassandSubjectController extends Controller
 
         $classroom->class_supervisor = null;
         $classroom->save();
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function assignSubjectTeacher1(Request $request)
+    {
+
+        $request->validate([
+            'subject_id' => 'required|exists:class_subjects,id',
+            'teacher_id' => 'required|exists:teachers,id',
+        ]);
+
+        $subject = ClassSubject::find($request->subject_id);
+
+        if ($subject->subject_teacher_1 !== null && $subject->subject_teacher_1 != $request->teacher_id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Subject Teacher already assigned to another teacher.',
+            ]);
+        }
+
+        $subject->subject_teacher_1 = $request->teacher_id;
+        $subject->save();
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function removeSubjectTeacher1(Request $request)
+    {
+        
+        $request->validate([
+            'subject_id' => 'required|exists:class_subjects,id',
+        ]);
+
+        $subject = ClassSubject::find($request->subject_id);
+
+        if (!$subject->subject_teacher_1) {
+            return response()->json(['status' => 'error', 'message' => 'No Subject Teacher to remove.']);
+        }
+
+        $subject->subject_teacher_1 = null;
+        $subject->save();
+
+        return response()->json(['status' => 'success']);
+    }
+
+
+     public function assignSubjectTeacher2(Request $request)
+    {
+
+        $request->validate([
+            'subject_id' => 'required|exists:class_subjects,id',
+            'teacher_id' => 'required|exists:teachers,id',
+        ]);
+
+        $subject = ClassSubject::find($request->subject_id);
+
+        if ($subject->subject_teacher_2 !== null && $subject->subject_teacher_2 != $request->teacher_id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Subject Teacher already assigned to another teacher.',
+            ]);
+        }
+
+        $subject->subject_teacher_2 = $request->teacher_id;
+        $subject->save();
+
+        return response()->json(['status' => 'success']);
+    }
+
+    public function removeSubjectTeacher2(Request $request)
+    {
+        
+        $request->validate([
+            'subject_id' => 'required|exists:class_subjects,id',
+        ]);
+
+        $subject = ClassSubject::find($request->subject_id);
+        
+        if (!$subject->subject_teacher_2) {
+            return response()->json(['status' => 'error', 'message' => 'No Subject Teacher to remove.']);
+        }
+
+        $subject->subject_teacher_2 = null;
+        $subject->save();
 
         return response()->json(['status' => 'success']);
     }

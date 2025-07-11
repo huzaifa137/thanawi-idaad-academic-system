@@ -46,16 +46,16 @@ class SchoolController extends Controller
         return view('School.all-schools', compact('schools'));
     }
 
-    public function termDates($id)
+    public function termDates()
     {
-        $school_id = $id;
+        $school_id = Session('LoggedSchool');
         $academicYears = AcademicYear::orderBy('id', 'desc')->where('is_active', 1)->get();
         $termDates = TermDate::where('school_id', $school_id)->orderBy('term', 'asc')->get();
 
         return view('School.term-dates', compact('school_id', 'academicYears', 'termDates'));
     }
 
-    public function storeSchool(Request $request)
+    public function createNewSchool(Request $request)
     {
 
         $validated = $request->validate([
@@ -133,10 +133,11 @@ class SchoolController extends Controller
         }
     }
 
-    public function schoolProfile($id)
+    public function schoolProfile()
     {
-        $school = School::findOrFail($id);
-        $profile = SchoolProfile::where('school_id', $id)->first();
+
+        $school = School::findOrFail(Session('LoggedSchool'));
+        $profile = SchoolProfile::where('school_id', Session('LoggedSchool'))->first();
 
         return view('School.school-profile', compact('school', 'profile'));
     }

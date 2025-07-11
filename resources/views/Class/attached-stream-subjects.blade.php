@@ -60,7 +60,7 @@ $controller = new Controller();
                                 <tbody> @forelse ($classSubjects as $key => $class)
                                     <?php
                                         $classInfo = DB::table('class_stream_assignments')->where('id',$class->class_stream_assignment_id)->first();
-                                    ?>
+                                   ?>
 
                                     <tr data-id="{{ $class->id }}">
                                         <td style="width:1px;">{{ $key + 1 }}</td>
@@ -71,23 +71,23 @@ $controller = new Controller();
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
                                                 <select name="teacher_id"
-                                                    class="form-select form-select-sm assign-supervisor form-control"
+                                                    class="form-select form-select-sm assign-subject-teacher-1 form-control"
                                                     data-class-id="{{ $class->id }}"
-                                                    data-current-supervisor="{{ $class->class_supervisor }}"
-                                                    {{ $class->class_supervisor ? 'disabled' : '' }}>
-                                                    <option value="">Select Supervisor</option>
+                                                    data-current-supervisor="{{ $class->subject_teacher_1 }}"
+                                                    {{ $class->subject_teacher_1 ? 'disabled' : '' }}>
+                                                    <option value="">Assign Teacher</option>
                                                     @foreach ($Teachers as $teacher)
                                                         <option value="{{ $teacher->id }}"
-                                                            {{ $class->class_supervisor == $teacher->id ? 'selected' : '' }}>
+                                                            {{ $class->subject_teacher_1 == $teacher->id ? 'selected' : '' }}>
                                                             {{ $teacher->surname }} {{ $teacher->firstname }}
                                                         </option>
                                                     @endforeach
                                                 </select>
 
-                                                @if ($class->class_supervisor)
+                                                @if ($class->subject_teacher_1)
                                                 &nbsp;
-                                                    <button class="btn btn-md btn-danger btn-remove-supervisor"
-                                                        data-class-id="{{ $class->id }}" title="Remove Supervisor">
+                                                    <button class="btn btn-md btn-danger btn-remove-subject-teacher-1"
+                                                        data-class-id="{{ $class->id }}" title="Remove Subject Teacher 1">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 @endif
@@ -96,23 +96,23 @@ $controller = new Controller();
                                          <td>
                                             <div class="d-flex align-items-center gap-2">
                                                 <select name="teacher_id"
-                                                    class="form-select form-select-sm assign-supervisor form-control"
+                                                    class="form-select form-select-sm assign-subject-teacher-2 form-control"
                                                     data-class-id="{{ $class->id }}"
-                                                    data-current-supervisor="{{ $class->class_supervisor }}"
-                                                    {{ $class->class_supervisor ? 'disabled' : '' }}>
-                                                    <option value="">Select Supervisor</option>
+                                                    data-current-supervisor="{{ $class->subject_teacher_2 }}"
+                                                    {{ $class->subject_teacher_2 ? 'disabled' : '' }}>
+                                                    <option value="">Assign Teacher</option>
                                                     @foreach ($Teachers as $teacher)
                                                         <option value="{{ $teacher->id }}"
-                                                            {{ $class->class_supervisor == $teacher->id ? 'selected' : '' }}>
+                                                            {{ $class->subject_teacher_2 == $teacher->id ? 'selected' : '' }}>
                                                             {{ $teacher->surname }} {{ $teacher->firstname }}
                                                         </option>
                                                     @endforeach
                                                 </select>
 
-                                                @if ($class->class_supervisor)
+                                                @if ($class->subject_teacher_2)
                                                 &nbsp;
-                                                    <button class="btn btn-md btn-danger btn-remove-supervisor"
-                                                        data-class-id="{{ $class->id }}" title="Remove Supervisor">
+                                                    <button class="btn btn-md btn-danger btn-remove-subject-teacher-2"
+                                                        data-class-id="{{ $class->id }}" title="Remove Subject Teacher 1">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 @endif
@@ -148,7 +148,7 @@ $controller = new Controller();
 <script>
     $(document).ready(function () {
         
-        $('.assign-supervisor').on('change', function () {
+        $('.assign-subject-teacher-1').on('change', function () {
             let classId = $(this).data('class-id');
             let teacherId = $(this).val();
             let selectElement = $(this);
@@ -160,11 +160,11 @@ $controller = new Controller();
 
             if (teacherId !== '') {
                 $.ajax({
-                    url: "{{ route('class.assignSupervisor') }}",
+                    url: "{{ route('class.assignSubjectTeacher1') }}",
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}",
-                        class_id: classId,
+                        subject_id: classId,
                         teacher_id: teacherId
                     },
                     success: function (response) {
@@ -172,30 +172,32 @@ $controller = new Controller();
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Assigned!',
-                                text: 'Class supervisor assigned successfully.',
+                                text: 'Subject Teacher 1 assigned successfully.',
                                 timer: 1500,
                                 showConfirmButton: false
                             });
                             selectElement.prop('disabled', true);
-                            // Optionally reload the page or row to show the delete icon
                             setTimeout(() => location.reload(), 1600);
                         } else {
                             Swal.fire('Error', response.message, 'error');
                         }
                     },
-                    error: function () {
-                        Swal.fire('Oops', 'Something went wrong. Try again.', 'error');
+                    // error: function () {
+                    //     Swal.fire('Oops', 'Something went wrong. Try again.', 'error');
+                    // }
+                    error: function(data) {
+                    $('body').html(data.responseText);
                     }
                 });
             }
         });
 
         // Remove Supervisor
-        $('.btn-remove-supervisor').on('click', function () {
+        $('.btn-remove-subject-teacher-1').on('click', function () {
             let classId = $(this).data('class-id');
             Swal.fire({
                 title: 'Are you sure?',
-                text: "Remove the assigned supervisor?",
+                text: "Remove assigned Subject Teacher 1 ?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -204,18 +206,18 @@ $controller = new Controller();
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ route('class.removeSupervisor') }}",
+                        url: "{{ route('class.removeSubjectTeacher1') }}",
                         type: "POST",
                         data: {
                             _token: "{{ csrf_token() }}",
-                            class_id: classId
+                            subject_id: classId
                         },
                         success: function (response) {
                             if (response.status === 'success') {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Removed!',
-                                    text: 'Supervisor removed successfully.',
+                                    text: 'Subject Teacher 1 removed successfully.',
                                     timer: 1500,
                                     showConfirmButton: false
                                 });
@@ -224,9 +226,104 @@ $controller = new Controller();
                                 Swal.fire('Error', response.message, 'error');
                             }
                         },
-                        error: function () {
-                            Swal.fire('Oops', 'Something went wrong.', 'error');
+                        // error: function () {
+                        //     Swal.fire('Oops', 'Something went wrong.', 'error');
+                        // }
+                        error: function(data) {
+                    $('body').html(data.responseText);
+                    }
+                    });
+                }
+            });
+        });
+    });
+
+      $(document).ready(function () {
+        
+        $('.assign-subject-teacher-2').on('change', function () {
+            let classId = $(this).data('class-id');
+            let teacherId = $(this).val();
+            let selectElement = $(this);
+
+            let current = selectElement.data('current-supervisor');
+            if (teacherId == current) {
+                return; 
+            }
+
+            if (teacherId !== '') {
+                $.ajax({
+                    url: "{{ route('class.assignSubjectTeacher2') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        subject_id: classId,
+                        teacher_id: teacherId
+                    },
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Assigned!',
+                                text: 'Subject Teacher 2 assigned successfully.',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                            selectElement.prop('disabled', true);
+                            setTimeout(() => location.reload(), 1600);
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
                         }
+                    },
+                    // error: function () {
+                    //     Swal.fire('Oops', 'Something went wrong. Try again.', 'error');
+                    // }
+                    error: function(data) {
+                    $('body').html(data.responseText);
+                    }
+                });
+            }
+        });
+
+        // Remove Supervisor
+        $('.btn-remove-subject-teacher-2').on('click', function () {
+            let classId = $(this).data('class-id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Remove assigned Subject Teacher 2 ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, remove it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('class.removeSubjectTeacher2') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            subject_id: classId
+                        },
+                        success: function (response) {
+                            if (response.status === 'success') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Removed!',
+                                    text: 'Subject Teacher 2 removed successfully.',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                                setTimeout(() => location.reload(), 1600);
+                            } else {
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        // error: function () {
+                        //     Swal.fire('Oops', 'Something went wrong.', 'error');
+                        // }
+                        error: function(data) {
+                    $('body').html(data.responseText);
+                    }
                     });
                 }
             });

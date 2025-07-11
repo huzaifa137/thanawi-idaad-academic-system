@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class TeacherController extends Controller
 {
@@ -98,14 +99,14 @@ class TeacherController extends Controller
         return response()->json(['message' => 'Teacher updated successfully']);
     }
 
-    public function schoolTeachers($id)
+    public function schoolTeachers()
     {
         $teachers = Teacher::with('school')
-            ->where('school_id', $id)
+            ->where('school_id', Session('LoggedSchool'))
             ->orderBy('surname')
             ->get();
 
-        $school_id = $id;
+        $school_id = Session('LoggedSchool');
 
         return view('Teacher.teachers-in-school', compact('teachers', 'school_id'));
     }

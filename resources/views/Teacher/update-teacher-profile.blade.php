@@ -63,20 +63,20 @@ $controller = new Controller();
 
                                                 <div class="form-group">
                                                     <label for="firstname" class="form-label">First Name</label>
-                                                    <input type="text" name="firstname" id="firstname"
-                                                        class="form-control" value="{{ $teacher->firstname }}">
+                                                    <input type="text" name="firstname" id="firstname" class="form-control"
+                                                        value="{{ $teacher->firstname }}">
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="othername" class="form-label">Other Name</label>
-                                                    <input type="text" name="othername" id="othername"
-                                                        class="form-control" value="{{ $teacher->othername }}">
+                                                    <input type="text" name="othername" id="othername" class="form-control"
+                                                        value="{{ $teacher->othername }}">
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="initials" class="form-label">Initials</label>
-                                                    <input type="text" name="initials" id="initials"
-                                                        class="form-control" value="{{ $teacher->initials }}">
+                                                    <input type="text" name="initials" id="initials" class="form-control"
+                                                        value="{{ $teacher->initials }}">
                                                 </div>
 
                                                 <div class="form-group">
@@ -102,9 +102,8 @@ $controller = new Controller();
                                                 <div class="form-group">
                                                     <label for="registration_number" class="form-label">Registration
                                                         Number</label>
-                                                    <input type="text" name="registration_number"
-                                                        id="registration_number" class="form-control"
-                                                        value="{{ $teacher->registration_number }}">
+                                                    <input type="text" name="registration_number" id="registration_number"
+                                                        class="form-control" value="{{ $teacher->registration_number }}">
                                                 </div>
 
                                                 <div class="form-group">
@@ -115,8 +114,8 @@ $controller = new Controller();
 
                                                 <div class="form-group">
                                                     <label for="address" class="form-label">Postal Address</label>
-                                                    <input type="text" name="address" id="address"
-                                                        class="form-control" value="{{ $teacher->address }}">
+                                                    <input type="text" name="address" id="address" class="form-control"
+                                                        value="{{ $teacher->address }}">
                                                 </div>
 
                                                 <div class="form-group">
@@ -127,9 +126,21 @@ $controller = new Controller();
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="group_teacher" class="form-label">Group/Title</label>
-                                                    <input type="text" name="group_teacher" id="group_teacher"
-                                                        class="form-control" value="{{ $teacher->group_teacher }}">
+                                                    <label class="form-label" for="group_teacher">Group Teacher Groups
+                                                        (1,2,3,4,5)</label>
+                                                    <select id="group_teacher" name="group_teacher" class="form-control">
+                                                        @if(empty($teacher->group_teacher))
+                                                            <option value="" disabled selected>Select group</option>
+                                                        @else
+                                                            <option value="{{ $teacher->group_teacher }}">
+                                                                Group {{ $teacher->group_teacher }}</option>
+                                                        @endif
+                                                        <option value="1">Group 1</option>
+                                                        <option value="2">Group 2</option>
+                                                        <option value="3">Group 3</option>
+                                                        <option value="4">Group 4</option>
+                                                        <option value="5">Group 5</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -177,8 +188,8 @@ $controller = new Controller();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $('#updateTeacherForm').on('submit', function(e) {
+        $(document).ready(function () {
+            $('#updateTeacherForm').on('submit', function (e) {
                 e.preventDefault();
 
                 let $form = $(this);
@@ -211,7 +222,7 @@ $controller = new Controller();
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Updated!',
@@ -244,10 +255,10 @@ $controller = new Controller();
                             //         });
                             //     }
                             // },
-                            error: function(data) {
+                            error: function (data) {
                                 $('body').html(data.responseText);
                             },
-                            complete: function() {
+                            complete: function () {
                                 $submitBtn.prop('disabled', false).html(
                                     originalBtnHtml);
                             }
@@ -263,7 +274,7 @@ $controller = new Controller();
     <script>
         function previewLogo(event) {
             const reader = new FileReader();
-            reader.onload = function() {
+            reader.onload = function () {
                 const output = document.getElementById('logoPreview');
                 output.src = reader.result;
             };

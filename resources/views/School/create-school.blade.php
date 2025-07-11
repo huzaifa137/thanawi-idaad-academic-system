@@ -160,7 +160,7 @@ $controller = new Controller();
                         $submitBtn.html('Saving...<i class="fas fa-spinner fa-spin"></i>');
 
                         $.ajax({
-                            url: '{{ route('schools.store') }}',
+                            url: '{{ route('create.new-school') }}',
                             method: 'POST',
                             data: $form.serialize(),
                             headers: {

@@ -54,7 +54,7 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                     <td class="fw-bold">{{ Helper::recordMdname($school->population) }}</td>
 
                                     <td class="d-flex align-items-center gap-1">
-                                        <a href="{{ route('profile.school', $school->id) }}"
+                                        <a href="{{ route('profile.school') }}"
                                             class="btn btn-sm btn-outline-info" title="View School Profile">
                                             <i class="fas fa-university"></i>
                                         </a>
@@ -85,13 +85,13 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                             }
                                         </style>
 
-                                        <a href="{{ route('school.term-dates', $school->id) }}"
+                                        <a href="{{ route('school.term-dates') }}"
                                             class="btn btn-sm btn-inline-pink" title="Select Date">
                                             <i class="fas fa-calendar-alt"></i>
                                         </a>
                                         &nbsp;
 
-                                        <a href="{{ route('school.teachers', $school->id) }}"
+                                        <a href="{{ route('school.teachers') }}"
                                             class="btn btn-sm btn-inline-orange" title="Teachers">
                                             <i class="fas fa-chalkboard-teacher"></i>
                                         </a>

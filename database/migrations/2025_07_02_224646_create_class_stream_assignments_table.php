@@ -15,8 +15,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('school_id');
             $table->unsignedBigInteger('class_id');
             $table->unsignedBigInteger('stream_id');
-            $table->unsignedBigInteger('subject_teacher_1')->nullable();
-            $table->unsignedBigInteger('subject_teacher_2')->nullable();
             $table->unsignedBigInteger('added_by')->nullable();
             $table->String('date_added')->nullable();
             $table->timestamps();

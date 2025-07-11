@@ -51,7 +51,7 @@ $controller = new Controller();
                         </div>
                     </div>
                     <div class="card-body bg-light">
-                        <form id="createSchoolForm">
+                        <form id="createClassForm">
                             <div class="row">
                                 <div class="col-lg-6 col-md-12">
                                     <div class="form-group">
@@ -186,7 +186,7 @@ $controller = new Controller();
 
     <script>
         $(document).ready(function () {
-            $('#createSchoolForm').on('submit', function (e) {
+            $('#createClassForm').on('submit', function (e) {
                 e.preventDefault();
 
                 let isValid = true;
@@ -301,7 +301,7 @@ $controller = new Controller();
                         dataToSend.humanities = humanities;
 
                         $.ajax({
-                            url: '{{ route('schools.store') }}',
+                            url: '{{ route('schools.class-store') }}',
                             method: 'POST',
                             data: JSON.stringify(dataToSend),
                             contentType: 'application/json',

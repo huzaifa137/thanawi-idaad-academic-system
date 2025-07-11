@@ -39,6 +39,7 @@ $controller = new Controller();
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th class="text-center">profile</th>
                                         <th>Surname</th>
                                         <th>Firstname</th>
                                         <th>Phone Number</th>
@@ -49,6 +50,13 @@ $controller = new Controller();
                                     @forelse ($teachers as $key => $teacher)
                                         <tr data-id="{{ $teacher->id }}">
                                             <td style="width:1px;">{{ $key + 1 }}</td>
+                                            <td class="text-center">
+                                          <img 
+                                            src="{{ $teacher?->teacher_profile ? asset('storage/' . $teacher->teacher_profile) : $teacher->teacher_profile ?? asset('assets/images/brand/uplogolight.png') }}"
+                                            class="img-fluid rounded-circle border p-2"
+                                            style="width: 100px; height: 100px; object-fit: cover;"
+                                            alt="Teacher Profile">
+                                        </td>
                                             <td>{{ $teacher->surname }}</td>
                                             <td>{{ $teacher->firstname }}</td>
                                             <td>{{ $teacher->phonenumber }}</td>
@@ -93,7 +101,7 @@ $controller = new Controller();
     <script>
         // Delete academic year functionality
         // Delete teacher functionality
-        $('tbody').on('click', '.btn-delete-teacher', function() {
+        $('tbody').on('click', '.btn-delete-teacher', function () {
             var teacherId = $(this).data('id');
             var row = $(this).closest('tr');
 
@@ -113,7 +121,7 @@ $controller = new Controller();
                         data: {
                             _token: '{{ csrf_token() }}'
                         },
-                        success: function(response) {
+                        success: function (response) {
                             row.remove();
                             Swal.fire(
                                 'Deleted!',
@@ -121,7 +129,7 @@ $controller = new Controller();
                                 'success'
                             );
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
                             Swal.fire(
                                 'Error!',
                                 'Something went wrong while deleting the teacher.',
@@ -135,7 +143,7 @@ $controller = new Controller();
     </script>
 
     <script>
-        $(document).on('click', '.btn-edit-teacher', function() {
+        $(document).on('click', '.btn-edit-teacher', function () {
             const teacherId = $(this).data('id');
 
             Swal.fire({
