@@ -663,3 +663,13 @@ function showLoading() {
             });
         });
     </script>
+
+
+MAIL BACKUP
+--------------------------------------------------------
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=huzaifabukenya227@gmail.com
+MAIL_PASSWORD=dmdzbelafzfsmelm
+MAIL_ENCRYPTION=tls

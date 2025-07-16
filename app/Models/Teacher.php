@@ -12,6 +12,8 @@ class Teacher extends Model
         'school_id',
         'surname',
         'firstname',
+        'email',
+        'password',
         'othername',
         'initials',
         'phonenumber',

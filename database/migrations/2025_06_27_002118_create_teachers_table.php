@@ -3,9 +3,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Hash;
 
-return new class extends Migration
-{
+
+return new class extends Migration {
 
     public function up()
     {
@@ -14,11 +15,14 @@ return new class extends Migration
             $table->unsignedBigInteger('school_id');
             $table->string('surname');
             $table->string('firstname');
+            $table->string('email');
+            $table->text('password')->default(Hash::make('H@ppy123'));
             $table->string('othername')->nullable();
             $table->string('initials')->nullable();
             $table->string('phonenumber');
             $table->string('registration_number')->nullable();
-            $table->enum('gender', ['male', 'female'])->nullable();;
+            $table->enum('gender', ['male', 'female'])->nullable();
+            ;
             $table->string('national_id')->nullable();
             $table->string('address')->nullable();
             $table->string('employee_number')->nullable();

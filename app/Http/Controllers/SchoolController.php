@@ -29,8 +29,8 @@ class SchoolController extends Controller
         session()->flush();
         $request->session()->put('LoggedStudent', 1);
         $request->session()->put('LoggedAdmin', 1);
-        $request->session()->put('LoggedSchool', value: 2);
-
+        $request->session()->put('LoggedSchool',  1);
+        
         return view('student.dashboard');
     }
 

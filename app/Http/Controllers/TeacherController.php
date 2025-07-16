@@ -1,7 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
+use DB;
+use Mail;
+use App\Models\User;
 use App\Models\Teacher;
+use Illuminate\Support\Str;
+use App\Models\password_reset_table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,23 +21,95 @@ class TeacherController extends Controller
 
     public function storeTeacher(Request $request)
     {
-
         $validated = $request->validate([
-            'school_id'           => 'required|exists:schools,id',
-            'surname'             => 'required|string|max:255',
-            'firstname'           => 'required|string|max:255',
-            'othername'           => 'nullable|string|max:255',
-            'initials'            => 'nullable|string|max:255',
-            'phonenumber'         => 'required|string|max:20',
+            'school_id' => 'required|exists:schools,id',
+            'surname' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'othername' => 'nullable|string|max:255',
+            'initials' => 'nullable|string|max:255',
+            'phonenumber' => 'required|string|max:20',
             'registration_number' => 'nullable|string|max:50',
-            'gender'              => 'nullable|in:male,female',
-            'national_id'         => 'nullable|string|max:50',
-            'address'             => 'nullable|string|max:500',
-            'employee_number'     => 'nullable|string|max:50',
-            'group_teacher'       => 'nullable|integer',
+            'gender' => 'nullable|in:male,female',
+            'national_id' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:500',
+            'employee_number' => 'nullable|string|max:50',
+            'group_teacher' => 'nullable|integer',
+            'email' => 'required',
         ]);
 
-        Teacher::create($validated);
+        $teacher = Teacher::create($validated);
+
+        // TEACHER USER ROLE STATUS ===> 5
+        // --------------------------------------
+
+        $password = $teacher->password;
+
+        $user = new User;
+
+        $user->username = $teacher->id;
+        $user->email = $teacher->email;
+        $user->user_role = 5;
+        $user->password = $password;
+        $user->save();
+
+        $token = Str::random(60);
+
+        $resetUrl = url('password/reset', $token);
+
+        $post = new password_reset_table();
+
+        $post->email = $teacher->email;
+        $post->token = $resetUrl;
+        $post->created_at = now();
+
+        $post->save();
+
+        $data = [
+            'email' => $teacher->email,
+            'username' => $teacher->surname,
+            'resetUrl' => $resetUrl,
+            'title' => 'SMART SCHOOLS O.T.P:Reset Password Link',
+        ];
+
+        Mail::send('emails.set_password', $data, function ($message) use ($data) {
+            $message->to($data['email'], $data['email'])->subject($data['title']);
+        });
+
+        dd('Implemented successfully....');
+        
+        // $email    = $request->email;
+        // $username = DB::table('teachers')->where('email', $email)->value('surname');
+
+        // $user = User::where('email', $email)->first();
+
+        // if ($user == null) {
+        //     return back()->withInput()->with('fail', 'The email provided is not registered in the system');
+        // } else {
+        //     $token = Str::random(60);
+
+        //     $resetUrl = url('password/reset', $token);
+
+        //     $post = new password_reset_table();
+
+        //     $post->email      = $email;
+        //     $post->token      = $resetUrl;
+        //     $post->created_at = now();
+
+        //     $post->save();
+
+        //     $data = [
+        //         'email'    => $email,
+        //         'username' => $username,
+        //         'resetUrl' => $resetUrl,
+        //         'title'    => 'SMART SCHOOLS O.T.P:Reset Password Link',
+        //     ];
+
+        //     Mail::send('emails.set_password', $data, function ($message) use ($data) {
+        //         $message->to($data['email'], $data['email'])->subject($data['title']);
+        //     });
+
+        //     // return back()->with('success', 'Link has been sent to your email : ' . ' ' . $email);
+        // }
 
         return response()->json(['message' => 'Teacher added successfully']);
     }
@@ -46,7 +123,7 @@ class TeacherController extends Controller
 
     public function teacherProfile($id)
     {
-        $teacher   = Teacher::with('school')->findOrFail($id);
+        $teacher = Teacher::with('school')->findOrFail($id);
         $school_id = $teacher->school_id;
 
         return view('Teacher.teacher-profile', compact('teacher', 'school_id'));
@@ -54,7 +131,7 @@ class TeacherController extends Controller
 
     public function updateteacherProfile($id)
     {
-        $teacher   = Teacher::with('school')->findOrFail($id);
+        $teacher = Teacher::with('school')->findOrFail($id);
         $school_id = $teacher->school_id;
 
         return view('Teacher.update-teacher-profile', compact('teacher', 'school_id'));
@@ -63,18 +140,18 @@ class TeacherController extends Controller
     public function storeUpdatedTeacherProfile(Request $request, Teacher $teacher)
     {
         $validated = $request->validate([
-            'surname'             => 'required|string|max:255',
-            'firstname'           => 'required|string|max:255',
-            'phonenumber'         => 'required|string|max:20',
-            'othername'           => 'nullable|string|max:255',
-            'initials'            => 'nullable|string|max:255',
+            'surname' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'phonenumber' => 'required|string|max:20',
+            'othername' => 'nullable|string|max:255',
+            'initials' => 'nullable|string|max:255',
             'registration_number' => 'nullable|string|max:50',
-            'gender'              => 'nullable|in:male,female',
-            'national_id'         => 'nullable|string|max:50',
-            'address'             => 'nullable|string|max:255',
-            'employee_number'     => 'nullable|string|max:50',
-            'group_teacher'       => 'nullable|integer|between:1,5',
-            'teacher_profile'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gender' => 'nullable|in:male,female',
+            'national_id' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:255',
+            'employee_number' => 'nullable|string|max:50',
+            'group_teacher' => 'nullable|integer|between:1,5',
+            'teacher_profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $profile = Teacher::where('id', $teacher->id)->first();
@@ -85,8 +162,8 @@ class TeacherController extends Controller
                 Storage::disk('public')->delete($profile->teacher_profile);
             }
 
-            $logoFile                     = $request->file('teacher_profile');
-            $logoPath                     = $logoFile->store('teacherProfiles', 'public');
+            $logoFile = $request->file('teacher_profile');
+            $logoPath = $logoFile->store('teacherProfiles', 'public');
             $validated['teacher_profile'] = $logoPath;
         } else if ($profile) {
             $validated['teacher_profile'] = $profile->teacher_profile;

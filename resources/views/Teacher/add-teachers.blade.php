@@ -73,6 +73,11 @@ $controller = new Controller();
                                         </select>
                                     </div>
                                     <div class="form-group">
+                                        <label class="form-label" for="email">Email</label>
+                                        <input type="text" id="email" name="email" class="form-control"
+                                            placeholder="Enter teacher email">
+                                    </div>
+                                    <div class="form-group">
                                         <label class="form-label" for="national_id">National ID No.</label>
                                         <input type="text" id="national_id" name="national_id" class="form-control"
                                             placeholder="Enter national ID number">
@@ -131,7 +136,7 @@ $controller = new Controller();
 
                 $form.find('.form-control, select').removeClass('is-invalid');
 
-                const requiredFields = ['surname', 'firstname', 'phonenumber'];
+                const requiredFields = ['surname', 'firstname', 'phonenumber', 'email'];
 
                 requiredFields.forEach(function(field) {
                     let input = $form.find(`[name="${field}"]`);
@@ -184,35 +189,35 @@ $controller = new Controller();
                                 );
                                 $form[0].reset();
                             },
-                            error: function(xhr) {
-                                if (xhr.status === 422) {
-                                    let errors = xhr.responseJSON.errors;
-                                    for (let field in errors) {
-                                        let input = $form.find(`[name="${field}"]`);
-                                        input.addClass('is-invalid');
-                                        if (input.next('.invalid-feedback').length ===
-                                            0) {
-                                            input.after(
-                                                `<div class="invalid-feedback">${errors[field][0]}</div>`
-                                                );
-                                        }
-                                    }
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Validation Error',
-                                        text: 'Please fix the errors and try again.'
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: 'An unexpected error occurred.'
-                                    });
-                                }
-                            },
-                            // error: function(data) {
-                            //     $('body').html(data.responseText);
+                            // error: function(xhr) {
+                            //     if (xhr.status === 422) {
+                            //         let errors = xhr.responseJSON.errors;
+                            //         for (let field in errors) {
+                            //             let input = $form.find(`[name="${field}"]`);
+                            //             input.addClass('is-invalid');
+                            //             if (input.next('.invalid-feedback').length ===
+                            //                 0) {
+                            //                 input.after(
+                            //                     `<div class="invalid-feedback">${errors[field][0]}</div>`
+                            //                     );
+                            //             }
+                            //         }
+                            //         Swal.fire({
+                            //             icon: 'error',
+                            //             title: 'Validation Error',
+                            //             text: 'Please fix the errors and try again.'
+                            //         });
+                            //     } else {
+                            //         Swal.fire({
+                            //             icon: 'error',
+                            //             title: 'Error',
+                            //             text: 'An unexpected error occurred.'
+                            //         });
+                            //     }
                             // },
+                            error: function(data) {
+                                $('body').html(data.responseText);
+                            },
                             complete: function() {
                                 $submitBtn.prop('disabled', false).html(
                                     originalBtnHtml);
