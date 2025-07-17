@@ -13,8 +13,6 @@
             </div>
         </div>
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
         <style>
             .toggle-password {
                 position: absolute;
@@ -24,22 +22,14 @@
                 cursor: pointer;
                 font-size: 18px;
                 color: #6c757d;
-                z-index: 10;
             }
 
-            .toggle-password.active i {
+            .toggle-password.active {
                 color: #007bff;
-            }
-
-            .is-invalid {
-                border-color: red;
-            }
-
-            .is-valid {
-                border-color: green;
             }
         </style>
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
         <div class="w-80 page-content">
             <div class="page-single-content">
@@ -47,8 +37,9 @@
                     <div class="row">
                         <div class="col-md-8 mx-auto d-block">
                             <div class="">
-                                <h1 class="mb-2">Reset Password</h1>
-                                <p class="text-muted">Please enter your new password for your account</p>
+                                <h1 class="mb-2">Set Password</h1>
+                                <p class="text-muted">Please set your password for your account : <span
+                                        style="color: green">{{$useremail}}</span></p>
 
                                 @if (Session::get('success'))
                                     <div class="alert alert-success">
@@ -62,48 +53,59 @@
                                     </div>
                                 @endif
 
-                                <form action="{{ route('user-store-new-password') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="generated_id" value="{{ $generated_id }}">
+                                <form action="{{ route('user-store-first-password') }}" method="POST">
 
-                                    <div class="input-group mb-4 position-relative">
+                                    <input type="hidden" name="generated_id" value="{{$generated_id}}">
+
+                                    @csrf
+                                    <div class="input-group mb-4">
                                         <span class="input-group-addon">
-                                            <!-- Lock SVG icon (optional) -->
                                             <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24"
                                                 viewBox="0 0 24 24" width="24">
-                                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                                <g fill="none">
+                                                    <path d="M0 0h24v24H0V0z" />
+                                                    <path d="M0 0h24v24H0V0z" opacity=".87" />
+                                                </g>
+                                                <path d="M6 20h12V10H6v10zm6-7c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"
+                                                    opacity=".3" />
                                                 <path
-                                                    d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-11h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v1H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v1H9V6z" />
+                                                    d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
                                             </svg>
                                         </span>
-                                        <input type="password" name="password" id="passwordInput" class="form-control"
+                                        <input type="password" name="password" class="form-control" id="passwordInput"
                                             placeholder="Enter password" required>
                                         <span class="toggle-password" toggle="#passwordInput">
                                             <i class="fa-solid fa-eye"></i>
                                         </span>
                                     </div>
+
                                     @error('password')
                                         <div style="color: red;">
                                             {{ $message }}
                                         </div>
                                     @enderror
 
-                                    <div class="input-group mb-4 position-relative">
+                                    <div class="input-group mb-4">
                                         <span class="input-group-addon">
-                                            <!-- Lock SVG icon (optional) -->
                                             <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24"
                                                 viewBox="0 0 24 24" width="24">
-                                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                                <g fill="none">
+                                                    <path d="M0 0h24v24H0V0z" />
+                                                    <path d="M0 0h24v24H0V0z" opacity=".87" />
+                                                </g>
+                                                <path d="M6 20h12V10H6v10zm6-7c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"
+                                                    opacity=".3" />
                                                 <path
-                                                    d="M12 17a2 2 0 100-4 2 2 0 000 4zm6-11h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v1H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v1H9V6z" />
+                                                    d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
                                             </svg>
                                         </span>
-                                        <input type="password" name="confirmPassword" id="confirmPasswordInput"
-                                            class="form-control" placeholder="Confirm password" required>
+                                        <input type="password" name="confirmPassword" class="form-control"
+                                            id="confirmPasswordInput" placeholder="Confirm password" required>
                                         <span class="toggle-password" toggle="#confirmPasswordInput">
                                             <i class="fa-solid fa-eye"></i>
                                         </span>
                                     </div>
+
                                     @error('confirmPassword')
                                         <div style="color: red;">
                                             {{ $message }}
@@ -114,12 +116,11 @@
                                         <div class="col-12">
                                             <button type="button" class="btn btn-lg btn-primary btn-block px-4"
                                                 onclick="confirmSubmission(this)">
-                                                <i class="fe fe-arrow-right"></i> Reset
+                                                <i class="fe fe-arrow-right"></i> Set Password
                                             </button>
                                         </div>
                                     </div>
                                 </form>
-
                             </div>
                             <div class="pt-4">
                                 <div class="font-weight-normal fs-16">Forget it <a class="btn-link font-weight-normal"
@@ -195,8 +196,8 @@
                 return;
             }
 
-            // $('input[name="password"]').addClass('is-valid');
-            // $('input[name="confirmPassword"]').addClass('is-valid');
+            $('input[name="password"]').addClass('is-valid');
+            $('input[name="confirmPassword"]').addClass('is-valid');
 
             Swal.fire({
                 title: 'Are you sure?',

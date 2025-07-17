@@ -24,7 +24,7 @@ $controller = new Controller();
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h3 class="card-title">Teachers</h3>
-                        <a href="{{ route('school.add-teachers', $school_id) }}" class="btn btn-sm btn-info">
+                        <a href="{{ route('school.add-teachers') }}" class="btn btn-sm btn-info">
                             <span
                                 class="rounded-circle bg-white text-info d-inline-flex align-items-center justify-content-center me-1"
                                 style="width: 20px; height: 20px;">

@@ -13,13 +13,12 @@
 </head>
 <body>
 
-    <h1>Summary of Password Reset Email</h1>
+    <h1>Reset Password</h1>
 
-    <p>Dear <span style="color:green"> {{ $username }}, </span></p>
+    <p>Dear <span style="color:blue;"> {{ $username }}, </span></p>
 
-    <p>This email is to inform you that a request has been made to reset the password for the supplier portal account associated with your email address, {{ $email }}. However, no changes have been made to your account at this time.</p>
-
-    <p>You can reset your password by clicking the provided link: {{ $resetUrl }}. If you did not request this password reset, please disregard this email, or you may inform us by replying directly. Remember, this is an automated message from the UP, so do not reply to this email.</p>
+    <p>Use this link to reset your password</p>
+    <p> <span style="font-weight: bold;">Link :</span> {{ $resetUrl }}. </p>
 
 </body>
 </html>

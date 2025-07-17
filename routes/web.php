@@ -60,10 +60,12 @@ Route::controller(UserController::class)->group(function () {
     });
 
     Route::get('password/reset/{id}', 'createNewPassword')->name('password/reset');
+    Route::get('password/set-password/{id}', 'createFirstPassword')->name('password.FirstPassword');
     Route::post('auth.save', 'save')->name('auth.save');
     Route::post('regenerate-otp', 'regenerateOTP')->name('regenerate-otp');
     Route::post('user-generate-forgot-password-link', 'generateForgotPasswordLink')->name('user-generate-forgot-password-link');
     Route::post('user-store-new-password', 'store_new_password')->name('user-store-new-password');
+    Route::post('user-store-first-password', 'store_first_password')->name('user-store-first-password');
     Route::post('supplier-user-otp-verification', 'supplierOtpVerification')->name('supplier-user-otp-verification');
     Route::get('reload-captcha', 'reload_captcha')->name('reload-captcha');
 });
@@ -325,7 +327,7 @@ Route::controller(SchoolController::class)->group(function () {
 
 Route::controller(TeacherController::class)->group(function () {
 
-    Route::get('add-teachers/{id}/', 'addTeachers')->name('school.add-teachers');
+    Route::get('add-teachers', 'addTeachers')->name('school.add-teachers');
     Route::get('/teachers', 'allTeachers')->name('teachers.all');
     Route::get('/school-teachers', 'schoolTeachers')->name('school.teachers');
     Route::get('/teacher-profile/{id}', 'teacherProfile')->name('teacher.profile');

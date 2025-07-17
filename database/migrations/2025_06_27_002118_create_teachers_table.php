@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('othername')->nullable();
             $table->string('initials')->nullable();
             $table->string('phonenumber')->nullable();
+            $table->string('registration_number')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->string('national_id')->nullable();
             $table->string('address')->nullable();

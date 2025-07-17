@@ -20,18 +20,18 @@ class UserController extends Controller
     {
         return $links = [
             [
-                "link_name"    => "Register new user",
+                "link_name" => "Register new user",
                 "link_address" => "users/users-register",
-                "link_icon"    => "fa-calendar",
-                "link_page"    => self::$page,
-                "link_right"   => "V",
+                "link_icon" => "fa-calendar",
+                "link_page" => self::$page,
+                "link_right" => "V",
             ],
             [
-                "link_name"    => "View users information",
+                "link_name" => "View users information",
                 "link_address" => "users/users-information",
-                "link_icon"    => "fa-search",
-                "link_page"    => self::$page,
-                "link_right"   => "V",
+                "link_icon" => "fa-search",
+                "link_page" => self::$page,
+                "link_right" => "V",
             ],
         ];
     }
@@ -39,7 +39,7 @@ class UserController extends Controller
     public function createNewPassword($id)
     {
         $generated_id = url('password/reset/' . $id);
-        $resetEntry   = DB::table('password_reset_tables')->where('token', $generated_id)->first();
+        $resetEntry = DB::table('password_reset_tables')->where('token', $generated_id)->first();
 
         if ($resetEntry) {
             if ($resetEntry->link_status == 0) {
@@ -56,33 +56,61 @@ class UserController extends Controller
         }
     }
 
+    public function createFirstPassword($id)
+    {
+        $generated_id = url('password/set-password/' . $id);
+        $resetEntry = DB::table('password_reset_tables')->where('token', $generated_id)->first();
+        $useremail = $resetEntry->email;
+
+        if ($resetEntry) {
+            if ($resetEntry->link_status == 0) {
+                if (now()->diffInMinutes($resetEntry->created_at) <= 30) {
+                    return view('users.set-first-pasword', compact(['generated_id', 'useremail']));
+                } else {
+                    return ('users.login')->with('fail', 'This reset password link has expired');
+                }
+            } else {
+                return redirect()->route('users.login')->with('fail', 'This link has already been used, request for a new link');
+            }
+        } else {
+            return redirect()->route('users.login')->with('fail', 'Invalid Link');
+        }
+    }
+
     public function generateForgotPasswordLink(Request $request)
     {
-        $email    = $request->email;
-        $username = DB::table('users')->where('email', $email)->value('username');
+        $email = $request->email;
+        $user_role = DB::table('users')->where('email', $email)->value('user_role');
+
+        if ($user_role == 5) {
+            // Teacher user-name
+            $username = DB::table('teachers')->where('email', $email)->value('surname');
+        } else {
+            $username = DB::table('users')->where('email', $email)->value('username');
+        }
 
         $user = User::where('email', $email)->first();
 
         if ($user == null) {
             return back()->withInput()->with('fail', 'The email provided is not registered in the system');
         } else {
-            $token = Str::random(60);
 
+            $token = Str::random(60);
             $resetUrl = url('password/reset', $token);
 
             $post = new password_reset_table();
 
-            $post->email      = $email;
-            $post->token      = $resetUrl;
+            $post->email = $email;
+            $post->token = $resetUrl;
             $post->created_at = now();
 
             $post->save();
 
             $data = [
-                'email'    => $email,
+                'email' => $email,
                 'username' => $username,
                 'resetUrl' => $resetUrl,
-                'title'    => 'UP O.T.P:Reset Password Link',
+                'title' => 'SMART SCHOOLS : Reset Password Link',
             ];
 
             Mail::send('emails.reset_email', $data, function ($message) use ($data) {
@@ -101,19 +129,20 @@ class UserController extends Controller
             ],
             [
                 'password.required' => 'The password field is required.',
-                'password.string'   => 'The password must be a string.',
-                'password.min'      => 'The password must be at least 6 characters.',
-                'password.regex'    => 'The password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+                'password.string' => 'The password must be a string.',
+                'password.min' => 'The password must be at least 6 characters.',
+                'password.regex' => 'The password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
             ],
         );
 
-        $password     = $request->password;
-        $confirm      = $request->confirmPassword;
+        $password = $request->password;
+        $confirm = $request->confirmPassword;
         $generated_id = $request->generated_id;
 
         if ($password == $confirm) {
-            $record     = DB::table('password_reset_tables')->where('token', $generated_id)->first();
-            $record_id  = $record->id;
+
+            $record = DB::table('password_reset_tables')->where('token', $generated_id)->first();
+            $record_id = $record->id;
             $user_email = $record->email;
 
             $new_password = Hash::make($password);
@@ -122,9 +151,55 @@ class UserController extends Controller
                 ->where('email', $user_email)
                 ->update(['password' => $new_password]);
 
-            $post              = password_reset_table::find($record_id);
+            $post = password_reset_table::find($record_id);
             $post->link_status = 1;
             $post->save();
+
+            return redirect()->route('users.login')->with('success', 'Password has been updated successfully');
+        } else {
+            return back()->with('fail', 'Passwords do not match');
+        }
+    }
+
+
+    public function store_first_password(Request $request)
+    {
+        $request->validate(
+            [
+                'password' => ['required', 'string', 'min:6', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/', 'regex:/[@$!%*?&#]/'],
+            ],
+            [
+                'password.required' => 'The password field is required.',
+                'password.string' => 'The password must be a string.',
+                'password.min' => 'The password must be at least 6 characters.',
+                'password.regex' => 'The password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+            ],
+        );
+
+        $password = $request->password;
+        $confirm = $request->confirmPassword;
+        $generated_id = $request->generated_id;
+
+        if ($password == $confirm) {
+
+            $record = DB::table('password_reset_tables')->where('token', $generated_id)->first();
+            $record_id = $record->id;
+            $user_email = $record->email;
+
+            $new_password = Hash::make($password);
+
+            DB::table('users')
+                ->where('email', $user_email)
+                ->update(['password' => $new_password]);
+
+            $userId = DB::table('users')
+                ->where('email', $user_email)->value('id');
+
+            $post = password_reset_table::find($record_id);
+            $post->link_status = 1;
+            $post->save();
+
+            $request->session()->put('LoggedStudent', $userId);
 
             return redirect()->route('users.login')->with('success', 'Password has been updated successfully');
         } else {
@@ -141,14 +216,14 @@ class UserController extends Controller
         $otp_4 = $request->input('otp_4');
         $otp_5 = $request->input('otp_5');
 
-        $new_otp      = $otp_1 . $otp_2 . $otp_3 . $otp_4 . $otp_5;
-        $user_id      = $request->input('hidden_otp');
+        $new_otp = $otp_1 . $otp_2 . $otp_3 . $otp_4 . $otp_5;
+        $user_id = $request->input('hidden_otp');
         $userPassword = $request->input('userPassword');
 
-        $temp_otp_stored   = DB::table('users')->where('email', $user_id)->value('temp_otp');
+        $temp_otp_stored = DB::table('users')->where('email', $user_id)->value('temp_otp');
         $supplier_username = DB::table('users')->where('email', $user_id)->value('username');
-        $userId            = DB::table('users')->where('email', $user_id)->value('id');
-        $userRole          = DB::table('users')->where('email', $user_id)->value('user_role');
+        $userId = DB::table('users')->where('email', $user_id)->value('id');
+        $userRole = DB::table('users')->where('email', $user_id)->value('user_role');
 
         if ($new_otp == $temp_otp_stored) {
 
@@ -165,10 +240,10 @@ class UserController extends Controller
             $user = DB::table('users')->where('id', $userId)->first();
 
             $data = [
-                'email'    => $user->email,
+                'email' => $user->email,
                 'username' => $user->username,
                 'password' => session('userPassword'),
-                'title'    => 'UgandanProgrammer - User Account has been created successfully.',
+                'title' => 'UgandanProgrammer - User Account has been created successfully.',
             ];
 
             try {
@@ -180,28 +255,28 @@ class UserController extends Controller
                 return back()->with('error', 'Email Not, Check Internet or re-register');
             }
 
-            $url  = '/';
+            $url = '/';
             $url2 = session()->get('url.intended');
             $url3 = '/student/dashboard';
 
             if ($userRole != 1) {
                 if ($url2 != null) {
                     return response()->json([
-                        'status'       => true,
-                        'message'      => 'Login successful',
+                        'status' => true,
+                        'message' => 'Login successful',
                         'redirect_url' => $url2,
                     ]);
                 }
 
                 return response()->json([
-                    'status'       => true,
-                    'message'      => 'Login successful',
+                    'status' => true,
+                    'message' => 'Login successful',
                     'redirect_url' => $url,
                 ]);
             } else {
                 return response()->json([
-                    'status'       => true,
-                    'message'      => 'Login successful',
+                    'status' => true,
+                    'message' => 'Login successful',
                     'redirect_url' => $url3,
                 ]);
             }
@@ -209,8 +284,8 @@ class UserController extends Controller
         } else {
 
             return response()->json([
-                'status'  => false,
-                'title'   => 'Invalid OTP',
+                'status' => false,
+                'title' => 'Invalid OTP',
                 'message' => 'Entered OTP is invalid, please check your email for correct OTP code',
             ]);
         }
@@ -267,7 +342,7 @@ class UserController extends Controller
     {
 
         $request->validate([
-            'email'    => [
+            'email' => [
                 'required',
                 'email',
                 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
@@ -285,9 +360,9 @@ class UserController extends Controller
 
         $userInfo = User::where('email', '=', $request->email)->first();
 
-        if (! $userInfo) {
+        if (!$userInfo) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'We dont recognise the above email or password',
             ]);
         } else {
@@ -299,23 +374,23 @@ class UserController extends Controller
 
                 if ($registrationStatus == 0) {
 
-                    $new_otp      = rand(10000, 99999);
+                    $new_otp = rand(10000, 99999);
                     $generatedOTP = $new_otp;
 
-                    $userId    = DB::table('users')->where('email', $request->email)->value('id');
+                    $userId = DB::table('users')->where('email', $request->email)->value('id');
                     $user_mail = DB::table('users')->where('email', $request->email)->value('email');
-                    $username  = DB::table('users')->where('email', $request->email)->value('username');
+                    $username = DB::table('users')->where('email', $request->email)->value('username');
 
                     DB::table('users')
                         ->where('email', $request->email)
                         ->update(['temp_otp' => $new_otp]);
 
                     $data = [
-                        'subject'      => 'UP OTP LOGIN',
-                        'body'         => 'Enter the Sent OTP to Login : ',
+                        'subject' => 'UP OTP LOGIN',
+                        'body' => 'Enter the Sent OTP to Login : ',
                         'generatedOTP' => $generatedOTP,
-                        'username'     => $username,
-                        'email'        => $user_mail,
+                        'username' => $username,
+                        'email' => $user_mail,
                     ];
 
                     if ($user_mail) {
@@ -332,14 +407,14 @@ class UserController extends Controller
                         $request->session()->put('userPassword', $request->password);
 
                         return response()->json([
-                            'status'       => true,
-                            'message'      => 'OTP has been sent,check your email to proceed',
+                            'status' => true,
+                            'message' => 'OTP has been sent,check your email to proceed',
                             'redirect_url' => '/users/user-otp',
                         ]);
                     }
                 } else {
 
-                    $userId   = DB::table('users')->where('email', $request->email)->value('id');
+                    $userId = DB::table('users')->where('email', $request->email)->value('id');
                     $userRole = DB::table('users')->where('email', $request->email)->value('user_role');
 
                     if ($userRole != 1) {
@@ -348,28 +423,28 @@ class UserController extends Controller
                         $request->session()->put('LoggedStudent', $userId);
                     }
 
-                    $url  = '/';
+                    $url = '/';
                     $url2 = session()->get('url.intended');
                     $url3 = '/student/dashboard';
 
                     if ($userRole != 1) {
                         if ($url2 != null) {
                             return response()->json([
-                                'status'       => true,
-                                'message'      => 'Login successful',
+                                'status' => true,
+                                'message' => 'Login successful',
                                 'redirect_url' => $url2,
                             ]);
                         }
 
                         return response()->json([
-                            'status'       => true,
-                            'message'      => 'Login successful',
+                            'status' => true,
+                            'message' => 'Login successful',
                             'redirect_url' => $url,
                         ]);
                     } else {
                         return response()->json([
-                            'status'       => true,
-                            'message'      => 'Login successful',
+                            'status' => true,
+                            'message' => 'Login successful',
                             'redirect_url' => $url3,
                         ]);
                     }
@@ -377,7 +452,7 @@ class UserController extends Controller
             } else {
 
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Invalid password or Email being entered',
                 ]);
             }
@@ -387,23 +462,23 @@ class UserController extends Controller
     public function regenerateOTP(Request $request)
     {
 
-        $user_id      = $request->input('hidden_otp');
-        $new_otp      = rand(10000, 99999);
+        $user_id = $request->input('hidden_otp');
+        $new_otp = rand(10000, 99999);
         $generatedOTP = $new_otp;
 
         $user_mail = DB::table('users')->where('email', $user_id)->value('email');
-        $username  = DB::table('users')->where('email', $user_id)->value('username');
+        $username = DB::table('users')->where('email', $user_id)->value('username');
 
         DB::table('users')
             ->where('email', $user_id)
             ->update(['temp_otp' => $new_otp]);
 
         $data = [
-            'subject'      => 'UP RESENT OTP LOGIN',
-            'body'         => 'Enter the Sent OTP to Login : ',
+            'subject' => 'UP RESENT OTP LOGIN',
+            'body' => 'Enter the Sent OTP to Login : ',
             'generatedOTP' => $generatedOTP,
-            'username'     => $username,
-            'email'        => $user_mail,
+            'username' => $username,
+            'email' => $user_mail,
         ];
 
         if ($user_mail) {
@@ -413,7 +488,7 @@ class UserController extends Controller
         }
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'New OTP code has been sent to your email' . ' ' . $user_mail,
         ]);
     }
@@ -462,7 +537,7 @@ class UserController extends Controller
 
     public function userInformation(Request $request)
     {
-        $users   = User::all();
+        $users = User::all();
         $mc_code = DB::table('master_datas')
             ->join('master_codes', 'md_master_code_id', '=', 'master_codes.id')
             ->get();
@@ -470,7 +545,7 @@ class UserController extends Controller
         if ($request->ajax()) {
             return datatables()->of($users)
                 ->addColumn('action', function ($user) {
-                    $links   = [];
+                    $links = [];
                     $links[] = '<a class="dropdown-item" href="user-account-information/' . $user->id . '"><i class="fa fa-fw fa-eye"></i> View</a>';
                     $links[] = '<a class="dropdown-item" href="/users/edit-specific-user/' . $user->id . '"><i class="fa fa-fw fa-edit"></i> Edit</a>';
                     $links[] = '<a onclick="return confirm(\'Are you sure you want to delete ' . $user->firstname . ' ' . $user->lastname . '?\'); " class="dropdown-item" href="delete-user/' . $user->id . '"><i class="fa fa-fw fa-times"></i> Delete</a>';
@@ -488,8 +563,8 @@ class UserController extends Controller
         }
 
         return view('users.user-information', [
-            'mc_code'         => $mc_code,
-            'users'           => $users,
+            'mc_code' => $mc_code,
+            'users' => $users,
             'LoggedUserAdmin' => User::where('id', '=', session('LoggedAdmin'))->first(),
         ]);
     }
@@ -518,37 +593,37 @@ class UserController extends Controller
 
         $request->validate([
 
-            'email'       => 'required',
-            'firstname'   => 'required',
-            'lastname'    => 'required',
-            'username'    => 'required',
-            'gender'      => 'required',
-            'user_role'   => 'required',
+            'email' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'username' => 'required',
+            'gender' => 'required',
+            'user_role' => 'required',
             'phonenumber' => 'required',
-            'title'       => 'required',
+            'title' => 'required',
         ]);
 
         $role_name = $request->user_role;
 
         $userRoleId = DB::table('user_roles')->where('user_name', $role_name)->value('user_id');
 
-        $email          = $request->email;
-        $firstname      = $request->firstname;
-        $lastname       = $request->lastname;
-        $username       = $request->username;
-        $gender         = $request->gender;
-        $user_role      = $request->user_role;
-        $phonenumber    = $request->phonenumber;
+        $email = $request->email;
+        $firstname = $request->firstname;
+        $lastname = $request->lastname;
+        $username = $request->username;
+        $gender = $request->gender;
+        $user_role = $request->user_role;
+        $phonenumber = $request->phonenumber;
         $account_status = $request->account_status;
-        $title          = $request->title;
-        $user_title     = $request->user_title;
+        $title = $request->title;
+        $user_title = $request->user_title;
 
         $user_supervisior = $request->user_supervisor;
-        $passport         = $request->passport;
-        $country          = $request->country;
-        $password         = $request->password;
+        $passport = $request->passport;
+        $country = $request->country;
+        $password = $request->password;
 
-        $all_emails   = DB::table('users')->pluck('email');
+        $all_emails = DB::table('users')->pluck('email');
         $all_username = DB::table('users')->pluck('username');
 
         foreach ($all_emails as $specific_email) {
@@ -575,26 +650,26 @@ class UserController extends Controller
 
         DB::table('users')->where('id', $id)
             ->update([
-                'email'           => $email,
-                'firstname'       => $firstname,
-                'lastname'        => $lastname,
-                'username'        => $username,
-                'gender'          => $gender,
-                'user_role'       => $user_role,
-                'phonenumber'     => $phonenumber,
-                'account_status'  => $account_status,
-                'user_id'         => $userRoleId,
-                'Title'           => $title,
+                'email' => $email,
+                'firstname' => $firstname,
+                'lastname' => $lastname,
+                'username' => $username,
+                'gender' => $gender,
+                'user_role' => $user_role,
+                'phonenumber' => $phonenumber,
+                'account_status' => $account_status,
+                'user_id' => $userRoleId,
+                'Title' => $title,
                 'user_supervisor' => $user_supervisior,
-                'user_title'      => $user_title,
+                'user_title' => $user_title,
                 'passport_number' => $passport,
-                'country'         => $country,
+                'country' => $country,
             ]);
 
         $units = $request->requisitionunits;
 
         $currentTimestamp = time();
-        $twoYearsFromNow  = strtotime('+2 years', $currentTimestamp);
+        $twoYearsFromNow = strtotime('+2 years', $currentTimestamp);
 
         return back()->with('success', 'User Information has been updated successfully');
     }
@@ -625,33 +700,33 @@ class UserController extends Controller
         if (is_numeric($md_master_code_id)) {
 
             $master_code_name = DB::table('master_codes')->where('id', $md_master_code_id)->pluck('mc_name');
-            $master_code_id   = DB::table('master_codes')->where('id', $md_master_code_id)->pluck('mc_id');
+            $master_code_id = DB::table('master_codes')->where('id', $md_master_code_id)->pluck('mc_id');
 
             if (isset($master_code_name[0])) {
 
                 $master_code_name = $master_code_name[0];
-                $master_code_id   = $master_code_id[0];
+                $master_code_id = $master_code_id[0];
 
                 return view('master-logic.edit-record', $data, compact(['tb_record', 'selected', 'master_code_name', 'master_code_id', 'md_id']));
             } else {
                 $master_code_name = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_name');
-                $master_code_id   = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_id');
+                $master_code_id = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_id');
 
                 $master_code_name = $master_code_name[0];
-                $master_code_id   = $master_code_id[0];
+                $master_code_id = $master_code_id[0];
 
                 return view('master-logic.edit-record', $data, compact(['tb_record', 'selected', 'master_code_name', 'master_code_id', 'md_id']));
 
             }
         } else {
             $master_code_name = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_name');
-            $master_code_id   = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_id');
+            $master_code_id = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_id');
 
             $master_code_name = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_name');
-            $master_code_id   = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_id');
+            $master_code_id = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_id');
 
             $master_code_name = $master_code_name[0];
-            $master_code_id   = $master_code_id[0];
+            $master_code_id = $master_code_id[0];
 
             return view('master-logic.master-logic.edit-record', $data, compact(['tb_record', 'selected', 'master_code_name', 'master_code_id', 'md_id']));
 
@@ -670,7 +745,7 @@ class UserController extends Controller
 
         $request->validate([
             'username' => 'required',
-            'email'    => 'required|email|unique:users',
+            'email' => 'required|email|unique:users',
             'password' => [
                 'required',
                 'string',
@@ -682,23 +757,23 @@ class UserController extends Controller
             ],
         ], [
             'password.required' => 'The password field is required.',
-            'password.string'   => 'The password must be a string.',
-            'password.min'      => 'The password must be at least 6 characters.',
-            'password.regex'    => 'The password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+            'password.string' => 'The password must be a string.',
+            'password.min' => 'The password must be at least 6 characters.',
+            'password.regex' => 'The password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
         ]);
 
         $user = new User;
 
         $user->username = $request->username;
-        $user->email    = $request->email;
+        $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $save           = $user->save();
+        $save = $user->save();
 
         $data = [
-            'email'    => $request->email,
+            'email' => $request->email,
             'username' => $request->username,
             'password' => $request->password,
-            'title'    => 'UgandanProgrammer - User Account has been created successfully.',
+            'title' => 'UgandanProgrammer - User Account has been created successfully.',
         ];
 
         return back()->with('success', 'User account has been created successfully');
@@ -716,7 +791,7 @@ class UserController extends Controller
 
         $request->validate([
             'username' => 'required',
-            'email'    => 'required|email',
+            'email' => 'required|email',
         ]);
 
         if ($request->password != null && $request->confirmPassword != null) {
@@ -734,9 +809,9 @@ class UserController extends Controller
                 ],
                 [
                     'password.required' => 'The password field is required.',
-                    'password.string'   => 'The password must be a string.',
-                    'password.min'      => 'The password must be at least 6 characters.',
-                    'password.regex'    => 'The password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+                    'password.string' => 'The password must be a string.',
+                    'password.min' => 'The password must be at least 6 characters.',
+                    'password.regex' => 'The password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
                 ]
             );
         }
@@ -748,15 +823,16 @@ class UserController extends Controller
             User::updateOrCreate(
                 ['id' => $request->user_id],
                 [
-                    'username'    => $request->username,
-                    'email'       => $request->email,
-                    'password'    => Hash::make($password),
-                    'firstname'   => $request->firstname,
-                    'lastname'    => $request->lastname,
-                    'gender'      => $request->gender,
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'password' => Hash::make($password),
+                    'firstname' => $request->firstname,
+                    'lastname' => $request->lastname,
+                    'gender' => $request->gender,
                     'phonenumber' => $request->phonenumber,
-                    'country'     => $request->country,
-                ]);
+                    'country' => $request->country,
+                ]
+            );
 
             return back()->with('success', 'User account has been updated successfully');
 
@@ -765,14 +841,15 @@ class UserController extends Controller
             User::updateOrCreate(
                 ['id' => $request->user_id],
                 [
-                    'username'    => $request->username,
-                    'email'       => $request->email,
-                    'firstname'   => $request->firstname,
-                    'lastname'    => $request->lastname,
-                    'gender'      => $request->gender,
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'firstname' => $request->firstname,
+                    'lastname' => $request->lastname,
+                    'gender' => $request->gender,
                     'phonenumber' => $request->phonenumber,
-                    'country'     => $request->country,
-                ]);
+                    'country' => $request->country,
+                ]
+            );
 
             return back()->with('success', 'User account has been updated successfully');
         }
