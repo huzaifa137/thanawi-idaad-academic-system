@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
+
+Route::get('/welcome', function () {
+    return view('welcome');
+});
+
 Route::controller(UserController::class)->group(function () {
 
     Route::group(['prefix' => '/users'], function () {

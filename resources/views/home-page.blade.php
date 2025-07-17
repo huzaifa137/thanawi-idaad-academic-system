@@ -67,9 +67,9 @@
 <body>
 
     <?php
-    use App\Http\Controllers\Helper;
-    use App\Http\Controllers\Controller;
-    $controller = new Controller();
+use App\Http\Controllers\Helper;
+use App\Http\Controllers\Controller;
+$controller = new Controller();
     ?>
 
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
@@ -322,7 +322,7 @@
             <div class="col-md-12 text-center mt-5">
                 <a href="{{ url('/student/courses-and-lessons') }} " class="btn btn-primary">See All Courses</a>
             </div>
-            
+
         </div>
     </section>
 
@@ -569,16 +569,16 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="label" for="name">Full Name</label>
-                                                    <input type="text" class="form-control" name="name"
-                                                        id="name" placeholder="Enter your fullname" />
+                                                    <input type="text" class="form-control" name="name" id="name"
+                                                        placeholder="Enter your fullname" />
                                                 </div>
                                             </div>
 
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="label" for="email">Email Address</label>
-                                                    <input type="email" class="form-control" name="email"
-                                                        id="email" placeholder="Enter your email" />
+                                                    <input type="email" class="form-control" name="email" id="email"
+                                                        placeholder="Enter your email" />
                                                 </div>
                                             </div>
 
@@ -593,22 +593,22 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="label" for="subject">Subject</label>
-                                                    <input type="text" class="form-control" name="subject"
-                                                        id="subject" placeholder="Enter subject of your message" />
+                                                    <input type="text" class="form-control" name="subject" id="subject"
+                                                        placeholder="Enter subject of your message" />
                                                 </div>
                                             </div>
 
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label class="label" for="#">Message</label>
-                                                    <textarea name="message" class="form-control" id="message" cols="30" rows="4"
+                                                    <textarea name="message" class="form-control" id="message" cols="30"
+                                                        rows="4"
                                                         placeholder="please provide your message here"></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <input type="submit" value="Send Message"
-                                                        class="btn btn-primary" />
+                                                    <input type="submit" value="Send Message" class="btn btn-primary" />
                                                     <div class="submitting"></div>
                                                 </div>
                                             </div>
@@ -733,10 +733,9 @@
 
     <div id="ftco-loader" class="show fullscreen">
         <svg class="circular" width="48px" height="48px">
-            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4"
-                stroke="#eeeeee" />
-            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4"
-                stroke-miterlimit="10" stroke="#F96D00" />
+            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
+            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+                stroke="#F96D00" />
         </svg>
     </div>
 
@@ -763,8 +762,8 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            $('#submitUserInformation').on('click', function(e) {
+        document.addEventListener('DOMContentLoaded', function () {
+            $('#submitUserInformation').on('click', function (e) {
                 e.preventDefault();
 
                 var button = $(this);
@@ -864,7 +863,7 @@
                             data: form_data,
                             processData: false,
                             contentType: false,
-                            success: function(response) {
+                            success: function (response) {
                                 if (response.status) {
                                     Swal.fire({
                                         icon: 'success',
@@ -891,19 +890,22 @@
                                     '<i class="fe fe-arrow-right"></i> Create a new account'
                                 );
                             },
-                            error: function(data) {
-                                const response = data.responseJSON;
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    html: response?.message ??
-                                        'Unexpected error occurred.',
-                                    confirmButtonText: 'OK'
-                                });
+                            // error: function(data) {
+                            //     const response = data.responseJSON;
+                            //     Swal.fire({
+                            //         icon: 'error',
+                            //         title: 'Error',
+                            //         html: response?.message ??
+                            //             'Unexpected error occurred.',
+                            //         confirmButtonText: 'OK'
+                            //     });
 
-                                button.prop('disabled', false).html(
-                                    '<i class="fe fe-arrow-right"></i> Create a new account'
-                                );
+                            //     button.prop('disabled', false).html(
+                            //         '<i class="fe fe-arrow-right"></i> Create a new account'
+                            //     );
+                            // }
+                            error: function (data) {
+                                $('body').html(data.responseText);
                             }
                         });
                     } else {
@@ -914,8 +916,8 @@
             });
         });
 
-        $(document).ready(function() {
-            $('#contactForm').on('submit', function(e) {
+        $(document).ready(function () {
+            $('#contactForm').on('submit', function (e) {
                 e.preventDefault();
 
                 let name = $('#name').val().trim();
@@ -1001,12 +1003,12 @@
                             data: formData,
                             processData: false,
                             contentType: false,
-                            beforeSend: function() {
+                            beforeSend: function () {
                                 $('.submitting').html(
                                     '<i class="fa fa-spinner fa-spin"></i> Sending...'
                                 );
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 if (response.status) {
                                     Swal.fire('Success', response.message ||
                                         'Your message has been sent.', 'success');
@@ -1019,7 +1021,7 @@
                                 }
                                 $('.submitting').html('');
                             },
-                            error: function(data) {
+                            error: function (data) {
                                 $('body').html(data.responseText);
                             }
                         });
@@ -1042,7 +1044,8 @@
     <script src="/assets007/js/jquery.animateNumber.min.js"></script>
     <script src="/assets007/js/bootstrap-datepicker.js"></script>
     <script src="/assets007/js/scrollax.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
     <script src="/assets007/js/google-map.js"></script>
     <script src="/assets007/js/main.js"></script>
 </body>

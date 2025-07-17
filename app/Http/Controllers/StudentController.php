@@ -50,6 +50,8 @@ class StudentController extends Controller
         // 3.Suspended  ====> 9
         // 4.Active     ====> 10
 
+        dd($request->all());
+        
         $request->validate([
             'username' => 'required',
             'email'    => 'required|email|unique:users',

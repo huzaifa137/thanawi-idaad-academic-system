@@ -34,9 +34,9 @@ $controller = new Controller();
 
                                     <div class="text-center mb-4">
                                         <img id="logoPreview"
-                                            src="{{ $teacher?->logo ? asset('storage/' . $teacher->logo) : $teacher->logo ?? asset('assets/images/brand/uplogolight.png') }}"
+                                            src="{{ $teacher?->teacher_profile ? asset('storage/' . $teacher->teacher_profile) : $teacher->teacher_profile ?? asset('assets/images/brand/uplogolight.png') }}"
                                             class="img-fluid rounded border p-2"
-                                            style="max-height: 180px; object-fit: contain;" alt="School Logo">
+                                            style="max-height: 180px; object-fit: contain;" alt="Teacher Profile">
                                     </div>
 
                                     <form method="POST" action="#" enctype="multipart/form-data"
@@ -45,13 +45,6 @@ $controller = new Controller();
                                         @method('POST')
 
                                         <input type="hidden" name="school_id" value="{{ $teacher->school_id }}">
-
-
-                                        <div class="form-group mb-4">
-                                            <label class="form-label">Upload Teacher Profile</label>
-                                            <input type="file" name="logo" id="logoUpload" class="form-control"
-                                                accept="image/*" onchange="previewLogo(event)">
-                                        </div>
 
                                         <div class="row">
                                             <div class="col-md-6">

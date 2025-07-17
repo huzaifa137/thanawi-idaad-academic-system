@@ -18,18 +18,19 @@ class TeacherController extends Controller
     {
 
         $validated = $request->validate([
-            'school_id'           => 'required|exists:schools,id',
-            'surname'             => 'required|string|max:255',
-            'firstname'           => 'required|string|max:255',
-            'othername'           => 'nullable|string|max:255',
-            'initials'            => 'nullable|string|max:255',
-            'phonenumber'         => 'required|string|max:20',
+            'school_id' => 'required|exists:schools,id',
+            'surname' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'othername' => 'nullable|string|max:255',
+            'initials' => 'nullable|string|max:255',
+            'phonenumber' => 'required|string|max:20',
             'registration_number' => 'nullable|string|max:50',
-            'gender'              => 'nullable|in:male,female',
-            'national_id'         => 'nullable|string|max:50',
-            'address'             => 'nullable|string|max:500',
-            'employee_number'     => 'nullable|string|max:50',
-            'group_teacher'       => 'nullable|integer',
+            'gender' => 'nullable|in:male,female',
+            'national_id' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:500',
+            'employee_number' => 'nullable|string|max:50',
+            'group_teacher' => 'nullable|integer',
         ]);
 
         Teacher::create($validated);
@@ -46,7 +47,7 @@ class TeacherController extends Controller
 
     public function teacherProfile($id)
     {
-        $teacher   = Teacher::with('school')->findOrFail($id);
+        $teacher = Teacher::with('school')->findOrFail($id);
         $school_id = $teacher->school_id;
 
         return view('Teacher.teacher-profile', compact('teacher', 'school_id'));
@@ -54,7 +55,7 @@ class TeacherController extends Controller
 
     public function updateteacherProfile($id)
     {
-        $teacher   = Teacher::with('school')->findOrFail($id);
+        $teacher = Teacher::with('school')->findOrFail($id);
         $school_id = $teacher->school_id;
 
         return view('Teacher.update-teacher-profile', compact('teacher', 'school_id'));
@@ -63,18 +64,18 @@ class TeacherController extends Controller
     public function storeUpdatedTeacherProfile(Request $request, Teacher $teacher)
     {
         $validated = $request->validate([
-            'surname'             => 'required|string|max:255',
-            'firstname'           => 'required|string|max:255',
-            'phonenumber'         => 'required|string|max:20',
-            'othername'           => 'nullable|string|max:255',
-            'initials'            => 'nullable|string|max:255',
+            'surname' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'phonenumber' => 'required|string|max:20',
+            'othername' => 'nullable|string|max:255',
+            'initials' => 'nullable|string|max:255',
             'registration_number' => 'nullable|string|max:50',
-            'gender'              => 'nullable|in:male,female',
-            'national_id'         => 'nullable|string|max:50',
-            'address'             => 'nullable|string|max:255',
-            'employee_number'     => 'nullable|string|max:50',
-            'group_teacher'       => 'nullable|integer|between:1,5',
-            'teacher_profile'     => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gender' => 'nullable|in:male,female',
+            'national_id' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:255',
+            'employee_number' => 'nullable|string|max:50',
+            'group_teacher' => 'nullable|integer|between:1,5',
+            'teacher_profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $profile = Teacher::where('id', $teacher->id)->first();
@@ -85,8 +86,8 @@ class TeacherController extends Controller
                 Storage::disk('public')->delete($profile->teacher_profile);
             }
 
-            $logoFile                     = $request->file('teacher_profile');
-            $logoPath                     = $logoFile->store('teacherProfiles', 'public');
+            $logoFile = $request->file('teacher_profile');
+            $logoPath = $logoFile->store('teacherProfiles', 'public');
             $validated['teacher_profile'] = $logoPath;
         } else if ($profile) {
             $validated['teacher_profile'] = $profile->teacher_profile;

@@ -13,6 +13,8 @@ class Teacher extends Model
         'surname',
         'firstname',
         'othername',
+        'email',
+        'password',
         'initials',
         'phonenumber',
         'registration_number',
