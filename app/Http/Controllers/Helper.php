@@ -37,7 +37,7 @@ class Helper extends Controller
         return DB::table('users')
             ->where('id', $user)
             ->where('user_role', 1)
-            ->value('username');
+            ->value('id');
     }
 
     public static function category_name($user = "")

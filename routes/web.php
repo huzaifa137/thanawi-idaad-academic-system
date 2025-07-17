@@ -3,6 +3,7 @@
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SchoolController;
+use App\Mail\userMail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +18,9 @@ use Illuminate\Support\Facades\Route;
  */
 
 
-Route::get('/welcome', function () {
-    return view('welcome');
+Route::get('/send-test-mail', function () {
+    Mail::to('youremail@example.com')->send(new userMail());
+    return 'Email sent!';
 });
 
 Route::controller(UserController::class)->group(function () {

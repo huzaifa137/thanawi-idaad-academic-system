@@ -78,6 +78,11 @@ $controller = new Controller();
                                             placeholder="Enter teacher email">
                                     </div>
                                     <div class="form-group">
+                                        <label class="form-label" for="email">Email</label>
+                                        <input type="text" id="email" name="email" class="form-control"
+                                            placeholder="Enter teacher email">
+                                    </div>
+                                    <div class="form-group">
                                         <label class="form-label" for="national_id">National ID No.</label>
                                         <input type="text" id="national_id" name="national_id" class="form-control"
                                             placeholder="Enter national ID number">
@@ -136,7 +141,11 @@ $controller = new Controller();
 
                 $form.find('.form-control, select').removeClass('is-invalid');
 
+<<<<<<< HEAD
                 const requiredFields = ['surname', 'firstname', 'phonenumber','email'];
+=======
+                const requiredFields = ['surname', 'firstname', 'phonenumber', 'email'];
+>>>>>>> f673094e5fc32c4ff8baa30815d9a1114ffaa52f
 
                 requiredFields.forEach(function(field) {
                     let input = $form.find(`[name="${field}"]`);
