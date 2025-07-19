@@ -155,6 +155,16 @@ class UserController extends Controller
             $post->link_status = 1;
             $post->save();
 
+            $user = DB::table('users')
+                ->where('email', $user_email)
+                ->first();
+
+            if ($user->registration_status == 0) {
+                DB::table('users')
+                    ->where('id', $user->id)
+                    ->update(['registration_status' => 1]);
+            }
+            
             return redirect()->route('users.login')->with('success', 'Password has been updated successfully');
         } else {
             return back()->with('fail', 'Passwords do not match');
@@ -198,6 +208,10 @@ class UserController extends Controller
             $post = password_reset_table::find($record_id);
             $post->link_status = 1;
             $post->save();
+
+            DB::table('users')
+                ->where('id', $userId)
+                ->update(['registration_status' => 1]);
 
             $request->session()->put('LoggedStudent', $userId);
 

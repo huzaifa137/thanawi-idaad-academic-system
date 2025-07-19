@@ -161,17 +161,6 @@
                                         </button>
 
                                     </div>
-
-                                    <div class="col-12 mt-4">
-                                        <div class="alert alert-info text-center" role="alert">
-                                            <strong>New here?</strong> Click below to create your account.
-                                            <br>
-                                            <a href="{{ url('/users/register') }}" class="btn btn-secondary mt-2">
-                                                <i class="fe fe-user-plus"></i> Register Here
-                                            </a>
-                                        </div>
-                                    </div>
-
                                 </div>
                             </form>
 

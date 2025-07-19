@@ -12,10 +12,7 @@
     </style>
 </head>
 <body>
-
-    <h1>Reset Password</h1>
-
-    <p>Dear <span style="color:blue;"> {{ $username }}, </span></p>
+    <h4>Dear <span style="color:black;"> {{ $username }}, </span></h4>
 
     <p>Use this link to reset your password</p>
     <p> <span style="font-weight: bold;">Link :</span> {{ $resetUrl }}. </p>
