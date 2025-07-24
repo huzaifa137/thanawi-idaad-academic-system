@@ -637,6 +637,13 @@ function showLoading() {
 		$('#loading-gif').hide();
 	}
 
+            if ($permission_exists) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Permission was already created.',
+            ], 409); // <-- Return a 409 Conflict status code
+        }
+
 
     <script>
         document.getElementById('quiz-form').addEventListener('submit', function(e) {

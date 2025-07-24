@@ -722,8 +722,8 @@ $controller = new Controller();
                         &copy;
                         <script>
                             document.write(new Date().getFullYear());
-                        </script> Smart Schools. All rights reserved. Built for Ugandan
-                        developers.
+                        </script> Smart Schools. All rights reserved. Built By a Ugandan
+                        developer.
                     </p>
                 </div>
             </div>

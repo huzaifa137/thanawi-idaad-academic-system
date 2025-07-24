@@ -29,8 +29,8 @@ class SchoolController extends Controller
         session()->flush();
         $request->session()->put('LoggedStudent', 1);
         $request->session()->put('LoggedAdmin', 1);
-        $request->session()->put('LoggedSchool',  1);
-        
+        $request->session()->put('LoggedSchool', 2);
+
         return view('student.dashboard');
     }
 
@@ -350,4 +350,23 @@ class SchoolController extends Controller
         return response()->json(['message' => 'Term deleted successfully.']);
     }
 
+    public function selectSchool(Request $request)
+    {
+        $schoolId = $request->input('school_id');
+        $school = School::find($schoolId);
+
+        if (!$school) {
+            return response()->json([
+                'status' => false,
+                'message' => 'School not found.'
+            ]);
+        }
+
+        $request->session()->put('LoggedSchool', $schoolId);
+
+        return response()->json([
+            'status' => true,
+            'message' => "School switched to {$school->name}"
+        ]);
+    }
 }

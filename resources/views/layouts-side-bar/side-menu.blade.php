@@ -16,11 +16,6 @@
                 <i class="fa fa-home fa-2x mr-3"></i>
                 Dashboard </span></a>
         </li>
-        <li class="slide">
-            <a class="side-menu__item" href="{{ url('student/profile') }}">
-                <i class="fa fa-user fa-2x mr-3"></i>
-                Profile</span></a>
-        </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('school.allSchools') }}">
@@ -44,9 +39,9 @@
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ url('student/lessons-and-study') }}">
-                <i class="fa fa-book-open fa-2x mr-3"></i>
-                My Lessons
+            <a class="side-menu__item" href="{{ url('/user-rights-and-previledges/setup') }}">
+                <i class="fas fa-user-shield fa-2x mr-3"></i>
+                Rights & Previledges
             </a>
         </li>
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\UserRightsAndPreviledges;
 use App\Mail\userMail;
 use Illuminate\Support\Facades\Route;
 
@@ -135,124 +136,6 @@ Route::controller(StudentController::class)->group(function () {
     Route::get('/clear-session', 'flushSession');
 });
 
-// Route::controller(CourseController::class)->group(function () {
-
-//     Route::group(['prefix' => '/courses'], function () {
-
-//         Route::group(['middleware' => ['AdminAuth']], function () {
-//             Route::get('/add-course', 'addCourse')->name('users.register');
-//             Route::get('/all-courses', 'allCourses')->name('all.courses');
-//             Route::post('/store-course', 'storeCourse')->name('store.course');
-//             Route::get('/course-information/{course}', 'courseInformation')->name('courses.show');
-//             Route::get('/edit-course-information/{course}', 'editcourseInformation')->name('edit.courses.show');
-//             Route::get('/course-module', 'courseModule')->name('courses.module');
-//             Route::get('/add-course-module', 'addCourseModule')->name('all.courses.module');
-//             Route::get('/contact-us', 'contactUs')->name('contact.us');
-
-//             Route::delete('/delete-course/{course}', 'deletecourseInformation')->name('delete.course');
-//             Route::delete('/delete-module/{id}', 'deleteModuleInformation')->name('delete.course.module');
-
-//             Route::post('/admin/messages/{id}/response', 'updateMessageResponse')->name('admin.updateMessageResponse');
-//             Route::post('/update-course-information', 'updateCourseInformation')->name('update.course.information');
-//             Route::post('/save-course-module', 'saveCourseModule')->name('save.course.module');
-//             Route::put('/update-module/{id}', 'updateModule')->name('update.course.module');
-
-//         });
-//         Route::post('user-course-creation', 'userAccountCreation')->name('user-course-creation');
-//     });
-// });
-
-// Route::controller(ModuleController::class)->group(function () {
-
-//     Route::group(['prefix' => '/courses'], function () {
-
-//         Route::group(['middleware' => ['AdminAuth']], function () {
-
-//             Route::get('/add-course-module', 'addCourseModule')->name('all.courses.module');
-//             Route::get('/module-information/{couresId}', 'moduleInformation')->name('module.information');
-
-//             Route::put('/update-module/{id}', 'updateModule')->name('update.course.module');
-//             Route::post('/save-course-module', 'saveCourseModule')->name('save.course.module');
-//             Route::delete('/delete-module/{id}', 'deleteModuleInformation')->name('delete.course.module');
-//         });
-//     });
-// });
-
-// Route::controller(LessonController::class)->group(function () {
-
-//     Route::group(['prefix' => '/lessons'], function () {
-
-//         Route::group(['middleware' => ['AdminAuth']], function () {
-
-//             Route::get('/lesson-details/{id}', 'showLesson')->name('lessons.details');
-//             Route::get('/module-details/{LessonId}', 'moduleDetails')->name('module.details');
-
-//             Route::put('/update-lesson/{id}', 'updateModuleLesson')->name('update.module.lesson');
-//             Route::post('/save-module-lesson', 'saveModuleLesson')->name('save.module.lesson');
-//             Route::post('/{lesson}/complete', 'lessonComplete')->name('lessons.complete');
-
-//             Route::delete('/delete-lesson/{id}', 'deleteModuleLesson')->name('delete.module.lesson');
-
-//         });
-//     });
-// });
-
-// Route::controller(QuizController::class)->group(function () {
-
-//     Route::group(['middleware' => ['AdminAuth']], function () {
-
-//         Route::group(['prefix' => '/quiz'], function () {
-//             Route::get('/create-quiz', 'createQuiz')->name('quizzes.create.quiz');
-//             Route::post('/store-quiz', 'storeQuiz')->name('quizzes.store.quiz');
-//             Route::get('/all-quizze-and-assignments', 'allQuizzesAndAssignments')->name('all.quizzes');
-
-//             Route::get('/all-quizzes', 'allQuizzes')->name('all.quizzes');
-//             Route::get('/questions/create/{quiz}', 'createQuestions')->name('questions.create');
-
-//             Route::post('/questions/{quiz}', 'storeQuestions')->name('questions.store');
-//             Route::get('/show-questions/{quiz}', 'showQuizQuestions')->name('quizzes.show.questions');
-
-//             Route::get('/on-take/{quiz}', 'showQuizForm')->name('quizzes.ontake');
-//             Route::post('/{quiz}/submit', 'submitQuiz')->name('quizzes.submit');
-//             Route::get('/attempts/{quiz}', 'attempts')->name('quizzes.attempts');
-//             Route::get('/show/{quiz}', 'showQuizForm')->name('quizzes.show');
-//             Route::delete('/delete-quiz-questions/{id}', 'deleteQuizQuestion')->name('questions.destroy');
-//             Route::delete('/delete-quiz/{quiz}', 'deleteQuiz');
-
-//         });
-
-//         Route::group(['prefix' => '/assignments'], function () {
-//             Route::get('/create-assignment', 'createAssignment')->name('create.assignments');
-//             Route::get('/all-assignments', 'allAssignment')->name('all.assignments');
-//             Route::post('/storeAssignment', 'storeAssignment')->name('store.assignments');
-//         });
-
-//         Route::get('/get-course-modules/{course_id}', 'getCourseModules');
-//         Route::get('/get-course-lessons/{module_id}', 'getModuleLesson');
-
-//     });
-// });
-
-// Route::controller(codEditorController::class)->group(function () {
-
-//     Route::group(['middleware' => ['AdminAuth']], function () {
-
-//         Route::group(['prefix' => '/code-editor'], function () {
-
-//             Route::get('/programming', 'programmingCodeEditor');
-//         });
-
-//         Route::group(['prefix' => '/certificates'], function () {
-
-//             Route::get('/{course}/certificate/preview', 'preview')->name('certificate.preview');
-//             Route::get('/certificate/template/{course}', 'template')->name('certificate.template');
-//             Route::get('/all-preview', 'previewAllCertificates')->name('certificates.all');
-
-//         });
-
-//     });
-// });
-
 Route::controller(StudentController::class)->group(function () {
 
     Route::group(['middleware' => ['StudentAuth']], function () {
@@ -285,7 +168,6 @@ Route::controller(StudentController::class)->group(function () {
             Route::post('/enroll-course-cart-action/{id}', 'enrollCourseCartAction')->name('student.enroll.course.action');
             Route::post('/cart/update-quantity', 'updateQuantity')->name('cart.updateQuantity');
         });
-
     });
 
     Route::get('/student/view-course-information/{id}', 'viewCourseInformation')->name('view.course.information');
@@ -322,6 +204,7 @@ Route::controller(SchoolController::class)->group(function () {
 
     Route::delete('/academic-years/{id}', 'destroyTerm')->name('academic-years.destroy');
     Route::post('/store-term-dates', 'storeTermDate')->name('term-dates.store');
+    Route::post('/select-school', 'selectSchool')->name('school.select');
 
 });
 
@@ -369,4 +252,34 @@ Route::controller(ClassandSubjectController::class)->group(function () {
 
     Route::post('/assign-class-subject-teacher-two', 'assignSubjectTeacher2')->name('class.assignSubjectTeacher2');
     Route::post('/remove-class-subject-teacher-two', 'removeSubjectTeacher2')->name('class.removeSubjectTeacher2');
+});
+
+
+Route::controller(UserRightsAndPreviledges::class)->group(function () {
+
+    Route::group(['middleware' => ['StudentAuth']], function () {
+        Route::group(['prefix' => '/user-rights-and-previledges'], function () {
+
+            Route::get('/setup', 'setup')->name('all.roles.setup');
+            Route::get('/all-roles', 'allRoles')->name('all.users.roles');
+            Route::get('/all-permissions', 'allPermissions')->name('all.users.permissions');
+            Route::get('/assign-permissions', 'assignPermissions')->name('assign.users.permissions');
+        });
+
+        Route::get('/roles/{id}', 'editRole');
+        Route::put('/roles/{id}', 'updateRole');
+
+        Route::post('/store-role', 'storeRole')->name('store.role');
+        Route::post('/store-permission-role', 'storePermissionRole')->name('store.permission.role');
+        Route::post('/permissions/store-multiple', 'storeMultiplePermissions')
+            ->name('store.multiple.permissions');
+
+
+        Route::delete('/roles/{id}', 'deleteRole');
+        Route::delete('/permissions/delete', 'destroyGroup')->name('permissions.delete');
+    });
+
+    Route::group(['middleware' => ['AdminAuth']], function () {
+
+    });
 });

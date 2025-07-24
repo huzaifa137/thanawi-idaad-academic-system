@@ -1,6 +1,8 @@
 <?php
 namespace App\Models;
 
+use App\Models\Role;
+use App\Models\School;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -45,7 +47,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -53,25 +56,36 @@ class User extends Authenticatable
      *
      * @var array
      */
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    public function completedLessons()
+    public function roles()
     {
-        return $this->belongsToMany(Lesson::class)->withTimestamps();
-    }
-
-    public function quizzes()
-    {
-        return $this->belongsToMany(Quiz::class)
-            ->withPivot('score', 'total', 'attempt_number', 'completed_at')
+        return $this->belongsToMany(Role::class, 'role_user_school')
+            ->withPivot('school_id')
             ->withTimestamps();
     }
 
-    public function lessons()
+    public function schools()
     {
-        return $this->belongsToMany(Lesson::class, 'lesson_user')->withTimestamps();
+        return $this->belongsToMany(School::class, 'role_user_school')
+            ->withPivot('role_id')
+            ->withTimestamps();
     }
 
+    public function getRolesForSchool($schoolId)
+    {
+        return $this->roles()->wherePivot('school_id', $schoolId)->get();
+    }
+
+    public function hasPermission($permissionName, $schoolId)
+    {
+        return $this->roles()
+            ->wherePivot('school_id', $schoolId)
+            ->whereHas('permissions', function ($query) use ($permissionName) {
+                $query->where('name', $permissionName);
+            })->exists();
+    }
 }

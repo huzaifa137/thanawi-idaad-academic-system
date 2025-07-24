@@ -164,7 +164,7 @@ class UserController extends Controller
                     ->where('id', $user->id)
                     ->update(['registration_status' => 1]);
             }
-            
+
             return redirect()->route('users.login')->with('success', 'Password has been updated successfully');
         } else {
             return back()->with('fail', 'Passwords do not match');
@@ -323,13 +323,8 @@ class UserController extends Controller
 
     public function studentLogout()
     {
-        if (session()->has('LoggedStudent')) {
-            session()->flush();
-            return redirect('/');
-        } else {
-            return redirect('/');
-        }
-        return back();
+        session()->flush();
+        return redirect('/');
     }
 
     public function forgotPassword()
@@ -382,87 +377,34 @@ class UserController extends Controller
         } else {
             if (Hash::check($request->password, $userInfo->password)) {
 
-                $registrationStatus = DB::table('users')->where('email', $request->email)->value('registration_status');
+                $user = DB::table('users')->where('email', $request->email)->first();
+                $url1 = '/student/dashboard';
 
-                $user_check_email = $request->email;
+                if ($user->user_role == 5) {
+                    # Logged Teacher and School Information
+                    $school_id = DB::table('teachers')->where('id', $user->username)->value('school_id');
 
-                if ($registrationStatus == 0) {
+                    $request->session()->put('LoggedStudent', $user->username);
+                    $request->session()->put('LoggedSchool', $school_id);
 
-                    $new_otp = rand(10000, 99999);
-                    $generatedOTP = $new_otp;
-
-                    $userId = DB::table('users')->where('email', $request->email)->value('id');
-                    $user_mail = DB::table('users')->where('email', $request->email)->value('email');
-                    $username = DB::table('users')->where('email', $request->email)->value('username');
-
-                    DB::table('users')
-                        ->where('email', $request->email)
-                        ->update(['temp_otp' => $new_otp]);
-
-                    $data = [
-                        'subject' => 'UP OTP LOGIN',
-                        'body' => 'Enter the Sent OTP to Login : ',
-                        'generatedOTP' => $generatedOTP,
-                        'username' => $username,
-                        'email' => $user_mail,
-                    ];
-
-                    if ($user_mail) {
-                        try {
-                            Mail::send('emails.otp', $data, function ($message) use ($data) {
-                                $message->to($data['email'], $data['email'])->subject($data['subject']);
-                            });
-                        } catch (Exception $e) {
-                            return back()->with('error', 'Email Not, Check Internet or re-register');
-                        }
-
-                        $request->session()->put('userId', $userId);
-                        $request->session()->put('userEmail', $user_mail);
-                        $request->session()->put('userPassword', $request->password);
-
-                        return response()->json([
-                            'status' => true,
-                            'message' => 'OTP has been sent,check your email to proceed',
-                            'redirect_url' => '/users/user-otp',
-                        ]);
-                    }
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Login successful',
+                        'redirect_url' => $url1,
+                    ]);
                 } else {
+                    # Other Users
 
-                    $userId = DB::table('users')->where('email', $request->email)->value('id');
-                    $userRole = DB::table('users')->where('email', $request->email)->value('user_role');
+                    $user = User::where('email', '=', $request->email)->first();
+                    $request->session()->put('LoggedStudent', $user->username);
 
-                    if ($userRole != 1) {
-                        $request->session()->put('LoggedAdmin', $userId);
-                    } else {
-                        $request->session()->put('LoggedStudent', $userId);
-                    }
-
-                    $url = '/';
-                    $url2 = session()->get('url.intended');
-                    $url3 = '/student/dashboard';
-
-                    if ($userRole != 1) {
-                        if ($url2 != null) {
-                            return response()->json([
-                                'status' => true,
-                                'message' => 'Login successful',
-                                'redirect_url' => $url2,
-                            ]);
-                        }
-
-                        return response()->json([
-                            'status' => true,
-                            'message' => 'Login successful',
-                            'redirect_url' => $url,
-                        ]);
-                    } else {
-                        return response()->json([
-                            'status' => true,
-                            'message' => 'Login successful',
-                            'redirect_url' => $url3,
-                        ]);
-                    }
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Login successful',
+                        'redirect_url' => $url1,
+                    ]);
                 }
+
             } else {
 
                 return response()->json([
@@ -761,14 +703,14 @@ class UserController extends Controller
             'username' => 'required',
             'email' => 'required|email|unique:users',
             'password' => [
-                'required',
-                'string',
-                'min:6',
-                'regex:/[A-Z]/',
-                'regex:/[a-z]/',
-                'regex:/[0-9]/',
-                'regex:/[@$!%*?&#]/',
-            ],
+                    'required',
+                    'string',
+                    'min:6',
+                    'regex:/[A-Z]/',
+                    'regex:/[a-z]/',
+                    'regex:/[0-9]/',
+                    'regex:/[@$!%*?&#]/',
+                ],
         ], [
             'password.required' => 'The password field is required.',
             'password.string' => 'The password must be a string.',

@@ -93,7 +93,7 @@ class TeacherController extends Controller
     }
 
     public function updateteacherProfile($id)
-    {
+    {        
         $teacher = Teacher::with('school')->findOrFail($id);
         $school_id = $teacher->school_id;
 
