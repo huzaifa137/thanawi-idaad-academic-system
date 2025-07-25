@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\password_reset_table;
 use App\Models\User;
-use App\Models\user_role;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;

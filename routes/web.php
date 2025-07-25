@@ -274,9 +274,16 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
         Route::post('/permissions/store-multiple', 'storeMultiplePermissions')
             ->name('store.multiple.permissions');
 
-
         Route::delete('/roles/{id}', 'deleteRole');
         Route::delete('/permissions/delete', 'destroyGroup')->name('permissions.delete');
+
+        Route::post('/assign-permissions/{roleId}', 'storeRolePermissions')->name('storeRolePermissions');
+        Route::post('/remove-permissions/{roleId}/remove', 'removePermission');
+        Route::post('/assign-user-to-role', 'assignUserToRole')->name('assignUserToRole');
+        Route::post('/remove-user-from-role', 'removeUserFromRole')->name('removeUserFromRole');       
+
+        Route::get('/search-users', 'searchUsersByQuery')->name('searchUsersByQuery');
+
     });
 
     Route::group(['middleware' => ['AdminAuth']], function () {
