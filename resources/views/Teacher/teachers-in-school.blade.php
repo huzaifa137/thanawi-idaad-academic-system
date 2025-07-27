@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\Helper;
+use App\Helpers\PermissionHelper;
 use App\Http\Controllers\Controller;
 $controller = new Controller();
 ?>
@@ -51,30 +51,46 @@ $controller = new Controller();
                                         <tr data-id="{{ $teacher->id }}">
                                             <td style="width:1px;">{{ $key + 1 }}</td>
                                             <td class="text-center">
-                                          <img 
-                                            src="{{ $teacher?->teacher_profile ? asset('storage/' . $teacher->teacher_profile) : $teacher->teacher_profile ?? asset('assets/images/brand/uplogolight.png') }}"
-                                            class="img-fluid rounded-circle border p-2"
-                                            style="width: 100px; height: 100px; object-fit: cover;"
-                                            alt="Teacher Profile">
-                                        </td>
+                                                <img src="{{ $teacher?->teacher_profile ? asset('storage/' . $teacher->teacher_profile) : $teacher->teacher_profile ?? asset('assets/images/brand/uplogolight.png') }}"
+                                                    class="img-fluid rounded-circle border p-2"
+                                                    style="width: 100px; height: 100px; object-fit: cover;"
+                                                    alt="Teacher Profile">
+                                            </td>
                                             <td>{{ $teacher->surname }}</td>
                                             <td>{{ $teacher->firstname }}</td>
                                             <td>{{ $teacher->phonenumber }}</td>
                                             <td class="text-center">
-                                                <button class="btn btn-sm btn-info" title="View"
-                                                    onclick="window.location.href='{{ route('teacher.profile', $teacher->id) }}'">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
 
-                                                <button class="btn btn-sm btn-warning btn-edit-teacher" title="Edit"
-                                                    data-id="{{ $teacher->id }}">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
+                                                {{-- @if (PermissionHelper::userHasAllPermissions(session('LoggedStudent'), 155,
+                                                'school')) --}}
 
-                                                <button class="btn btn-sm btn-danger btn-delete-teacher" title="Delete"
-                                                    data-id="{{ $teacher->id }}">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
+                                                @if (PermissionHelper::userHasSpecificPermission(session('LoggedStudent'), 'view_155', 155, 'school'))
+                                                    <button class="btn btn-sm btn-info" title="View"
+                                                        onclick="window.location.href='{{ route('teacher.profile', $teacher->id) }}'">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                @endif
+
+                                                @if (PermissionHelper::userHasSpecificPermission(session('LoggedStudent'), 'edit_155', 155, 'school'))
+                                                    <button class="btn btn-sm btn-warning btn-edit-teacher" title="Edit"
+                                                        data-id="{{ $teacher->id }}">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                @endif
+
+                                                @if (PermissionHelper::userHasSpecificPermission(session('LoggedStudent'), 'delete_155', 155, 'school'))
+                                                    <button class="btn btn-sm btn-danger btn-delete-teacher" title="Delete"
+                                                        data-id="{{ $teacher->id }}">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                @endif
+
+                                                {{-- @else
+                                                <p style="color: red">Access restricted</p>
+                                                @endif --}}
+
+
+
                                             </td>
                                         </tr>
                                     @empty

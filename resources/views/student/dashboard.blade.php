@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Helper;
+use App\Helpers\PermissionHelper;
 use App\Http\Controllers\Controller;
 $controller = new Controller();
 ?>
@@ -19,11 +20,33 @@ $controller = new Controller();
 
         <div class="page-header">
             <h1 class="page-title">
-                Welcome,
-                {{-- @if (!empty($student->firstname) && !empty($student->lastname))
-                    {{ $student->firstname }} {{ $student->lastname }}
+
+                @if (PermissionHelper::userPermissionSectionAccess(session('LoggedStudent'), 158, 'school'))
+                    Welcome,
+
                 @else
-                    {{ $student->username }}
+
+                @endif
+
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                <script>
+                    @if(session('error'))
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Error',
+                            text: '{{ session('error') }}',
+                            timer: 7000,
+                            showConfirmButton: false
+                        });
+                    @endif
+                </script>
+
+
+                {{-- @if (!empty($student->firstname) && !empty($student->lastname))
+                {{ $student->firstname }} {{ $student->lastname }}
+                @else
+                {{ $student->username }}
                 @endif --}}
             </h1>
         </div>

@@ -6,6 +6,11 @@
         </a>
     </div>
 </div>
+
+<?php
+use App\Helpers\PermissionHelper;
+?>
+
 <aside class="app-sidebar app-sidebar3">
     <ul class="side-menu" style="margin-top:100px !important;">
 
@@ -24,13 +29,17 @@
             </a>
         </li>
 
-        <li class="slide">
-            <a class="side-menu__item" href="{{ route('school.teachers') }}">
-                <i class="fa fa-user-tie fa-2x mr-3"></i>
-                Teachers
-            </a>
-        </li>
+        @if (PermissionHelper::userPermissionSectionAccess(session('LoggedStudent'), 155, 'school'))
+            <li class="slide">
+                <a class="side-menu__item" href="{{ route('school.teachers') }}">
+                    <i class="fa fa-user-tie fa-2x mr-3"></i>
+                    Teachers
+                </a>
+            </li>
+        @else
 
+        @endif
+        
         <li class="slide">
             <a class="side-menu__item" href="{{ route('manage.classes') }}">
                 <i class="fa fa-chalkboard-teacher fa-2x mr-3"></i>

@@ -33,8 +33,6 @@
     }
 </script>
 
-
-
 // SESSEIONS
 
 @if (Session::get('success'))

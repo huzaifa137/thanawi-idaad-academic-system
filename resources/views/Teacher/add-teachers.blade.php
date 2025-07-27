@@ -72,7 +72,7 @@ $controller = new Controller();
                                             <option value="female">Female</option>
                                         </select>
                                     </div>
-                                     <div class="form-group">
+                                    <div class="form-group">
                                         <label class="form-label" for="Email">Email</label>
                                         <input type="text" id="email" name="email" class="form-control"
                                             placeholder="Enter teacher email">
@@ -89,8 +89,8 @@ $controller = new Controller();
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="employee_number">Employee Number</label>
-                                        <input type="text" id="employee_number" name="employee_number"
-                                            class="form-control" placeholder="Enter employee number">
+                                        <input type="text" id="employee_number" name="employee_number" class="form-control"
+                                            placeholder="Enter employee number">
                                     </div>
                                     <div class="form-group mb-0">
                                         <label class="form-label" for="group_teacher">Group Teacher Groups
@@ -126,8 +126,8 @@ $controller = new Controller();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $('#createSchoolTeacher').on('submit', function(e) {
+        $(document).ready(function () {
+            $('#createSchoolTeacher').on('submit', function (e) {
                 e.preventDefault();
 
                 let isValid = true;
@@ -137,8 +137,8 @@ $controller = new Controller();
                 $form.find('.form-control, select').removeClass('is-invalid');
 
                 const requiredFields = ['surname', 'firstname', 'phonenumber', 'email'];
-                
-                requiredFields.forEach(function(field) {
+
+                requiredFields.forEach(function (field) {
                     let input = $form.find(`[name="${field}"]`);
                     if (!input.val().trim()) {
                         input.addClass('is-invalid');
@@ -181,7 +181,7 @@ $controller = new Controller();
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 Swal.fire(
                                     'Submitted!',
                                     response.message,
@@ -189,36 +189,36 @@ $controller = new Controller();
                                 );
                                 $form[0].reset();
                             },
-                            // error: function(xhr) {
-                            //     if (xhr.status === 422) {
-                            //         let errors = xhr.responseJSON.errors;
-                            //         for (let field in errors) {
-                            //             let input = $form.find(`[name="${field}"]`);
-                            //             input.addClass('is-invalid');
-                            //             if (input.next('.invalid-feedback').length ===
-                            //                 0) {
-                            //                 input.after(
-                            //                     `<div class="invalid-feedback">${errors[field][0]}</div>`
-                            //                     );
-                            //             }
-                            //         }
-                            //         Swal.fire({
-                            //             icon: 'error',
-                            //             title: 'Validation Error',
-                            //             text: 'Please fix the errors and try again.'
-                            //         });
-                            //     } else {
-                            //         Swal.fire({
-                            //             icon: 'error',
-                            //             title: 'Error',
-                            //             text: 'An unexpected error occurred.'
-                            //         });
-                            //     }
-                            // },
-                            error: function(data) {
-                                $('body').html(data.responseText);
+                            error: function (xhr) {
+                                if (xhr.status === 422) {
+                                    let errors = xhr.responseJSON.errors;
+                                    for (let field in errors) {
+                                        let input = $form.find(`[name="${field}"]`);
+                                        input.addClass('is-invalid');
+                                        if (input.next('.invalid-feedback').length === 0) {
+                                            input.after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                                        }
+                                    }
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Validation Error',
+                                        text: 'Please fix the errors and try again.'
+                                    });
+                                } else {
+                                    // Show the actual error in the response
+                                    let errorMessage = xhr.responseJSON?.message || xhr.statusText || 'An unexpected error occurred';
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Server Error',
+                                        html: `<pre>${errorMessage}</pre>`, // show full error message
+                                    });
+                                }
                             },
-                            complete: function() {
+                            // error: function(data) {
+                            //     $('body').html(data.responseText);
+                            // },
+                            complete: function () {
                                 $submitBtn.prop('disabled', false).html(
                                     originalBtnHtml);
                             }

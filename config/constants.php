@@ -29,5 +29,22 @@ return [
         'PRIMARY_LEVEL' => 18,
         'URPF' => 19,
 
+        // SYSTEM SECTIONS
+
+        // 1.SCHOOOL
+
+           'School' => 16,
+
+
     ],
 ];
+
+
+// Any of these (Add,Delete,Edit,View) ====> Accessing specific user right 
+// public static function userHasSpecificPermission($userId, $permissionFeature, $permissionName, $permissionScope)
+
+// All of these (Add,Delete,Edit,View) ====> Accessing all user rights
+// public static function userHasAllPermissions($userId, $permissionName, $permissionScope)
+
+      
+        

@@ -8,6 +8,8 @@ class Permission extends Model
 {
     protected $fillable = [
         'name',
+        'feature',
+        'role_id',
         'scope',
         'is_marked',
     ];

@@ -8,6 +8,7 @@ use App\Models\Teacher;
 use Illuminate\Support\Str;
 use App\Models\password_reset_table;
 use Illuminate\Http\Request;
+use App\Helpers\PermissionHelper;
 use Illuminate\Support\Facades\Storage;
 
 class TeacherController extends Controller
@@ -93,7 +94,7 @@ class TeacherController extends Controller
     }
 
     public function updateteacherProfile($id)
-    {        
+    {
         $teacher = Teacher::with('school')->findOrFail($id);
         $school_id = $teacher->school_id;
 
@@ -140,7 +141,14 @@ class TeacherController extends Controller
     }
 
     public function schoolTeachers()
-    {        
+    {
+
+        if (PermissionHelper::userPermissionSectionAccess(session('LoggedStudent'), 155, 'school')) {
+
+        } else {
+            return redirect()->route('student.dashboard')->with('error', 'You do not have permission to access that feature!');
+        }
+
         $teachers = Teacher::with('school')
             ->where('school_id', Session('LoggedSchool'))
             ->orderBy('surname')

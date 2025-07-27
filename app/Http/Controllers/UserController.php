@@ -395,7 +395,7 @@ class UserController extends Controller
                     # Other Users
 
                     $user = User::where('email', '=', $request->email)->first();
-                    $request->session()->put('LoggedStudent', $user->username);
+                    $request->session()->put('LoggedStudent', $user->id);
 
                     return response()->json([
                         'status' => true,

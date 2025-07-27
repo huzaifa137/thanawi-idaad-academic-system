@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('feature');
             $table->string('name');
+            $table->unsignedBigInteger('role_id')->nullable();
             $table->enum('scope', ['system', 'school']);
             $table->boolean('is_marked')->default(false);
             $table->timestamps();

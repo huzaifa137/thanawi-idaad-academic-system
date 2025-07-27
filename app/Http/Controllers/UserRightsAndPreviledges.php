@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Models\PermissionRole;
 use Illuminate\Http\Request;
 
 class UserRightsAndPreviledges extends Controller
@@ -60,8 +61,6 @@ class UserRightsAndPreviledges extends Controller
             'scope' => 'required',
         ]);
 
-        $permission_feature_name = Helper::item_md_name($request->permission_feature);
-
         $permission_exists = Permission::where('name', $request->permission_feature)
             ->where('scope', $request->scope)
             ->exists();
@@ -78,7 +77,7 @@ class UserRightsAndPreviledges extends Controller
 
         foreach ($actions as $action) {
             $permissions[] = [
-                'feature' => $action . '_' . $permission_feature_name,
+                'feature' => $action . '_' . $request->permission_feature,
                 'name' => $request->permission_feature,
                 'scope' => $request->scope,
                 'created_at' => now(),
@@ -93,28 +92,61 @@ class UserRightsAndPreviledges extends Controller
 
     public function storeMultiplePermissions(Request $request)
     {
-        $now = now();
 
-        Permission::query()->update(['is_marked' => false]);
+        $roleId = $request->role_id;
+
+        Permission::where('role_id', $roleId)->update(['is_marked' => false]);
 
         foreach ($request->permissions as $item) {
 
             $feature = $item['feature'];
             $scope = $item['scope'];
-
+            
             [$action, $featureName] = explode('_', $feature, 2);
 
-            $permission_id = Helper::item_md_id($featureName);
+            $RolePermissionCheck = PermissionRole::where('permission_id', $featureName)
+                ->where('permission_scope', $scope)
+                ->where('role_id', $roleId)->first();
 
-            Permission::updateOrCreate(
-                ['feature' => $feature, 'scope' => $scope, 'name' => $permission_id],
-                [
-                    'name' => $permission_id,
+            $roleInfo = Role::find($roleId);
+            $permissionName = ucfirst(Helper::item_md_name($featureName));
+
+            if (!$RolePermissionCheck) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Role ({$roleInfo->name}) is not assigned ({$permissionName}) permission access."
+                ], 403);
+            }
+
+            $existingPermission = Permission::where('name', $featureName)
+                ->where('scope', $scope)
+                ->whereNull('role_id')
+                ->first();
+
+            if ($existingPermission) {
+
+                $existingPermission->update([
+                    'role_id' => $roleId,
                     'is_marked' => true,
-                    'updated_at' => $now,
-                ]
-            );
+                    'updated_at' => now(),
+                ]);
+            } else {
+
+                Permission::updateOrCreate(
+                    [
+                        'feature' => $feature,
+                        'scope' => $scope,
+                        'name' => $featureName,
+                        'role_id' => $roleId,
+                    ],
+                    [
+                        'is_marked' => true,
+                        'updated_at' => now(),
+                    ]
+                );
+            }
         }
+
         return response()->json(['success' => true, 'message' => 'Permissions saved successfully.']);
     }
 
@@ -123,22 +155,23 @@ class UserRightsAndPreviledges extends Controller
         $roles = Role::orderBy('name', 'asc')->get();
 
         $permissions = DB::table('permissions')
-            ->select('name', 'scope', DB::raw('GROUP_CONCAT(feature) as features'))
+            ->select('name', 'scope')
             ->groupBy('name', 'scope')
             ->orderBy('scope', 'desc')
             ->get();
 
-        $markedFeatures = DB::table('permissions')
-            ->where('is_marked', true)
-            ->pluck('feature')
-            ->toArray();
-
-        $rolePermissions = DB::table('permission_role')->get()->groupBy('role_id');
+        $permissionsByRole = DB::table('permissions')
+            ->select('role_id', 'feature', 'is_marked')
+            ->get()
+            ->groupBy('role_id');
 
         $users = User::all();
 
-        return view('UserRights.assign-permissions', compact('permissions', 'markedFeatures', 'roles', 'rolePermissions', 'users'));
+        $rolePermissions = DB::table('permission_role')->get()->groupBy('role_id');
+
+        return view('UserRights.assign-permissions', compact('permissions', 'roles', 'permissionsByRole', 'users', 'rolePermissions'));
     }
+
 
     public function storeRolePermissions(Request $request, $roleId)
     {
@@ -303,27 +336,4 @@ class UserRightsAndPreviledges extends Controller
         }
         return response()->json(['success' => false, 'message' => 'Failed to remove user from role.'], 400);
     }
-
-    public function searchUsersByQuery(Request $request)
-    {
-
-        $query = $request->input('query');
-        $role_id = $request->input('role_id');
-
-        // dd($role_id);
-        // dd($query);
-
-
-        $users = User::where('user_role', $role_id)
-            ->where(function ($queryBuilder) use ($query) {
-                $queryBuilder->where('username', 'like', '%' . $query . '%')
-                    ->orWhere('email', 'like', '%' . $query . '%');
-            })
-            // ->take(10)
-            ->get();
-
-        return response()->json(['users' => $users]);
-    }
-
-
 }
