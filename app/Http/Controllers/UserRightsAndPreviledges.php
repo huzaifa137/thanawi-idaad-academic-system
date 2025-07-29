@@ -101,7 +101,7 @@ class UserRightsAndPreviledges extends Controller
 
             $feature = $item['feature'];
             $scope = $item['scope'];
-            
+
             [$action, $featureName] = explode('_', $feature, 2);
 
             $RolePermissionCheck = PermissionRole::where('permission_id', $featureName)
@@ -336,4 +336,51 @@ class UserRightsAndPreviledges extends Controller
         }
         return response()->json(['success' => false, 'message' => 'Failed to remove user from role.'], 400);
     }
+
+    public function addUsers()
+    {
+        return view('users.all-users');
+    }
+
+    public function storeNewUser(Request $request)
+    {
+        $validated = $request->validate([
+            'username' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'othername' => 'nullable|string|max:255',
+            'phonenumber' => 'required|string|max:20',
+            'gender' => 'nullable|in:male,female',
+            'email' => 'required',
+        ]);
+
+        $teacher = User::create($validated);
+
+        // ADMNISTRATOR ROLE STATUS ===> 0
+        // --------------------------------------
+
+        $token = Str::random(60);
+        $resetUrl = url('password/set-password', $token);
+
+        $post = new password_reset_table();
+
+        $post->email = $teacher->email;
+        $post->token = $resetUrl;
+        $post->created_at = now();
+
+        $post->save();
+
+        $data = [
+            'email' => $teacher->email,
+            'username' => $teacher->surname,
+            'resetUrl' => $resetUrl,
+            'title' => 'SMART SCHOOLS SET PASSWORD',
+        ];
+
+        Mail::send('emails.set_password', $data, function ($message) use ($data) {
+            $message->to($data['email'], $data['email'])->subject($data['title']);
+        });
+
+        return response()->json(['message' => 'User added successfully']);
+    }
+
 }

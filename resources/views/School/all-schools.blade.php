@@ -129,7 +129,6 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
     </div>
     </div>
 
-    {{-- Keep your custom styles here --}}
     <style>
         .table-hover tbody tr:hover {
             background-color: #f8f9fa !important;
@@ -160,8 +159,6 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
     </style>
 
     {{-- Removed extra closing divs, assuming they are part of master layout --}}
-    {{-- </div> </div> </div> --}}
-
     {{-- SweetAlert2 and Bootstrap JS moved to the bottom of the @section('content') or master layout's body end --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -251,6 +248,9 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                     'error'
                                 );
                             }
+                            // error: function(data) {
+                            // $('body').html(data.responseText);
+                            // }
                         });
                     }
                 });

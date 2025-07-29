@@ -95,10 +95,41 @@ class TeacherController extends Controller
 
     public function updateteacherProfile($id)
     {
-        $teacher = Teacher::with('school')->findOrFail($id);
-        $school_id = $teacher->school_id;
 
-        return view('Teacher.update-teacher-profile', compact('teacher', 'school_id'));
+        $user = DB::table('users')->where('id', $id)->first();
+
+        if ($user->user_role == 5) {
+
+            if (Session::has('LoggedSchool') && Session::get('LoggedSchool') !== null) {
+
+                $teacher = DB::table('teachers')
+                    ->where('id', $user->username)
+                    ->where('school_id', Session('LoggedSchool'))
+                    ->first();
+
+                $school_id = Session('LoggedSchool');
+
+                if ($teacher) {
+                    return view('Teacher.update-teacher-profile', compact('teacher', 'school_id'));
+                } else {
+                    return redirect()->route('student.dashboard')->with('error', 'No Profile Information Found');
+                }
+
+            } else {
+
+                return redirect()->route('student.dashboard')->with('error', 'No School has been selected');
+            }
+
+        } elseif ($user->user_role == 0) {
+
+            $teacher = DB::table('teachers')
+                ->where('id', $user->username)
+                ->where('school_id', Session('LoggedSchool'))
+                ->first();
+
+            return view('Users.update-user-info', compact('teacher'));
+
+        }
     }
 
     public function storeUpdatedTeacherProfile(Request $request, Teacher $teacher)

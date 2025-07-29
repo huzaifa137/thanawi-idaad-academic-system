@@ -33,18 +33,19 @@ return [
 
         // 1.SCHOOOL
 
-           'School' => 16,
-
+        'School' => 16,
 
     ],
 ];
 
 
-// Any of these (Add,Delete,Edit,View) ====> Accessing specific user right 
+// Access specific features (Each of these Add,Delete,Edit,View) ====> Accessing specific user right 
 // public static function userHasSpecificPermission($userId, $permissionFeature, $permissionName, $permissionScope)
 
-// All of these (Add,Delete,Edit,View) ====> Accessing all user rights
+// Have all Rights for that feauture (All of these Add,Delete,Edit,View) ====> Accessing all user crud
 // public static function userHasAllPermissions($userId, $permissionName, $permissionScope)
 
-      
-        
+// Access specific Section in the system (All of these Add,Delete,Edit,View) ====> Accessing all user crud
+// public static function userPermissionSectionAccess($userId, $permissionName, $permissionScope)
+
+

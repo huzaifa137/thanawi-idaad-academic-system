@@ -466,6 +466,9 @@ $currencies = collect($currencyIds)
     $procurement_officer = config('constants.options.PROCUREMENT_OFFICER');
 
 
+                return redirect()->route('student.dashboard')->with('error', 'You do not have permission to access that feature!');
+
+
     <tr class="bg-dark text-white">
                         <td colspan="8"><strong>Contract Reference: {{ $draftRecord->fc_contract_ref }} | Contract
                                 Title: {{ $draftRecord->fc_contract_title }} | Contract Subject:

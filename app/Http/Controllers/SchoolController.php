@@ -10,6 +10,7 @@ use App\Models\TermDate;
 use App\Models\UpdateTracker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Session;
 
 class SchoolController extends Controller
 {
@@ -125,6 +126,7 @@ class SchoolController extends Controller
     {
         try {
 
+            dd($schoolId);
             $schoolId->delete();
 
             return response()->json(['success' => true]);
@@ -136,10 +138,17 @@ class SchoolController extends Controller
     public function schoolProfile()
     {
 
-        $school = School::findOrFail(Session('LoggedSchool'));
-        $profile = SchoolProfile::where('school_id', Session('LoggedSchool'))->first();
+        if (Session::has('LoggedSchool') && Session::get('LoggedSchool') !== null) {
 
-        return view('School.school-profile', compact('school', 'profile'));
+            $school = School::findOrFail(Session('LoggedSchool'));
+            $profile = SchoolProfile::where('school_id', Session('LoggedSchool'))->first();
+            return view('School.school-profile', compact('school', 'profile'));
+
+        } else {
+
+            return redirect()->route('student.dashboard')->with('error', 'No School has been selected');
+
+        }
     }
 
     public function schoolOptions($id)

@@ -264,6 +264,9 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
             Route::get('/all-roles', 'allRoles')->name('all.users.roles');
             Route::get('/all-permissions', 'allPermissions')->name('all.users.permissions');
             Route::get('/assign-permissions', 'assignPermissions')->name('assign.users.permissions');
+
+            Route::get('add-users', 'addUsers')->name('add-users');
+
         });
 
         Route::get('/roles/{id}', 'editRole');
@@ -280,9 +283,11 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
         Route::post('/assign-permissions/{roleId}', 'storeRolePermissions')->name('storeRolePermissions');
         Route::post('/remove-permissions/{roleId}/remove', 'removePermission');
         Route::post('/assign-user-to-role', 'assignUserToRole')->name('assignUserToRole');
-        Route::post('/remove-user-from-role', 'removeUserFromRole')->name('removeUserFromRole');       
+        Route::post('/remove-user-from-role', 'removeUserFromRole')->name('removeUserFromRole');
 
-        Route::get('/search-users', 'searchUsersByQuery')->name('searchUsersByQuery');
+        Route::post('/store-new-user', 'storeNewUser')->name('users.store.new.user');
+
+
 
     });
 

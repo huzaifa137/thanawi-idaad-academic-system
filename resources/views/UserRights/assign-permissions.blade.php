@@ -15,12 +15,9 @@ use App\Http\Controllers\Helper;
                     <div class="bg-info d-flex justify-content-between align-items-center px-3 py-2">
                         <h3 class="text-white mb-0">All User Permission Features</h3>
                         <div id="manage-users-role" class="text-white">
-                            <button class="btn btn-light"
-                                onmouseover="this.style.pointerEvents='none'; this.style.cursor='default';"
-                                onmousedown="return false;"
-                                onmouseout="this.style.pointerEvents='auto'; this.style.cursor='default';">
-                                <i class="fa fa-user-shield mr-2"></i>Manage All Users Roles & Permissions Here
-                            </button>
+                           <a href="{{ route('add-users') }}" class="btn btn-light">
+                                <i class="fa fa-user-shield mr-2"></i> Manage All Users Configurations
+                            </a>
                         </div>
                     </div>
 
