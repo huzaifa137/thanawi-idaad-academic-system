@@ -40,10 +40,22 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                 <th>School Code</th>
                                 <th>School Type</th>
                                 <th>School Population</th>
+                                <th>Status</th>
                                 <th style="width: 90px;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
+
+                            @php
+                                $statusConfig = [
+                                    10 => ['label' => 'Active', 'class' => 'text-success', 'icon' => 'fas fa-check-circle'],
+                                    0 => ['label' => 'Banned', 'class' => 'text-danger', 'icon' => 'fas fa-ban'],
+                                    8 => ['label' => 'Locked', 'class' => 'text-warning', 'icon' => 'fas fa-lock'],
+                                    9 => ['label' => 'Suspended', 'class' => 'text-secondary', 'icon' => 'fas fa-user-slash'],
+                                    1 => ['label' => 'Pending Activation', 'class' => 'text-secondary', 'icon' => 'fas fa-clock'],
+                                ];
+                            @endphp
+
                             @forelse ($schools as $key => $school)
                                 <tr>
 
@@ -52,13 +64,16 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                     <td class="fw-bold">{{ $school->registration_code }}</td>
                                     <td class="fw-bold">{{ Helper::recordMdname($school->school_type) }}</td>
                                     <td class="fw-bold">{{ Helper::recordMdname($school->population) }}</td>
+                                    <td>
+                                        @php
+                                            $status = $statusConfig[$school->school_status] ?? ['label' => 'Unknown', 'class' => 'text-muted', 'icon' => 'fas fa-question-circle'];
+                                        @endphp
+                                        <span class="{{ $status['class'] }}">
+                                            <i class="{{ $status['icon'] }}"></i> {{ $status['label'] }}
+                                        </span>
+                                    </td>
 
                                     <td class="d-flex align-items-center gap-1">
-                                        <a href="{{ route('profile.school') }}"
-                                            class="btn btn-sm btn-outline-info" title="View School Profile">
-                                            <i class="fas fa-university"></i>
-                                        </a>
-                                        &nbsp;
                                         <style>
                                             .btn-inline-pink {
                                                 color: rgb(250, 12, 115);
@@ -85,13 +100,19 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                             }
                                         </style>
 
-                                        <a href="{{ route('school.term-dates') }}"
+                                        <a href="{{ route('profile.individual.school', $school->id) }}"
+                                            class="btn btn-sm btn-outline-info" title="View School Profile">
+                                            <i class="fas fa-university"></i>
+                                        </a>
+                                        &nbsp;
+
+                                        <a href="{{ route('school.term-dates', $school->id) }}"
                                             class="btn btn-sm btn-inline-pink" title="Select Date">
                                             <i class="fas fa-calendar-alt"></i>
                                         </a>
                                         &nbsp;
 
-                                        <a href="{{ route('school.teachers') }}"
+                                        <a href="{{ route('individual.school.teachers', $school->id) }}"
                                             class="btn btn-sm btn-inline-orange" title="Teachers">
                                             <i class="fas fa-chalkboard-teacher"></i>
                                         </a>
@@ -100,14 +121,23 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                             class="btn btn-sm btn-outline-success" title="View School Profile">
                                             <i class="fas fa-cogs"></i>
                                         </a>
-
                                         &nbsp;
+
+                                        <a href="javascript:void(0);"
+                                            class="btn btn-sm btn-outline-info btn-change-school-status"
+                                            data-id="{{ $school->id }}" data-status="{{ $school->school_status }}"
+                                            title="Change Status">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </a>
+                                        &nbsp;
+
                                         <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-edit"
-                                            data-id="{{ $school->id }}"
-                                            data-edit-url="{{ route('edit.school', $school->id) }}" title="Edit">
+                                            data-id="{{ $school->id }}" data-edit-url="{{ route('edit.school', $school->id) }}"
+                                            title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         &nbsp;
+
                                         <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-delete"
                                             data-id="{{ $school->id }}" title="Delete">
                                             <i class="fas fa-trash-alt"></i>
@@ -121,6 +151,40 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                             @endforelse
                         </tbody>
                     </table>
+
+                    <!-- Change School Status Modal -->
+                    <div class="modal fade" id="changeSchoolStatusModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <form id="changeSchoolStatusForm">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Change School Status</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" id="schoolStatusId">
+                                        <div class="form-group">
+                                            <label for="newSchoolStatus">Select New Status</label>
+                                            <select id="newSchoolStatus" class="form-control">
+                                                <option value="1">Pending Activation</option>
+                                                <option value="10">Active</option>
+                                                <option value="0">Banned</option>
+                                                <option value="8">Locked</option>
+                                                <option value="9">Suspended</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Change Status</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -161,7 +225,11 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
     {{-- Removed extra closing divs, assuming they are part of master layout --}}
     {{-- SweetAlert2 and Bootstrap JS moved to the bottom of the @section('content') or master layout's body end --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 @endsection
 
 @section('js')
@@ -187,22 +255,22 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var table = $('#schoolsTable').DataTable({
                 responsive: false, // Ensure this is compatible with your CSS/layout
                 pageLength: 10,
                 order: [
-                    [0, 'desc']
+                    [0, 'asc']
                 ],
                 dom: 'frtip', // Defines table controls (Filter, Row length, Table, Info, Paging)
                 columnDefs: [{
-                        orderable: false,
-                        targets: [1, 4, 5] // Adjust these target indices if columns change
-                    },
-                    {
-                        className: 'text-center',
-                        targets: '_all'
-                    }
+                    orderable: false,
+                    targets: [1, 4, 5] // Adjust these target indices if columns change
+                },
+                {
+                    className: 'text-center',
+                    targets: '_all'
+                }
                 ],
                 language: {
                     search: "_INPUT_",
@@ -211,7 +279,7 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
             });
 
             // Delete functionality
-            $('#schoolsTable tbody').on('click', '.btn-delete', function() {
+            $('#schoolsTable tbody').on('click', '.btn-delete', function () {
                 var schoolId = $(this).data('id');
                 var row = table.row($(this).parents('tr'));
 
@@ -231,7 +299,7 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 row.remove()
                                     .draw(); // Remove row from DataTable and redraw
 
@@ -241,7 +309,7 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                     'success'
                                 );
                             },
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 Swal.fire(
                                     'Error!',
                                     'Something went wrong deleting the school.',
@@ -257,7 +325,7 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
             });
 
             // Edit functionality
-            $('#schoolsTable tbody').on('click', '.btn-edit', function() {
+            $('#schoolsTable tbody').on('click', '.btn-edit', function () {
                 var editUrl = $(this).data('edit-url');
 
                 Swal.fire({
@@ -273,6 +341,78 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                         window.location.href = editUrl;
                     }
                 });
+            });
+        });
+
+        $(document).ready(function () {
+            // Open modal with current school status
+            $('.btn-change-school-status').on('click', function () {
+                const schoolId = $(this).data('id');
+                const currentStatus = $(this).data('status');
+
+                $('#schoolStatusId').val(schoolId);
+
+                const $select = $('#newSchoolStatus');
+                $select.val(currentStatus); // Set value (in case browser already supports it)
+
+                // Reorder options dynamically
+                const currentOption = $select.find('option[value="' + currentStatus + '"]');
+                if (currentOption.length) {
+                    $select.prepend(currentOption); // Move to top
+                }
+
+                $('#changeSchoolStatusModal').modal('show');
+            });
+
+
+            // Submit status change with confirmation
+            $('#changeSchoolStatusForm').on('submit', function (e) {
+                e.preventDefault();
+                const schoolId = $('#schoolStatusId').val();
+                const newStatus = $('#newSchoolStatus').val();
+
+                $('#changeSchoolStatusModal').modal('hide');
+
+                setTimeout(() => {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "This will update the school's status.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#28a745',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, change it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: `/schools/${schoolId}/change-status`,
+                                type: 'POST',
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    status: newStatus
+                                },
+                                success: function (response) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Updated!',
+                                        text: response.message || 'School status updated.',
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+
+                                    // Reload to update UI
+                                    location.reload();
+                                },
+                                // error: function (xhr) {
+                                //     Swal.fire('Error', 'Failed to change status.', 'error');
+                                // }
+                                error: function (data) {
+                                    $('body').html(data.responseText);
+                                }
+                            });
+                        }
+                    });
+                }, 300);
             });
         });
     </script>

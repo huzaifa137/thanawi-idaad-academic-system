@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Mail;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Role;
 use App\Models\Permission;
 use App\Models\PermissionRole;
 use Illuminate\Http\Request;
+use App\Models\password_reset_table;
+use Illuminate\Support\Str;
 
 class UserRightsAndPreviledges extends Controller
 {
@@ -339,11 +342,15 @@ class UserRightsAndPreviledges extends Controller
 
     public function addUsers()
     {
-        return view('users.all-users');
+        $users = User::whereIn('user_role', [0, 1])->get();
+        $roles = Role::all();
+
+        return view('users.all-users', compact(['users', 'roles']));
     }
 
     public function storeNewUser(Request $request)
     {
+
         $validated = $request->validate([
             'username' => 'required|string|max:255',
             'firstname' => 'required|string|max:255',
@@ -355,6 +362,10 @@ class UserRightsAndPreviledges extends Controller
 
         $teacher = User::create($validated);
 
+        // Assign selected roles (if any)
+        if ($request->has('roles')) {
+            $teacher->roles()->attach($request->roles);
+        }
         // ADMNISTRATOR ROLE STATUS ===> 0
         // --------------------------------------
 
@@ -371,7 +382,7 @@ class UserRightsAndPreviledges extends Controller
 
         $data = [
             'email' => $teacher->email,
-            'username' => $teacher->surname,
+            'username' => $teacher->username,
             'resetUrl' => $resetUrl,
             'title' => 'SMART SCHOOLS SET PASSWORD',
         ];
@@ -382,5 +393,114 @@ class UserRightsAndPreviledges extends Controller
 
         return response()->json(['message' => 'User added successfully']);
     }
+
+    public function updateUserInformation(Request $request)
+    {
+        $validated = $request->validate([
+            'username' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
+            'othername' => 'nullable|string|max:255',
+            'phonenumber' => 'required|string|max:20',
+            'gender' => 'nullable|in:male,female',
+            'email' => 'required|email',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $user = User::findOrFail($validated['user_id']);
+
+        unset($validated['user_id']);
+
+        $user->update($validated);
+        $user->roles()->sync($request->roles ?? []);
+
+        return response()->json(['message' => 'User information updated successfully']);
+    }
+
+    public function deleteUser(User $userId)
+    {
+        try {
+
+            $userId->delete();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Delete failed'], 500);
+        }
+    }
+
+    public function getUserDetails($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        return response()->json($user);
+    }
+
+    public function changeStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:0,8,9,10'
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->account_status = $request->status;
+        $user->save();
+
+        return response()->json(['message' => 'Status updated successfully.']);
+    }
+
+    public function addUserToRole(Request $request)
+    {
+
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role_id' => 'required|exists:roles,id',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+
+        $userId = $request->user_id;
+        $roleId = $request->role_id;
+
+        $exists = DB::table('role_user_school')
+            ->where('user_id', $userId)
+            ->where('role_id', $roleId)
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['message' => 'User is already assigned to this role.'], 409);
+        }
+
+        $currentRoles = $user->roles()->pluck('roles.id')->toArray();
+
+        if (!in_array($request->role_id, $currentRoles)) {
+            $currentRoles[] = $request->role_id;
+            $user->roles()->sync($currentRoles);
+        }
+
+        return response()->json(['message' => 'User added to role successfully']);
+    }
+
+    public function deleteUserFromRole(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role_id' => 'required|exists:roles,id',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+
+        $currentRoles = $user->roles()->pluck('roles.id')->toArray();
+        $updatedRoles = array_filter($currentRoles, fn($id) => $id != $request->role_id);
+
+        $user->roles()->sync($updatedRoles);
+
+        return response()->json(['message' => 'User removed from role successfully']);
+    }
+
+
 
 }

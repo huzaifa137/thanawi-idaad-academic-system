@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Course;
 use App\Models\password_reset_table;
 use App\Models\User;
 use DB;
@@ -9,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Mail;
-use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -377,13 +375,45 @@ class UserController extends Controller
             if (Hash::check($request->password, $userInfo->password)) {
 
                 $user = DB::table('users')->where('email', $request->email)->first();
+
+                $statusMessages = [
+                    0 => 'Your account has been banned.',
+                    8 => 'Your account is locked. ',
+                    9 => 'Your account is suspended. .',
+                ];
+
+                if ($user->account_status != 10) {
+                    $message = $statusMessages[$user->account_status] ?? 'Your account is not active.';
+
+                    return response()->json([
+                        'status' => false,
+                        'message' => $message,
+                    ]);
+                }
+
                 $url1 = '/student/dashboard';
+                $chooseSchool = route('select.current.school');
 
                 if ($user->user_role == 5) {
+
+                    $userExistsInSchool = DB::table('teachers')
+                        ->where('email', $request->email)
+                        ->count();
+
+                    if ($userExistsInSchool > 1) {
+
+                        session(['login_email' => $request->email]);
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Login successful',
+                            'redirect_url' => $chooseSchool,
+                        ]);
+                    }
+
                     # Logged Teacher and School Information
                     $school_id = DB::table('teachers')->where('id', $user->username)->value('school_id');
 
-                    $request->session()->put('LoggedStudent', $user->username);
+                    $request->session()->put('LoggedStudent', $user->id);
                     $request->session()->put('LoggedSchool', $school_id);
 
                     return response()->json([
@@ -391,11 +421,20 @@ class UserController extends Controller
                         'message' => 'Login successful',
                         'redirect_url' => $url1,
                     ]);
-                } else {
+                } elseif ($user->user_role == 0) {
                     # Other Users
 
-                    $user = User::where('email', '=', $request->email)->first();
                     $request->session()->put('LoggedStudent', $user->id);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Login successful',
+                        'redirect_url' => $url1,
+                    ]);
+                } elseif ($user->user_role == 1) {
+                    # Other Users
+
+                    $request->session()->put('LoggedAdmin', $user->id);
 
                     return response()->json([
                         'status' => true,
@@ -411,6 +450,48 @@ class UserController extends Controller
                     'message' => 'Invalid password or Email being entered',
                 ]);
             }
+        }
+    }
+
+
+    public function authUserSelectedSchool(Request $request)
+    {
+
+        $request->validate([
+            'email' => 'required',
+            'selected_school_id' => 'required',
+        ]);
+        
+        $school_id = $request->selected_school_id;
+        $user = DB::table('users')->where('email', $request->email)->first();
+
+        $statusMessages = [
+            0 => 'Your account has been banned.',
+            8 => 'Your account is locked. ',
+            9 => 'Your account is suspended. .',
+        ];
+
+        if ($user->account_status != 10) {
+            $message = $statusMessages[$user->account_status] ?? 'Your account is not active.';
+
+            return response()->json([
+                'status' => false,
+                'message' => $message,
+            ]);
+        }
+
+        $url1 = '/student/dashboard';
+
+        if ($user->user_role == 5) {
+
+            $request->session()->put('LoggedStudent', $user->id);
+            $request->session()->put('LoggedSchool', $school_id);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Login successful',
+                'redirect_url' => $url1,
+            ]);
         }
     }
 
@@ -702,14 +783,14 @@ class UserController extends Controller
             'username' => 'required',
             'email' => 'required|email|unique:users',
             'password' => [
-                    'required',
-                    'string',
-                    'min:6',
-                    'regex:/[A-Z]/',
-                    'regex:/[a-z]/',
-                    'regex:/[0-9]/',
-                    'regex:/[@$!%*?&#]/',
-                ],
+                'required',
+                'string',
+                'min:6',
+                'regex:/[A-Z]/',
+                'regex:/[a-z]/',
+                'regex:/[0-9]/',
+                'regex:/[@$!%*?&#]/',
+            ],
         ], [
             'password.required' => 'The password field is required.',
             'password.string' => 'The password must be a string.',

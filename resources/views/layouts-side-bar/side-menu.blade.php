@@ -29,17 +29,13 @@ use App\Helpers\PermissionHelper;
             </a>
         </li>
 
-        @if (PermissionHelper::userPermissionSectionAccess(session('LoggedStudent'), 155, 'school'))
-            <li class="slide">
-                <a class="side-menu__item" href="{{ route('school.teachers') }}">
-                    <i class="fa fa-user-tie fa-2x mr-3"></i>
-                    Teachers
-                </a>
-            </li>
-        @else
+        <li class="slide">
+            <a class="side-menu__item" href="{{ route('school.teachers') }}">
+                <i class="fa fa-user-tie fa-2x mr-3"></i>
+                Teachers
+            </a>
+        </li>
 
-        @endif
-        
         <li class="slide">
             <a class="side-menu__item" href="{{ route('manage.classes') }}">
                 <i class="fa fa-chalkboard-teacher fa-2x mr-3"></i>

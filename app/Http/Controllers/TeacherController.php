@@ -3,13 +3,14 @@ namespace App\Http\Controllers;
 
 use DB;
 use Mail;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\Teacher;
 use Illuminate\Support\Str;
 use App\Models\password_reset_table;
 use Illuminate\Http\Request;
-use App\Helpers\PermissionHelper;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
 
 class TeacherController extends Controller
 {
@@ -38,43 +39,67 @@ class TeacherController extends Controller
             'email' => 'required',
         ]);
 
+        $userExistsInSchool = DB::table('teachers')
+            ->where('email', $request->email)
+            ->where('school_id', $request->school_id)
+            ->first();
+
+        if ($userExistsInSchool) {
+            return response()->json([
+                'message' => 'This teacher is already registered under this school.'
+            ], 422);
+        }
+
+        $userExists = DB::table('users')->where('email', $request->email)->first();
+
+        if ($userExists && !$request->has('confirm_existing')) {
+            return response()->json([
+                'exists' => true,
+                'message' => 'A user with this email already exists in another school. Do you want to continue ?'
+            ]);
+        }
+
         $teacher = Teacher::create($validated);
 
-        // TEACHER USER ROLE STATUS ===> 5
-        // --------------------------------------
+        if (!$userExists) {
 
-        $password = $teacher->password;
+            // TEACHER USER ROLE STATUS ===> 5
+            // --------------------------------------
 
-        $user = new User;
+            $password = $teacher->password;
 
-        $user->username = $teacher->id;
-        $user->email = $teacher->email;
-        $user->user_role = 5;
-        $user->password = $password;
-        $user->save();
+            $user = new User;
 
-        $token = Str::random(60);
-        $resetUrl = url('password/set-password', $token);
+            $user->username = $teacher->id;
+            $user->email = $teacher->email;
+            $user->user_role = 5;
+            $user->password = $password;
+            $user->save();
 
-        $post = new password_reset_table();
 
-        $post->email = $teacher->email;
-        $post->token = $resetUrl;
-        $post->created_at = now();
+            $token = Str::random(60);
+            $resetUrl = url('password/set-password', $token);
 
-        $post->save();
+            $post = new password_reset_table();
 
-        $data = [
-            'email' => $teacher->email,
-            'username' => $teacher->surname,
-            'resetUrl' => $resetUrl,
-            'title' => 'SMART SCHOOLS SET PASSWORD',
-        ];
+            $post->email = $teacher->email;
+            $post->token = $resetUrl;
+            $post->created_at = now();
 
-        Mail::send('emails.set_password', $data, function ($message) use ($data) {
-            $message->to($data['email'], $data['email'])->subject($data['title']);
-        });
+            $post->save();
 
+            $data = [
+                'email' => $teacher->email,
+                'username' => $teacher->surname,
+                'resetUrl' => $resetUrl,
+                'title' => 'SMART SCHOOLS SET PASSWORD',
+            ];
+
+            Mail::send('emails.set_password', $data, function ($message) use ($data) {
+                $message->to($data['email'], $data['email'])->subject($data['title']);
+            });
+        }
+        
         return response()->json(['message' => 'Teacher added successfully']);
     }
 
@@ -97,6 +122,9 @@ class TeacherController extends Controller
     {
 
         $user = DB::table('users')->where('id', $id)->first();
+        $roles = Role::all();
+        $userModel = User::find($id);
+        $userRoles = $userModel ? $userModel->roles->pluck('id')->toArray() : [];
 
         if ($user->user_role == 5) {
 
@@ -104,7 +132,6 @@ class TeacherController extends Controller
 
                 $teacher = DB::table('teachers')
                     ->where('id', $user->username)
-                    ->where('school_id', Session('LoggedSchool'))
                     ->first();
 
                 $school_id = Session('LoggedSchool');
@@ -122,13 +149,11 @@ class TeacherController extends Controller
 
         } elseif ($user->user_role == 0) {
 
-            $teacher = DB::table('teachers')
-                ->where('id', $user->username)
-                ->where('school_id', Session('LoggedSchool'))
+            $teacher = DB::table('users')
+                ->where('id', $id)
                 ->first();
 
-            return view('Users.update-user-info', compact('teacher'));
-
+            return view('Users.update-user-info', compact('teacher', 'roles', 'userRoles'));
         }
     }
 
@@ -173,19 +198,24 @@ class TeacherController extends Controller
 
     public function schoolTeachers()
     {
-
-        if (PermissionHelper::userPermissionSectionAccess(session('LoggedStudent'), 155, 'school')) {
-
-        } else {
-            return redirect()->route('student.dashboard')->with('error', 'You do not have permission to access that feature!');
-        }
-
         $teachers = Teacher::with('school')
             ->where('school_id', Session('LoggedSchool'))
             ->orderBy('surname')
             ->get();
 
         $school_id = Session('LoggedSchool');
+
+        return view('Teacher.teachers-in-school', compact('teachers', 'school_id'));
+    }
+
+    public function individualSchoolTeachers($schoolId)
+    {
+        $teachers = Teacher::with('school')
+            ->where('school_id', $schoolId)
+            ->orderBy('id')
+            ->get();
+
+        $school_id = $schoolId;
 
         return view('Teacher.teachers-in-school', compact('teachers', 'school_id'));
     }

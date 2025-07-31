@@ -23,30 +23,35 @@ $controller = new Controller();
                 <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0 text-white">Update User</h4>
-                        <a href="#" class="btn btn-info">
+                        <a href="{{ route('add-users')}}" class="btn btn-info">
                             <i class="fas fa-chalkboard-teacher"></i> All Users
                         </a>
                     </div>
                     <div class="card-body bg-light">
+
                         <form id="createSchoolTeacher">
                             <div class="row">
-                                <input type="hidden" name="school_id" id="school_id" value="0">
+                                <input type="hidden" name="user_id" value="{{ $teacher->id }}">
+
                                 <div class="col-lg-6 col-md-12">
                                     <div class="form-group">
-                                        <label class="form-label" for="username">username</label>
+                                        <label class="form-label" for="username">Username</label>
                                         <input type="text" id="username" name="username" class="form-control"
-                                            placeholder="Enter username">
+                                            placeholder="Enter username" value="{{ old('username', $teacher->username) }}">
                                     </div>
+
                                     <div class="form-group">
                                         <label class="form-label" for="firstname">Firstname</label>
                                         <input type="text" id="firstname" name="firstname" class="form-control"
-                                            placeholder="Enter firstname">
+                                            placeholder="Enter firstname"
+                                            value="{{ old('firstname', $teacher->firstname) }}">
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label class="form-label" for="phonenumber">Phone Number</label>
                                         <input type="tel" id="phonenumber" name="phonenumber" class="form-control"
-                                            placeholder="Enter phone number">
+                                            placeholder="Enter phone number"
+                                            value="{{ old('phonenumber', $teacher->phonenumber) }}">
                                     </div>
                                 </div>
 
@@ -54,24 +59,47 @@ $controller = new Controller();
                                     <div class="form-group">
                                         <label class="form-label" for="gender">Gender</label>
                                         <select id="gender" name="gender" class="form-control">
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
+                                            <option value="male" {{ old('gender', $teacher->gender) === 'male' ? 'selected' : '' }}>Male</option>
+                                            <option value="female" {{ old('gender', $teacher->gender) === 'female' ? 'selected' : '' }}>Female</option>
                                         </select>
                                     </div>
+
                                     <div class="form-group">
-                                        <label class="form-label" for="Email">Email</label>
+                                        <label class="form-label" for="email">Email</label>
                                         <input type="text" id="email" name="email" class="form-control"
-                                            placeholder="Enter teacher email">
+                                            placeholder="Enter teacher email" value="{{ old('email', $teacher->email) }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="form-group mt-3">
+                                        <label class="form-label">Attached Roles</label>
+                                        <div class="row">
+                                            @foreach ($roles as $role)
+                                                <div class="col-md-4">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="roles[]"
+                                                            value="{{ $role->id }}"
+                                                            id="role_{{ $role->id }}"
+                                                            {{ in_array($role->id, $userRoles) ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="role_{{ $role->id }}">
+                                                            <i class="fas fa-crown me-1 text-warning"></i> {{ $role->name }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="mt-4 text-left">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-paper-plane"></i> Submit
+                                    <i class="fas fa-paper-plane"></i> Update
                                 </button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -122,7 +150,7 @@ $controller = new Controller();
 
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You are about to submit the teacher data.",
+                    text: "You are about to update the user data.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Yes, submit it!',
@@ -134,7 +162,7 @@ $controller = new Controller();
                         $submitBtn.html('Saving...<i class="fas fa-spinner fa-spin"></i>');
 
                         $.ajax({
-                            url: '{{ route('teachers.store') }}',
+                            url: '{{ route('users.update.information') }}',
                             method: 'POST',
                             data: $form.serialize(),
                             headers: {
@@ -145,8 +173,9 @@ $controller = new Controller();
                                     'Submitted!',
                                     response.message,
                                     'success'
-                                );
-                                $form[0].reset();
+                                ).then(() => {
+                                    location.reload(); // 🔄 Reload after Swal is dismissed
+                                });
                             },
                             error: function (xhr) {
                                 if (xhr.status === 422) {
@@ -164,24 +193,19 @@ $controller = new Controller();
                                         text: 'Please fix the errors and try again.'
                                     });
                                 } else {
-                                    // Show the actual error in the response
                                     let errorMessage = xhr.responseJSON?.message || xhr.statusText || 'An unexpected error occurred';
-
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Server Error',
-                                        html: `<pre>${errorMessage}</pre>`, // show full error message
+                                        html: `<pre>${errorMessage}</pre>`,
                                     });
                                 }
                             },
-                            // error: function(data) {
-                            //     $('body').html(data.responseText);
-                            // },
                             complete: function () {
-                                $submitBtn.prop('disabled', false).html(
-                                    originalBtnHtml);
+                                $submitBtn.prop('disabled', false).html(originalBtnHtml);
                             }
                         });
+
                     }
                 });
             });

@@ -98,9 +98,8 @@
                                     </span>
 
 
-                                    <input type="email" id="email" name="email" class="form-control"
-                                        placeholder="Email" required
-                                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="Email"
+                                        required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                         title="Please enter a valid email address." value="{{ old('email') }}">
 
                                 </div>
@@ -113,8 +112,8 @@
                                 <div class="input-group mb-4">
                                     <span class="input-group-addon">
 
-                                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="20"
-                                            width="20" viewBox="0 0 24 24">
+                                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="20" width="20"
+                                            viewBox="0 0 24 24">
                                             <g fill="none">
                                                 <path d="M0 0h24v24H0V0z" />
                                                 <path d="M0 0h24v24H0V0z" opacity=".87" />
@@ -123,8 +122,8 @@
                                                 opacity=".3" />
                                             <path
                                                 d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0
-                                                                                                                                                                                    2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1
-                                                                                                                                                                                    0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
+                                                                                                                                                                                        2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1
+                                                                                                                                                                                        0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" />
                                         </svg>
                                     </span>
 
@@ -134,11 +133,11 @@
                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                             <path
                                                 d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11
-                                                                                                                                                                                    11-7.5c-1.73-4.39-6-7.5-11-7.5zm0
-                                                                                                                                                                                    13c-2.76 0-5-2.24-5-5s2.24-5
-                                                                                                                                                                                    5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66
-                                                                                                                                                                                    0-3 1.34-3 3s1.34 3 3 3
-                                                                                                                                                                                    3-1.34 3-3-1.34-3-3-3z" />
+                                                                                                                                                                                        11-7.5c-1.73-4.39-6-7.5-11-7.5zm0
+                                                                                                                                                                                        13c-2.76 0-5-2.24-5-5s2.24-5
+                                                                                                                                                                                        5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66
+                                                                                                                                                                                        0-3 1.34-3 3s1.34 3 3 3
+                                                                                                                                                                                        3-1.34 3-3-1.34-3-3-3z" />
                                         </svg>
                                     </div>
                                 </div>
@@ -186,8 +185,8 @@
             input.type = input.type === 'password' ? 'text' : 'password';
         }
 
-        $(document).ready(function() {
-            $('#login_button').on('click', function(e) {
+        $(document).ready(function () {
+            $('#login_button').on('click', function (e) {
                 e.preventDefault();
 
                 var button = $(this);
@@ -245,7 +244,7 @@
                         email: email,
                         password: password
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status) {
                             window.location.href = response.redirect_url
                         } else {
@@ -263,27 +262,30 @@
                             });
                         }
                     },
-                    error: function(data) {
+                    // error: function(data) {
 
-                        try {
-                            const response = data.responseJSON;
-                            if (response && response.message) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    html: response.message,
-                                    confirmButtonText: 'OK'
-                                });
-                            } else {
-                                $('body').html(data
-                                    .responseText);
-                            }
-                        } catch (e) {
-                            $('body').html(data.responseText);
-                        }
+                    //     try {
+                    //         const response = data.responseJSON;
+                    //         if (response && response.message) {
+                    //             Swal.fire({
+                    //                 icon: 'error',
+                    //                 title: 'Error',
+                    //                 html: response.message,
+                    //                 confirmButtonText: 'OK'
+                    //             });
+                    //         } else {
+                    //             $('body').html(data
+                    //                 .responseText);
+                    //         }
+                    //     } catch (e) {
+                    //         $('body').html(data.responseText);
+                    //     }
 
-                        $('#login_button').prop('disabled', false).html(
-                            '<i class="fe fe-arrow-right"></i> Login');
+                    //     $('#login_button').prop('disabled', false).html(
+                    //         '<i class="fe fe-arrow-right"></i> Login');
+                    // }
+                    error: function (data) {
+                        $('body').html(data.responseText);
                     }
                 });
 

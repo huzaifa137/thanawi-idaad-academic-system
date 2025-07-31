@@ -142,12 +142,9 @@ $controller = new Controller();
                     let input = $form.find(`[name="${field}"]`);
                     if (!input.val().trim()) {
                         input.addClass('is-invalid');
-
                         if (input.next('.invalid-feedback').length === 0) {
-                            input.after(
-                                '<div class="invalid-feedback">This field is required.</div>');
+                            input.after('<div class="invalid-feedback">This field is required.</div>');
                         }
-
                         isValid = false;
                     }
                 });
@@ -170,64 +167,92 @@ $controller = new Controller();
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $submitBtn.prop('disabled', true);
-                        const originalBtnHtml = $submitBtn.html();
-                        $submitBtn.html('Saving...<i class="fas fa-spinner fa-spin"></i>');
-
-                        $.ajax({
-                            url: '{{ route('teachers.store') }}',
-                            method: 'POST',
-                            data: $form.serialize(),
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            success: function (response) {
-                                Swal.fire(
-                                    'Submitted!',
-                                    response.message,
-                                    'success'
-                                );
-                                $form[0].reset();
-                            },
-                            error: function (xhr) {
-                                if (xhr.status === 422) {
-                                    let errors = xhr.responseJSON.errors;
-                                    for (let field in errors) {
-                                        let input = $form.find(`[name="${field}"]`);
-                                        input.addClass('is-invalid');
-                                        if (input.next('.invalid-feedback').length === 0) {
-                                            input.after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
-                                        }
-                                    }
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Validation Error',
-                                        text: 'Please fix the errors and try again.'
-                                    });
-                                } else {
-                                    // Show the actual error in the response
-                                    let errorMessage = xhr.responseJSON?.message || xhr.statusText || 'An unexpected error occurred';
-
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Server Error',
-                                        html: `<pre>${errorMessage}</pre>`, // show full error message
-                                    });
-                                }
-                            },
-                            // error: function(data) {
-                            //     $('body').html(data.responseText);
-                            // },
-                            complete: function () {
-                                $submitBtn.prop('disabled', false).html(
-                                    originalBtnHtml);
-                            }
-                        });
+                        submitForm($form, $submitBtn, false); // first try
                     }
                 });
             });
+
+            function submitForm($form, $submitBtn, confirmExisting) {
+                $submitBtn.prop('disabled', true);
+                const originalBtnHtml = $submitBtn.html();
+                $submitBtn.html('Saving...<i class="fas fa-spinner fa-spin"></i>');
+
+                let formData = $form.serialize();
+
+                if (confirmExisting) {
+                    formData += '&confirm_existing=1'; // append confirm flag
+                }
+
+                $.ajax({
+                    url: '{{ route('teachers.store') }}',
+                    method: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
+                        if (response.exists && !confirmExisting) {
+                            Swal.fire({
+                                title: 'Email already exists',
+                                text: response.message,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes, continue',
+                                cancelButtonText: 'Cancel'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    submitForm($form, $submitBtn, true); // retry with confirm flag
+                                }
+                            });
+                        } else {
+                            Swal.fire('Submitted!', response.message, 'success');
+                            $form[0].reset();
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+
+                            if (errors) {
+                                for (let field in errors) {
+                                    let input = $form.find(`[name="${field}"]`);
+                                    input.addClass('is-invalid');
+                                    if (input.next('.invalid-feedback').length === 0) {
+                                        input.after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                                    }
+                                }
+                            }
+
+                            if (xhr.responseJSON.message) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Validation Error',
+                                    text: xhr.responseJSON.message
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Validation Error',
+                                    text: 'Please fix the errors and try again.'
+                                });
+                            }
+                        } else {
+                            let errorMessage = xhr.responseJSON?.message || xhr.statusText || 'An unexpected error occurred';
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Server Error',
+                                html: `<pre>${errorMessage}</pre>`,
+                            });
+                        }
+                    },
+                    complete: function () {
+                        $submitBtn.prop('disabled', false).html(originalBtnHtml);
+                    }
+                });
+            }
         });
     </script>
+
 @endsection
 @section('js')
     <!-- c3.js Charts js-->

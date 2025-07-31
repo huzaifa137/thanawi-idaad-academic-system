@@ -12,37 +12,30 @@ class Helper extends Controller
         return $user = Session::get('LoggedAdmin');
     }
 
-    public static function instructor_name($user = "")
-    {
-        $user = (int) $user;
-        $admin = DB::table('users')->where('id', '=', $user)->where('user_role', '!=', 1)->first();
-
-        return $user = @$admin->firstname . ' ' . @$admin->lastname;
-    }
-
-    public static function student_name($user = "")
-    {
-        $user = (int) $user;
-        $admin = DB::table('users')
-            ->where('id', $user)
-            ->where('user_role', 1)
-            ->first();
-
-        return $admin ? trim($admin->firstname . ' ' . $admin->lastname) : null;
-    }
-
     public static function logged_admin_user($user = "")
     {
         $user = (int) $user;
 
+        $admin = DB::table('users')
+            ->where('id', $user)
+            ->first();
+
         if (Session('LoggedStudent')) {
 
-            $admin = DB::table('teachers')
-                ->where('id', $user)
-                ->first();
-        }
+            if (@$admin->user_role == 5) {
 
-        return $admin ? trim($admin->surname . ' ' . $admin->firstname) : null;
+                $teacher = DB::table('teachers')
+                    ->where('id', @$admin->username)
+                    ->first();
+
+                return $teacher ? trim(@$teacher->surname) : null;
+
+            } elseif (@$admin->user_role == 0) {
+
+                return $admin ? trim(@$admin->username) : null;
+
+            }
+        }
     }
 
     public static function student_username($user = "")
@@ -230,7 +223,7 @@ class Helper extends Controller
         $records = DB::table('master_datas')
             ->where('md_master_code_id', $md_master_code_id)
             ->get();
-            
+
         return $records;
     }
 }

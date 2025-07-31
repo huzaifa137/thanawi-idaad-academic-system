@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\AcademicYear;
 use App\Models\DynamicFormValue;
 use App\Models\MasterData;
@@ -47,9 +48,43 @@ class SchoolController extends Controller
         return view('School.all-schools', compact('schools'));
     }
 
-    public function termDates()
+    public function changeStatus(Request $request, $id)
     {
-        $school_id = Session('LoggedSchool');
+        $request->validate([
+            'status' => 'required|in:0,8,9,10,1'
+        ]);
+
+        $school = School::findOrFail($id);
+        $school->school_status = $request->status;
+        $school->save();
+
+        $teacherIds = DB::table('teachers')
+            ->where('school_id', $id)
+            ->pluck('id');
+
+        foreach ($teacherIds as $teacherId) {
+         
+            $username = (string) $teacherId;
+
+            $user = DB::table('users')->where('username', $username)->first();
+
+            if ($user) {
+                DB::table('users')
+                    ->where('id', $user->id)
+                    ->update(['account_status' => $request->status]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'School and teacher statuses updated successfully.'
+        ]);
+    }
+
+
+
+    public function termDates($school_Id)
+    {
+        $school_id = $school_Id;
         $academicYears = AcademicYear::orderBy('id', 'desc')->where('is_active', 1)->get();
         $termDates = TermDate::where('school_id', $school_id)->orderBy('term', 'asc')->get();
 
@@ -126,7 +161,6 @@ class SchoolController extends Controller
     {
         try {
 
-            dd($schoolId);
             $schoolId->delete();
 
             return response()->json(['success' => true]);
@@ -135,9 +169,15 @@ class SchoolController extends Controller
         }
     }
 
+    public function schoolIndividualProfile($id)
+    {
+        $school = School::findOrFail($id);
+        $profile = SchoolProfile::where('school_id', $id)->first();
+        return view('School.school-profile', compact('school', 'profile'));
+    }
+
     public function schoolProfile()
     {
-
         if (Session::has('LoggedSchool') && Session::get('LoggedSchool') !== null) {
 
             $school = School::findOrFail(Session('LoggedSchool'));
@@ -145,9 +185,7 @@ class SchoolController extends Controller
             return view('School.school-profile', compact('school', 'profile'));
 
         } else {
-
             return redirect()->route('student.dashboard')->with('error', 'No School has been selected');
-
         }
     }
 

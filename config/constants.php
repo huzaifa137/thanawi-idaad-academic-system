@@ -49,3 +49,18 @@ return [
 // public static function userPermissionSectionAccess($userId, $permissionName, $permissionScope)
 
 
+// if (PermissionHelper::userPermissionSectionAccess(session('LoggedStudent'), 155, 'school')) {
+
+// } else {
+//     return redirect()->route('student.dashboard')->with('error', 'You do not have permission to access that feature!');
+// }
+
+// @if (PermissionHelper::userPermissionSectionAccess(session('LoggedStudent'), 155, 'school'))
+// @else
+
+// @endif
+
+// @if (PermissionHelper::userHasSpecificPermission(session('LoggedStudent'), 'view_155', 155, 'school'))
+// @else
+// <p style="color: red">Access restricted</p>
+// @endif

@@ -40,7 +40,6 @@ Route::controller(UserController::class)->group(function () {
             Route::get('/users-register', 'userRegister');
             Route::get('/users-information', 'userInformation')->name('users.user-information');
             Route::get('user-account-information/{id}', 'userAccountInformation');
-            Route::get('delete-user/{id}', 'deleteUser');
             Route::get('/home-page', 'homePage')->name('home.page');
             Route::get('/register', 'register')->name('users.register');
             Route::get('/edit-user-information', 'editUserInformation');
@@ -48,6 +47,7 @@ Route::controller(UserController::class)->group(function () {
             Route::get('/terms-and-conditions', 'user_terms_and_conditions')->name('users.terms-and-conditions');
         });
 
+        Route::post('auth-user-selected-school', 'authUserSelectedSchool')->name('auth-user-selected-school');
         Route::post('store-internal-user', 'storeInternalUser')->name('store-internal-user');
         Route::post('update-internal-user', 'storeUpdatedInternalUser')->name('update-internal-user');
         Route::post('save-role', 'saveUserRole')->name('save-role');
@@ -170,6 +170,8 @@ Route::controller(StudentController::class)->group(function () {
         });
     });
 
+    Route::get('/select-current-school', 'selectCurrentSchool')->name('select.current.school');
+
     Route::get('/student/view-course-information/{id}', 'viewCourseInformation')->name('view.course.information');
 
 });
@@ -177,10 +179,11 @@ Route::controller(StudentController::class)->group(function () {
 Route::controller(SchoolController::class)->group(function () {
 
     Route::get('create-school', 'createSchool')->name('school.create-school');
-    Route::get('term-dates/', 'termDates')->name('school.term-dates');
+    Route::get('term-dates/{schoolId}', 'termDates')->name('school.term-dates');
     Route::get('all-schools', 'allSchools')->name('school.allSchools');
     Route::get('/edit-school/{id}/', 'editSchool')->name('edit.school');
     Route::get('/school-profile', 'schoolProfile')->name('profile.school');
+    Route::get('/school-individual-profile/{id}', 'schoolIndividualProfile')->name('profile.individual.school');
     Route::get('/school-options/{id}/', 'schoolOptions')->name('school.options');
 
     Route::delete('/school/{schoolId}', 'deleteSchool')->name('school.delete');
@@ -189,6 +192,7 @@ Route::controller(SchoolController::class)->group(function () {
     Route::post('/update-school', 'updateSchool')->name('update.school');
     Route::post('/store-school-profile', 'storeSchoolProfile')->name('schools.store.profile');
     Route::post('/school/configure', 'configureSchoolOptions')->name('school.configure');
+    Route::post('/schools/{id}/change-status', 'changeStatus');
 
     Route::get('admin-user', 'adminUser')->name('admin.user');
     Route::get('student-user', 'studentUser')->name('student.user');
@@ -210,9 +214,11 @@ Route::controller(SchoolController::class)->group(function () {
 
 Route::controller(TeacherController::class)->group(function () {
 
+
     Route::get('add-teachers', 'addTeachers')->name('school.add-teachers');
     Route::get('/teachers', 'allTeachers')->name('teachers.all');
     Route::get('/school-teachers', 'schoolTeachers')->name('school.teachers');
+    Route::get('/individual-school-teachers/{id}', 'individualSchoolTeachers')->name('individual.school.teachers');
     Route::get('/teacher-profile/{id}', 'teacherProfile')->name('teacher.profile');
     Route::get('/update-teacher-profile/{id}', 'updateteacherProfile')->name('update.teacher.profile');
 
@@ -266,9 +272,14 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
             Route::get('/assign-permissions', 'assignPermissions')->name('assign.users.permissions');
 
             Route::get('add-users', 'addUsers')->name('add-users');
-
         });
 
+        // routes/web.php
+
+        Route::post('/roles/add-user', 'addUserToRole')->name('roles.add-user');
+        Route::post('/roles/remove-user', 'deleteUserFromRole')->name('roles.removeUser');
+
+        Route::get('/users/{id}/details', 'getUserDetails');
         Route::get('/roles/{id}', 'editRole');
         Route::put('/roles/{id}', 'updateRole');
 
@@ -279,6 +290,7 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
         Route::delete('/roles/{id}', 'deleteRole');
         Route::delete('/permissions/delete', 'destroyGroup')->name('permissions.delete');
+        Route::delete('/user/{userId}', 'deleteUser')->name('user.delete');
 
         Route::post('/assign-permissions/{roleId}', 'storeRolePermissions')->name('storeRolePermissions');
         Route::post('/remove-permissions/{roleId}/remove', 'removePermission');
@@ -286,6 +298,8 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
         Route::post('/remove-user-from-role', 'removeUserFromRole')->name('removeUserFromRole');
 
         Route::post('/store-new-user', 'storeNewUser')->name('users.store.new.user');
+        Route::post('/update-user-information', 'updateUserInformation')->name('users.update.information');
+        Route::post('/users/{id}/change-status', 'changeStatus');
 
 
 

@@ -117,30 +117,6 @@
                             });
                         </script>
 
-                        {{--
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                const searchInput = document.getElementById('schoolSearch');
-                                const schoolItems = document.querySelectorAll('.school-item');
-                                const dropdownBtn = document.getElementById('schoolDropdownButton');
-
-                                searchInput.addEventListener('keyup', function () {
-                                    const searchValue = this.value.toLowerCase();
-                                    schoolItems.forEach(item => {
-                                        const schoolName = item.textContent.toLowerCase();
-                                        item.style.display = schoolName.includes(searchValue) ? '' : 'none';
-                                    });
-                                });
-
-                                schoolItems.forEach(item => {
-                                    item.addEventListener('click', function (e) {
-                                        e.preventDefault();
-                                        dropdownBtn.textContent = this.textContent.trim();
-                                    });
-                                });
-                            });
-                        </script> --}}
-
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                         <script>
                             document.addEventListener("DOMContentLoaded", function () {

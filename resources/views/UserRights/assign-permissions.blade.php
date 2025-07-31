@@ -16,7 +16,7 @@ use App\Http\Controllers\Helper;
                         <h3 class="text-white mb-0">All User Permission Features</h3>
                         <div id="manage-users-role" class="text-white">
                            <a href="{{ route('add-users') }}" class="btn btn-light">
-                                <i class="fa fa-user-shield mr-2"></i> Manage All Users Configurations
+                                <i class="fa fa-user-shield mr-2"></i> Manage All Users
                             </a>
                         </div>
                     </div>

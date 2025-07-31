@@ -60,37 +60,20 @@ $controller = new Controller();
                                             <td>{{ $teacher->firstname }}</td>
                                             <td>{{ $teacher->phonenumber }}</td>
                                             <td class="text-center">
+                                                <button class="btn btn-sm btn-info" title="View"
+                                                    onclick="window.location.href='{{ route('teacher.profile', $teacher->id) }}'">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
 
-                                                {{-- @if (PermissionHelper::userHasAllPermissions(session('LoggedStudent'), 155,
-                                                'school')) --}}
+                                                <button class="btn btn-sm btn-warning btn-edit-teacher" title="Edit"
+                                                    data-id="{{ $teacher->id }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
 
-                                                @if (PermissionHelper::userHasSpecificPermission(session('LoggedStudent'), 'view_155', 155, 'school'))
-                                                    <button class="btn btn-sm btn-info" title="View"
-                                                        onclick="window.location.href='{{ route('teacher.profile', $teacher->id) }}'">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                @endif
-
-                                                @if (PermissionHelper::userHasSpecificPermission(session('LoggedStudent'), 'edit_155', 155, 'school'))
-                                                    <button class="btn btn-sm btn-warning btn-edit-teacher" title="Edit"
-                                                        data-id="{{ $teacher->id }}">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                @endif
-
-                                                @if (PermissionHelper::userHasSpecificPermission(session('LoggedStudent'), 'delete_155', 155, 'school'))
-                                                    <button class="btn btn-sm btn-danger btn-delete-teacher" title="Delete"
-                                                        data-id="{{ $teacher->id }}">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                @endif
-
-                                                {{-- @else
-                                                <p style="color: red">Access restricted</p>
-                                                @endif --}}
-
-
-
+                                                <button class="btn btn-sm btn-danger btn-delete-teacher" title="Delete"
+                                                    data-id="{{ $teacher->id }}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     @empty

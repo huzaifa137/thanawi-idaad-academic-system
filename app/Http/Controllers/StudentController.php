@@ -50,11 +50,9 @@ class StudentController extends Controller
         // 3.Suspended  ====> 9
         // 4.Active     ====> 10
 
-        dd($request->all());
-        
         $request->validate([
             'username' => 'required',
-            'email'    => 'required|email|unique:users',
+            'email' => 'required|email|unique:users',
             'password' => [
                 'required',
                 'string',
@@ -66,17 +64,17 @@ class StudentController extends Controller
             ],
         ], [
             'password.required' => 'The password field is required.',
-            'password.string'   => 'The password must be a string.',
-            'password.min'      => 'The password must be at least 6 characters.',
-            'password.regex'    => 'The password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+            'password.string' => 'The password must be a string.',
+            'password.min' => 'The password must be at least 6 characters.',
+            'password.regex' => 'The password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
         ]);
 
-        $password         = $request->password;
+        $password = $request->password;
         $confirm_password = $request->confirmPassword;
 
         if ($password != $confirm_password) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Provided Passwords do not match',
             ]);
         }
@@ -84,12 +82,12 @@ class StudentController extends Controller
         $user = new User;
 
         $user->username = $request->username;
-        $user->email    = $request->email;
+        $user->email = $request->email;
         $user->password = Hash::make($password);
-        $save           = $user->save();
+        $save = $user->save();
 
-        $generatedOTP   = rand(10000, 99999);
-        $info           = DB::table('users')->where('email', $request->email)->update(['temp_otp' => $generatedOTP]);
+        $generatedOTP = rand(10000, 99999);
+        $info = DB::table('users')->where('email', $request->email)->update(['temp_otp' => $generatedOTP]);
         $registeredUser = DB::table('users')->where('email', $request->email)->first();
 
         if ($registeredUser && Hash::check($request->password, $registeredUser->password)) {
@@ -97,16 +95,16 @@ class StudentController extends Controller
             $generatedOTP = rand(10000, 99999);
             DB::table('users')->where('email', $request->email)->update(['temp_otp' => $generatedOTP]);
 
-            $userId    = $registeredUser->id;
-            $username  = $registeredUser->username;
+            $userId = $registeredUser->id;
+            $username = $registeredUser->username;
             $useremail = $registeredUser->email;
 
             $data = [
-                'subject'      => 'Smart Schools REGISTRATION OTP',
-                'body'         => 'Enter the Sent OTP to confirm registration : ',
+                'subject' => 'Smart Schools REGISTRATION OTP',
+                'body' => 'Enter the Sent OTP to confirm registration : ',
                 'generatedOTP' => $generatedOTP,
-                'username'     => $username,
-                'email'        => $useremail,
+                'username' => $username,
+                'email' => $useremail,
             ];
 
             try {
@@ -123,15 +121,15 @@ class StudentController extends Controller
             $request->session()->put('userPassword', $request->password);
 
             return response()->json([
-                'status'       => true,
-                'message'      => 'OTP has been sent,check your email to proceed',
+                'status' => true,
+                'message' => 'OTP has been sent,check your email to proceed',
                 'redirect_url' => '/users/user-otp',
             ]);
 
         } else {
             return response()->json([
-                'status'       => false,
-                'message'      => 'There was something wrong in creating this account,try registering again or contact admins',
+                'status' => false,
+                'message' => 'There was something wrong in creating this account,try registering again or contact admins',
                 'redirect_url' => '/',
             ]);
         }
@@ -149,9 +147,9 @@ class StudentController extends Controller
         $new_otp = $otp_1 . $otp_2 . $otp_3 . $otp_4 . $otp_5;
         $user_id = $request->input('hidden_otp');
 
-        $temp_otp_stored   = DB::table('users')->where('id', $user_id)->value('temp_otp');
+        $temp_otp_stored = DB::table('users')->where('id', $user_id)->value('temp_otp');
         $supplier_username = DB::table('users')->where('id', $user_id)->value('username');
-        $userRole          = DB::table('users')->where('id', $user_id)->value('user_role');
+        $userRole = DB::table('users')->where('id', $user_id)->value('user_role');
 
         if ($new_otp == $temp_otp_stored) {
 
@@ -161,28 +159,28 @@ class StudentController extends Controller
                 $request->session()->put('LoggedStudent', $user_id);
             }
 
-            $url  = '/';
+            $url = '/';
             $url2 = session()->get('url.intended');
             $url3 = '/student/dashboard';
 
             if ($userRole != 1) {
                 if ($url2 != null) {
                     return response()->json([
-                        'status'       => true,
-                        'message'      => 'Login successful',
+                        'status' => true,
+                        'message' => 'Login successful',
                         'redirect_url' => $url2,
                     ]);
                 }
 
                 return response()->json([
-                    'status'       => true,
-                    'message'      => 'Login successful',
+                    'status' => true,
+                    'message' => 'Login successful',
                     'redirect_url' => $url,
                 ]);
             } else {
                 return response()->json([
-                    'status'       => true,
-                    'message'      => 'Login successful',
+                    'status' => true,
+                    'message' => 'Login successful',
                     'redirect_url' => $url3,
                 ]);
             }
@@ -190,8 +188,8 @@ class StudentController extends Controller
         } else {
 
             return response()->json([
-                'status'  => false,
-                'title'   => 'Invalid OTP',
+                'status' => false,
+                'title' => 'Invalid OTP',
                 'message' => 'Entered OTP is invalid, please check your email for correct OTP code',
             ]);
         }
@@ -200,9 +198,42 @@ class StudentController extends Controller
     public function studentDashboard()
     {
         $studentId = session('LoggedStudent');
-        $student = DB::table('users')->where('id',$studentId)->first();
+        $student = DB::table('users')->where('id', $studentId)->first();
 
         return view('student.dashboard', compact('student'));
+    }
+
+    public function selectCurrentSchool()
+    {
+        
+        if (session('login_email')) {
+
+            $email = session('login_email');
+            $user = DB::table('users')->where('email', $email)->first();
+            $userInfo = DB::table('teachers')->where('id', $user->username)->first();
+
+            $teacherSchools = DB::table('teachers')
+                ->where('email', session(key: 'login_email'))
+                ->pluck('school_id')
+                ->unique();
+
+
+            $schoolsInExistance = DB::table('schools')
+                ->whereIn('id', $teacherSchools)
+                ->get()
+                ->map(function ($school) {
+                    $profile = DB::table('school_profiles')->where('school_id', $school->id)->first();
+                    $school->profile = $profile;
+                    return $school;
+                });
+
+
+            return view('users.schools-teacher-belongs-in', compact(['schoolsInExistance', 'userInfo', 'email']));
+
+        } else {
+            session()->flush();
+            return redirect('/');
+        }
     }
 
     public function studentProfile(Request $request)
@@ -230,7 +261,7 @@ class StudentController extends Controller
     public function coursesAndLessons()
     {
         $allCourses = Course::orderBy('id', 'desc')->paginate(10);
-        $studentId  = Session('LoggedStudent');
+        $studentId = Session('LoggedStudent');
 
         $enrolledCourseIds = DB::table('enrollments')
             ->where('user_id', $studentId)
@@ -258,11 +289,11 @@ class StudentController extends Controller
             $cart[$id]['quantity'] += 1;
         } else {
             $cart[$id] = [
-                "id"        => $course->id,
-                "title"     => $course->title,
+                "id" => $course->id,
+                "title" => $course->title,
                 "thumbnail" => $course->thumbnail,
-                "price"     => $cleanedPrice,
-                "quantity"  => 1,
+                "price" => $cleanedPrice,
+                "quantity" => 1,
             ];
         }
 
@@ -323,12 +354,12 @@ class StudentController extends Controller
             return redirect()->route('student.cart')->with('error', 'Your cart is empty.');
         }
 
-        $subtotal  = 0;
+        $subtotal = 0;
         $isAllFree = true;
 
         foreach ($cart as $item) {
             $courseId = $item['course_id'] ?? $item['id'];
-            $course   = \App\Models\Course::find($courseId);
+            $course = \App\Models\Course::find($courseId);
 
             if ($course && $course->pricing_category == 0) {
                 continue;
@@ -341,8 +372,8 @@ class StudentController extends Controller
         }
 
         $discount = 0;
-        $vat      = ($subtotal - $discount) * 0;
-        $total    = $subtotal - $discount + $vat;
+        $vat = ($subtotal - $discount) * 0;
+        $total = $subtotal - $discount + $vat;
 
         return view('student.checkout', compact('cart', 'subtotal', 'discount', 'vat', 'total', 'isAllFree'));
     }
@@ -358,14 +389,14 @@ class StudentController extends Controller
         foreach ($cart as $item) {
             DB::table('enrollments')->updateOrInsert(
                 [
-                    'user_id'   => Session('LoggedStudent'),
+                    'user_id' => Session('LoggedStudent'),
                     'course_id' => $item['id'],
                 ],
                 [
-                    'status'      => 'enrolled',
+                    'status' => 'enrolled',
                     'enrolled_at' => now(),
-                    'updated_at'  => now(),
-                    'created_at'  => now(),
+                    'updated_at' => now(),
+                    'created_at' => now(),
                 ]
             );
         }
@@ -395,7 +426,7 @@ class StudentController extends Controller
     public function filterCourses(Request $request)
     {
         $studentId = session('LoggedStudent');
-        $filter    = $request->query('filter', 'all');
+        $filter = $request->query('filter', 'all');
 
         $enrolledCourseIds = DB::table('enrollments')
             ->where('user_id', $studentId)
@@ -411,7 +442,7 @@ class StudentController extends Controller
         }
 
         return view('Courses.partials.courses_grid', [
-            'allCourses'        => $courses,
+            'allCourses' => $courses,
             'enrolledCourseIds' => $enrolledCourseIds,
         ])->render();
     }
@@ -443,17 +474,17 @@ class StudentController extends Controller
             ->where('user_id', $studentId)
             ->exists();
 
-        $followersCount     = null;
+        $followersCount = null;
         $formattedFollowers = null;
         if ($isEnrolled) {
             $sessionKey = "followers_count_{$studentId}_{$courseId}";
 
-            if (! session()->has($sessionKey)) {
+            if (!session()->has($sessionKey)) {
                 $randomNumber = rand(1000, 999999);
                 session([$sessionKey => $randomNumber]);
             }
 
-            $followersCount     = session($sessionKey);
+            $followersCount = session($sessionKey);
             $formattedFollowers = $this->formatFollowers($followersCount);
         }
 
@@ -462,7 +493,10 @@ class StudentController extends Controller
             ->toArray();
 
         return view('student.course-details', compact(
-            'course', 'formattedFollowers', 'enrolledCourseIds', 'isEnrolled'
+            'course',
+            'formattedFollowers',
+            'enrolledCourseIds',
+            'isEnrolled'
         ));
     }
 
@@ -488,11 +522,11 @@ class StudentController extends Controller
             $cart[$id]['quantity'] += 1;
         } else {
             $cart[$id] = [
-                "id"        => $course->id,
-                "title"     => $course->title,
+                "id" => $course->id,
+                "title" => $course->title,
                 "thumbnail" => $course->thumbnail,
-                "price"     => $cleanedPrice,
-                "quantity"  => 1,
+                "price" => $cleanedPrice,
+                "quantity" => 1,
             ];
         }
 
@@ -513,17 +547,17 @@ class StudentController extends Controller
             ->where('user_id', $studentId)
             ->exists();
 
-        $followersCount     = null;
+        $followersCount = null;
         $formattedFollowers = null;
         if ($isEnrolled) {
             $sessionKey = "followers_count_{$studentId}_{$courseId}";
 
-            if (! session()->has($sessionKey)) {
+            if (!session()->has($sessionKey)) {
                 $randomNumber = rand(1000, 999999);
                 session([$sessionKey => $randomNumber]);
             }
 
-            $followersCount     = session($sessionKey);
+            $followersCount = session($sessionKey);
             $formattedFollowers = $this->formatFollowers($followersCount);
         }
 
@@ -536,8 +570,13 @@ class StudentController extends Controller
         $quizzesCount = $course->modules->flatMap->lessons->flatMap->quizzes->count();
 
         return view('student.ongoing-studies', compact(
-            'course', 'formattedFollowers', 'enrolledCourseIds', 'isEnrolled',
-            'modulesCount', 'lessonsCount', 'quizzesCount'
+            'course',
+            'formattedFollowers',
+            'enrolledCourseIds',
+            'isEnrolled',
+            'modulesCount',
+            'lessonsCount',
+            'quizzesCount'
         ));
     }
 
@@ -576,10 +615,10 @@ class StudentController extends Controller
             $response = $answers->firstWhere('question_id', $question->id);
 
             return [
-                'question'       => $question->question_text,
-                'user_answer'    => $response?->answer ?? null,
-                'is_correct'     => $response?->is_correct ?? false,
-                'has_answer'     => ! is_null($response),
+                'question' => $question->question_text,
+                'user_answer' => $response?->answer ?? null,
+                'is_correct' => $response?->is_correct ?? false,
+                'has_answer' => !is_null($response),
                 'correct_answer' => $question->correct_answer,
             ];
         });
@@ -602,10 +641,10 @@ class StudentController extends Controller
     public function submitQuiz(Request $request, Quiz $quiz)
     {
         $submittedAnswers = $request->input('answers', []);
-        $questions        = $quiz->questions;
+        $questions = $quiz->questions;
 
-        $score   = 0;
-        $total   = $questions->count();
+        $score = 0;
+        $total = $questions->count();
         $results = [];
 
         if ($questions->isEmpty()) {
@@ -615,14 +654,14 @@ class StudentController extends Controller
         $user = User::find(session('LoggedStudent'));
 
         $userQuizAttempt = UserQuizAttempt::create([
-            'user_id'      => $user->id,
-            'quiz_id'      => $quiz->id,
-            'score'        => 0,
+            'user_id' => $user->id,
+            'quiz_id' => $quiz->id,
+            'score' => 0,
             'completed_at' => now(),
         ]);
 
         foreach ($questions as $question) {
-            $userAnswer    = isset($submittedAnswers[$question->id]) ? trim($submittedAnswers[$question->id]) : null;
+            $userAnswer = isset($submittedAnswers[$question->id]) ? trim($submittedAnswers[$question->id]) : null;
             $correctAnswer = trim($question->correct_answer);
 
             $isCorrect = false;
@@ -639,15 +678,15 @@ class StudentController extends Controller
 
             $userQuizAttempt->answers()->create([
                 'question_id' => $question->id,
-                'answer'      => $userAnswer,
-                'is_correct'  => $isCorrect,
+                'answer' => $userAnswer,
+                'is_correct' => $isCorrect,
             ]);
 
             $results[] = [
-                'question'       => $question->question_text,
-                'user_answer'    => $userAnswer,
+                'question' => $question->question_text,
+                'user_answer' => $userAnswer,
                 'correct_answer' => $correctAnswer,
-                'is_correct'     => $isCorrect,
+                'is_correct' => $isCorrect,
             ];
         }
 
@@ -661,17 +700,17 @@ class StudentController extends Controller
         $attemptNumber = $lastAttempt ? $lastAttempt->pivot->attempt_number + 1 : 1;
 
         $user->quizzes()->attach($quiz->id, [
-            'score'          => $score,
-            'total'          => $total,
+            'score' => $score,
+            'total' => $total,
             'attempt_number' => $attemptNumber,
-            'completed_at'   => now(),
+            'completed_at' => now(),
         ]);
 
         return view('student.on-take-result', [
-            'quiz'          => $quiz,
-            'score'         => $score,
-            'total'         => $total,
-            'results'       => $results,
+            'quiz' => $quiz,
+            'score' => $score,
+            'total' => $total,
+            'results' => $results,
             'attemptNumber' => $attemptNumber,
         ]);
     }
@@ -690,14 +729,14 @@ class StudentController extends Controller
                 ->orderByDesc('completed_at')
                 ->first();
 
-            if (! $result) {
+            if (!$result) {
                 return response()->json([
                     'message' => 'You must attempt the quiz on this lesson before marking it complete.',
                 ], 403);
             }
 
             $correct = $result->score ?? 0;
-            $total   = $result->total ?? 0;
+            $total = $result->total ?? 0;
 
             if ($total == 0) {
                 return response()->json([
@@ -714,7 +753,7 @@ class StudentController extends Controller
             }
         }
 
-        if ($user && ! $user->completedLessons->contains($lesson->id)) {
+        if ($user && !$user->completedLessons->contains($lesson->id)) {
             $user->completedLessons()->attach($lesson->id);
         }
 
@@ -723,7 +762,7 @@ class StudentController extends Controller
 
     public function previewAllCertificates()
     {
-        $user    = User::find(session('LoggedStudent'));
+        $user = User::find(session('LoggedStudent'));
         $courses = Course::with('modules.lessons')->get();
 
         $certificates = [];
@@ -740,15 +779,15 @@ class StudentController extends Controller
                 ->toArray();
 
             $certificates[] = [
-                'course'          => $course,
+                'course' => $course,
                 'allLessonsCount' => count($allLessonIds),
-                'completedCount'  => count($completedLessonIds),
-                'isCompleted'     => count($allLessonIds) > 0 && count($completedLessonIds) === count($allLessonIds),
+                'completedCount' => count($completedLessonIds),
+                'isCompleted' => count($allLessonIds) > 0 && count($completedLessonIds) === count($allLessonIds),
             ];
         }
 
         return view('student.all-preview', [
-            'user'         => $user,
+            'user' => $user,
             'certificates' => $certificates,
         ]);
     }
@@ -757,7 +796,7 @@ class StudentController extends Controller
     {
         $user = User::find(session('LoggedStudent'));
 
-        if (! $user) {
+        if (!$user) {
             return redirect()->back()->with('error', 'User not logged in.');
         }
 
@@ -767,7 +806,7 @@ class StudentController extends Controller
             ->whereIn('lessons.id', $courseLessonIds)
             ->pluck('lessons.id');
 
-        $total     = count($courseLessonIds);
+        $total = count($courseLessonIds);
         $completed = count($completedLessonIds);
 
         if ($total !== $completed) {
@@ -781,7 +820,7 @@ class StudentController extends Controller
     public function contactUs()
     {
         $studentEmail = DB::table('users')->where('id', Session('LoggedStudent'))->value('email');
-        $messages     = contactUs::orderBy('created_at', 'desc')->where('student_id', Session('LoggedStudent'))->get();
+        $messages = contactUs::orderBy('created_at', 'desc')->where('student_id', Session('LoggedStudent'))->get();
 
         return view('student.contact-us', compact(['studentEmail', 'messages']));
     }
@@ -790,23 +829,23 @@ class StudentController extends Controller
     {
 
         contactUs::create([
-            'student_email'          => $request->studentEmail,
-            'student_subject'        => $request->subject,
-            'student_message'        => $request->message,
-            'student_id'             => Session('LoggedStudent'),
-            'admin_response_status'  => 0,
+            'student_email' => $request->studentEmail,
+            'student_subject' => $request->subject,
+            'student_message' => $request->message,
+            'student_id' => Session('LoggedStudent'),
+            'admin_response_status' => 0,
             'admin_response_message' => '',
-            'admin_responded_by'     => null,
-            'date_added'             => Carbon::now()->toDateTimeString(),
+            'admin_responded_by' => null,
+            'date_added' => Carbon::now()->toDateTimeString(),
         ]);
 
         $studentInformation = user::find(Session('LoggedStudent'));
 
         $data = [
-            'email'           => $studentInformation->email,
-            'username'        => $studentInformation->username,
+            'email' => $studentInformation->email,
+            'username' => $studentInformation->username,
             'student_message' => $request->message,
-            'title'           => 'U.P STUDENT MESSAGE FROM CONTACT US',
+            'title' => 'U.P STUDENT MESSAGE FROM CONTACT US',
         ];
 
         Mail::send('emails.student-contact-us', $data, function ($message) use ($data) {
@@ -814,7 +853,7 @@ class StudentController extends Controller
         });
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Your message has been submitted.',
         ]);
     }
@@ -825,12 +864,12 @@ class StudentController extends Controller
         $studentInformation = user::find(Session('LoggedStudent'));
 
         $data = [
-            'email'           => $request->email,
-            'username'        => $request->name,
-            'phonenumber'     => $request->phonenumber,
-            'subject'         => $request->subject,
+            'email' => $request->email,
+            'username' => $request->name,
+            'phonenumber' => $request->phonenumber,
+            'subject' => $request->subject,
             'student_message' => $request->message,
-            'title'           => 'U.P HOMEPAGE MESSAGE FROM USER',
+            'title' => 'U.P HOMEPAGE MESSAGE FROM USER',
         ];
 
         Mail::send('emails.student-contact-us-home-page', $data, function ($message) use ($data) {
@@ -838,7 +877,7 @@ class StudentController extends Controller
         });
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Your message has been submitted.',
         ]);
     }
@@ -853,17 +892,17 @@ class StudentController extends Controller
             ->where('user_id', $studentId)
             ->exists();
 
-        $followersCount     = null;
+        $followersCount = null;
         $formattedFollowers = null;
         if ($isEnrolled) {
             $sessionKey = "followers_count_{$studentId}_{$courseId}";
 
-            if (! session()->has($sessionKey)) {
+            if (!session()->has($sessionKey)) {
                 $randomNumber = rand(1000, 999999);
                 session([$sessionKey => $randomNumber]);
             }
 
-            $followersCount     = session($sessionKey);
+            $followersCount = session($sessionKey);
             $formattedFollowers = $this->formatFollowers($followersCount);
         }
 
@@ -872,7 +911,10 @@ class StudentController extends Controller
             ->toArray();
 
         return view('student.courses-information-and-lessons-details', compact(
-            'course', 'formattedFollowers', 'enrolledCourseIds', 'isEnrolled'
+            'course',
+            'formattedFollowers',
+            'enrolledCourseIds',
+            'isEnrolled'
         ));
     }
 }
