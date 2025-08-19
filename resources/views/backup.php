@@ -53,82 +53,82 @@ $('body').html(data.responseText);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-        const form = document.getElementById("quizForm");
-        form.addEventListener("submit", function(e) {
-            e.preventDefault();
+const form = document.getElementById("quizForm");
+form.addEventListener("submit", function(e) {
+e.preventDefault();
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to create this quiz.",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#aaa',
-                confirmButtonText: 'Yes, save it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-    });
+Swal.fire({
+title: 'Are you sure?',
+text: "You are about to create this quiz.",
+icon: 'question',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#aaa',
+confirmButtonText: 'Yes, save it!'
+}).then((result) => {
+if (result.isConfirmed) {
+form.submit();
+}
+});
+});
+});
 
-    $(document).ready(function() {
-        const form = $('#quizForm');
-        const submitBtn = form.find('button[type="submit"]');
+$(document).ready(function() {
+const form = $('#quizForm');
+const submitBtn = form.find('button[type="submit"]');
 
-        form.on('submit', function(e) {
-            e.preventDefault();
+form.on('submit', function(e) {
+e.preventDefault();
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to create this quiz.",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#aaa',
-                confirmButtonText: 'Yes, save it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Button UI
-                    submitBtn.prop('disabled', true);
-                    submitBtn.html('Creating quiz... <i class="fas fa-spinner fa-spin"></i>');
+Swal.fire({
+title: 'Are you sure?',
+text: "You are about to create this quiz.",
+icon: 'question',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#aaa',
+confirmButtonText: 'Yes, save it!'
+}).then((result) => {
+if (result.isConfirmed) {
+// Button UI
+submitBtn.prop('disabled', true);
+submitBtn.html('Creating quiz... <i class="fas fa-spinner fa-spin"></i>');
 
-                    // Submit with AJAX
-                    $.ajax({
-                        url: form.attr('action'),
-                        method: form.attr('method'),
-                        data: form.serialize(),
-                        success: function(response) {
-                            // Redirect or success SweetAlert
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Quiz created successfully!',
-                                icon: 'success'
-                            }).then(() => {
-                                window.location.href =
-                                    "{{ route('quizzes.create.quiz') }}";
-                            });
-                        },
-                        error: function(data) {
-                            // Show raw error HTML for debugging (as you requested)
-                            $('body').html(data.responseText);
-                        }
-                    });
-                }
-            });
-        });
-    });
+// Submit with AJAX
+$.ajax({
+url: form.attr('action'),
+method: form.attr('method'),
+data: form.serialize(),
+success: function(response) {
+// Redirect or success SweetAlert
+Swal.fire({
+title: 'Success!',
+text: 'Quiz created successfully!',
+icon: 'success'
+}).then(() => {
+window.location.href =
+"{{ route('quizzes.create.quiz') }}";
+});
+},
+error: function(data) {
+// Show raw error HTML for debugging (as you requested)
+$('body').html(data.responseText);
+}
+});
+}
+});
+});
+});
 
 
-    @if (session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops!',
-                text: '{{ session('error') }}',
-            });
-        @endif
-        
+@if (session('error'))
+Swal.fire({
+icon: 'error',
+title: 'Oops!',
+text: '{{ session('error') }}',
+});
+@endif
+
 <!-- Confirm on Form submission -->
 
 <button class="btn btn-primary"><i class="fa fa-fw fa-save"></i> Save</button>
@@ -190,27 +190,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function() {
-       document.querySelectorAll('.delete-record-btn').forEach(function(btn) {
-           btn.addEventListener('click', function(event) {
-               event.preventDefault();
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.delete-record-btn').forEach(function (btn) {
+            btn.addEventListener('click', function (event) {
+                event.preventDefault();
 
-               Swal.fire({
-                   title: 'Are you sure?',
-                   text: 'Please confirm before you delete this record!',
-                   icon: 'warning',
-                   showCancelButton: true,
-                   confirmButtonColor: '#3085d6',
-                   cancelButtonColor: '#d33',
-                   confirmButtonText: 'Yes, delete it!'
-               }).then((result) => {
-                   if (result.isConfirmed) {
-                       window.location.href = this.href;
-                   }
-               });
-           });
-       });
-   });
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Please confirm before you delete this record!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = this.href;
+                    }
+                });
+            });
+        });
+    });
 
 </script>
 
@@ -226,9 +226,9 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
     // Select all edit buttons
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.edit-record-btn').forEach(function(button) {
-            button.addEventListener('click', function(event) {
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.edit-record-btn').forEach(function (button) {
+            button.addEventListener('click', function (event) {
                 event.preventDefault(); // Prevent default anchor behavior
 
                 let url = this.getAttribute('data-url'); // Get URL from data attribute
@@ -251,74 +251,74 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-document.getElementById('register-user-btn').addEventListener('click', function(event) {
-            event.preventDefault();
+    document.getElementById('register-user-btn').addEventListener('click', function (event) {
+        event.preventDefault();
 
-            var button = this;
+        var button = this;
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Do you want to register a new user?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, register!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to register a new user?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, register!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
 
-                    button.disabled = true;
-                    button.innerHTML = 'Creating user account...<i class="fas fa-spinner fa-spin"></i>';
-                    document.querySelector("form").submit();
-                }
-            });
+                button.disabled = true;
+                button.innerHTML = 'Creating user account...<i class="fas fa-spinner fa-spin"></i>';
+                document.querySelector("form").submit();
+            }
         });
+    });
 
 </script>
 
 
-            $('#otp_verification').html(
-            '<span class="text-white">Verifying...</span><i class="fe fe-loader"></i> ');
-            $('#otp_verification').css('cursor', 'default');
-            $('#otp_verification').prop('disabled', true);
+$('#otp_verification').html(
+'<span class="text-white">Verifying...</span><i class="fe fe-loader"></i> ');
+$('#otp_verification').css('cursor', 'default');
+$('#otp_verification').prop('disabled', true);
 
 
 @if ($procurement->isEmpty())
-    <div class="col-sm-12 col-md-12">
+<div class="col-sm-12 col-md-12">
     <div class="alert alert-warning mt-3" role="alert">
-    No prequalification periods found
-                </div>
-            </div>
-                @else
-                 @endif
+        No prequalification periods found
+    </div>
+</div>
+@else
+@endif
 
 
-                 @if (empty($time_data))
+@if (empty($time_data))
 
-                 @else
-                 @endif
+@else
+@endif
 
-                 <!-- selecting master data individual meaning  -->
+<!-- selecting master data individual meaning  -->
 
-                 <p>{{ Controller::rgf('master_datas', $user_profile_data->year, 'md_id', 'md_name') }}
+<p>{{ Controller::rgf('master_datas', $user_profile_data->year, 'md_id', 'md_name') }}
 
-                 <!-- selecting master data drop down meaning  -->
-                 <p>{{ Controller::rgf('master_datas', $user_profile_data->year, 'md_id', 'md_name') }}
+    <!-- selecting master data drop down meaning  -->
+<p>{{ Controller::rgf('master_datas', $user_profile_data->year, 'md_id', 'md_name') }}
 
-                 <td><?php
-                     echo Controller::DropMasterData(config('constants.options.PROCUREMENT_CATEGORY'), $procurement_record->category_of_procurement, 'category_of_procurement', 2);
-                     ?></td>
+    <td><?php
+    echo Controller::DropMasterData(config('constants.options.PROCUREMENT_CATEGORY'), $procurement_record->category_of_procurement, 'category_of_procurement', 2);
+    ?></td>
 
 
-                            <div class="col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">Category</label>
-                                    <td><?php
-                                        echo Helper::DropMasterData(config('constants.options.COURSE_CATEGORIES'), $course->category_id, 'category', 2);
-                                        ?></td>
-                                </div>
-                            </div>
+<div class="col-sm-6 col-md-6">
+    <div class="form-group">
+        <label class="form-label">Category</label>
+        <td><?php
+        echo Helper::DropMasterData(config('constants.options.COURSE_CATEGORIES'), $course->category_id, 'category', 2);
+        ?></td>
+    </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -329,47 +329,48 @@ document.getElementById('register-user-btn').addEventListener('click', function(
 <script type="text/javascript"></script>
 
 <script>
-        function handleSubmit(form) {
-            const uploadButton = document.getElementById('uploadButton');
-            const loader = document.getElementById('loader');
+    function handleSubmit(form) {
+        const uploadButton = document.getElementById('uploadButton');
+        const loader = document.getElementById('loader');
 
-            uploadButton.disabled = true;
-            loader.style.display = 'inline-block';
+        uploadButton.disabled = true;
+        loader.style.display = 'inline-block';
 
-            uploadButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Uploading...';
+        uploadButton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Uploading...';
 
-            return true;
-        }
-    </script>
+        return true;
+    }
+</script>
 
 
 .border {
-                        border: 1px solid #ddd;
-                        border-radius: 8px;
-                        padding: 20px;
-                        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
-                        background-color: #ffffff;
-                    }
+border: 1px solid #ddd;
+border-radius: 8px;
+padding: 20px;
+box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+background-color: #ffffff;
+}
 
 <!-- php artisan schedule:work -->
 
-echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">';
+echo '
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">';
 
 
 
 <?php
 
-    $ActiveUser = $procurement_officer = config('constants.options.HeadOfProcurementUserId');
-    $userRoleId = DB::table('admins')->where('id', Session('LoggedAdmin'))->value('user_id');
+$ActiveUser = $procurement_officer = config('constants.options.HeadOfProcurementUserId');
+$userRoleId = DB::table('admins')->where('id', Session('LoggedAdmin'))->value('user_id');
 
 ?>
 
 
 <div class="alert alert-warning" role="alert">
-                    Head of Procurement required to process this section
-                </div>
+    Head of Procurement required to process this section
+</div>
 
- closing Modal bootstrap Information
+closing Modal bootstrap Information
 
 <!-- NEW BOOTSTRAP IMPLEMENTATION CLOSING MODAL -->
 
@@ -381,22 +382,28 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-$finanical_year  = Controller::rgf('master_datas', $year, 'md_id', 'md_code');
-        $Record_Approval = procurement_approval::first();
+$finanical_year = Controller::rgf('master_datas', $year, 'md_id', 'md_code');
+$Record_Approval = procurement_approval::first();
 
-        if ($Record_Approval) {
-            $procurement = DB::table('procurements')->join('master_datas', 'procurements.currency', '=', 'master_datas.md_id')->select('procurements.*', 'master_datas.created_at as master_created_at', 'master_datas.md_name')->where('procurements.year', $year)->where('procurements.is_item_planned', 0)->paginate(30);
+if ($Record_Approval) {
+$procurement = DB::table('procurements')->join('master_datas', 'procurements.currency', '=',
+'master_datas.md_id')->select('procurements.*', 'master_datas.created_at as master_created_at',
+'master_datas.md_name')->where('procurements.year', $year)->where('procurements.is_item_planned', 0)->paginate(30);
 
-            $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+$data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
 
-            return view('procurement-plan.ProcurementRecords', $data, compact(['procurement', 'year']))->with('finanical_year', $finanical_year);
-        } else {
-            $procurement = DB::table('procurements')->join('master_datas', 'procurements.currency', '=', 'master_datas.md_id')->select('procurements.*', 'master_datas.created_at as master_created_at', 'master_datas.md_name')->where('procurements.year', $year)->where('procurements.is_item_planned', 0)->paginate(30);
+return view('procurement-plan.ProcurementRecords', $data, compact(['procurement', 'year']))->with('finanical_year',
+$finanical_year);
+} else {
+$procurement = DB::table('procurements')->join('master_datas', 'procurements.currency', '=',
+'master_datas.md_id')->select('procurements.*', 'master_datas.created_at as master_created_at',
+'master_datas.md_name')->where('procurements.year', $year)->where('procurements.is_item_planned', 0)->paginate(30);
 
-            $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+$data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
 
-            return view('procurement-plan.ProcurementRecords', $data, compact(['procurement', 'year']))->with('finanical_year', $finanical_year);
-        }
+return view('procurement-plan.ProcurementRecords', $data, compact(['procurement', 'year']))->with('finanical_year',
+$finanical_year);
+}
 
 
 
@@ -407,33 +414,33 @@ $finanical_year  = Controller::rgf('master_datas', $year, 'md_id', 'md_code');
 <!-- CKEDITOR BEING IMPELEMENTED IN THE SYSTEM -->
 
 <section>
-                                    <div class="tab-pane">
-                                        <div class="col-md-12">
-                                            <div class="editor-container">
-                                                <textarea name="content" id="t_description"></textarea>
-                                            </div>
+    <div class="tab-pane">
+        <div class="col-md-12">
+            <div class="editor-container">
+                <textarea name="content" id="t_description"></textarea>
+            </div>
 
-                                            <script>
-                                                ClassicEditor
-                                                    .create(document.querySelector('#t_description'))
-                                                    .then(editor => {
-                                                        window.t_description = editor;
-                                                    })
-                                                    .catch(error => {
-                                                        console.error('There was a problem initializing CKEditor:', error);
-                                                    });
-                                            </script>
-                                        </div>
-                                    </div>
-                                </section>
+            <script>
+                ClassicEditor
+                    .create(document.querySelector('#t_description'))
+                    .then(editor => {
+                        window.t_description = editor;
+                    })
+                    .catch(error => {
+                        console.error('There was a problem initializing CKEditor:', error);
+                    });
+            </script>
+        </div>
+    </div>
+</section>
 
 
-                                <script src="https://cdn.ckeditor.com/ckeditor5/35.1.0/classic/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/35.1.0/classic/ckeditor.js"></script>
 
-           $linkToProceed = DB::table('master_datas')
-            ->where('md_master_code_id', config('constants.options.APP_CONFIG'))
-            ->where('md_code', operator: 'Supplier Portal')
-            ->value('md_name');
+$linkToProceed = DB::table('master_datas')
+->where('md_master_code_id', config('constants.options.APP_CONFIG'))
+->where('md_code', operator: 'Supplier Portal')
+->value('md_name');
 
 'pendingRequests' => $linkToProceed .'/support-team/pending-issues',
 
@@ -442,242 +449,242 @@ var content = t_description.getData().trim();
 
 $user_comments = DB::table('procurement_comments')->where('ppc_year', $year)->where('ppc_division', $division)->get();
 
-$currencyIds = DB::table('procurements')->where('year', $year)->where('requisition_division', $division)->distinct()->pluck('currency');
+$currencyIds = DB::table('procurements')->where('year', $year)->where('requisition_division',
+$division)->distinct()->pluck('currency');
 
 if ($currencyIds->count() === 1) {
-    $currencyIds = [$currencyIds->first()];
+$currencyIds = [$currencyIds->first()];
 }
 
 $currencies = collect($currencyIds)
-    ->map(function ($currencyId) {
-        return Controller::MasterRecord(config('constants.options.CURRENCY_METHOD'), $currencyId);
-    })
-    ->filter()
-    ->toArray();
+->map(function ($currencyId) {
+return Controller::MasterRecord(config('constants.options.CURRENCY_METHOD'), $currencyId);
+})
+->filter()
+->toArray();
 
-    $finalCurrency = count($currencies) === 1 ? $currencies[0] : $currencies;
-
-
-    <br>Currency:
-    <b>{{ is_array($finalCurrency) ? implode(', ', $finalCurrency) : $finalCurrency }}</b>
+$finalCurrency = count($currencies) === 1 ? $currencies[0] : $currencies;
 
 
-
-    $procurement_officer = config('constants.options.PROCUREMENT_OFFICER');
-
-
-                return redirect()->route('student.dashboard')->with('error', 'You do not have permission to access that feature!');
+<br>Currency:
+<b>{{ is_array($finalCurrency) ? implode(', ', $finalCurrency) : $finalCurrency }}</b>
 
 
-    <tr class="bg-dark text-white">
-                        <td colspan="8"><strong>Contract Reference: {{ $draftRecord->fc_contract_ref }} | Contract
-                                Title: {{ $draftRecord->fc_contract_title }} | Contract Subject:
-                                {{ $draftRecord->fc_contract_subject }} | Start Date: {{ $draftRecord->fc_start_date }} |
-                                End Date: {{ $draftRecord->fc_end_date }}</strong></td>
 
-                                <!-- LABELS PILL-->
+$procurement_officer = config('constants.options.PROCUREMENT_OFFICER');
 
-@keyframes pop {
+
+return redirect()->route('student.dashboard')->with('error', 'You do not have permission to access that feature!');
+
+
+<tr class="bg-dark text-white">
+    <td colspan="8"><strong>Contract Reference: {{ $draftRecord->fc_contract_ref }} | Contract
+            Title: {{ $draftRecord->fc_contract_title }} | Contract Subject:
+            {{ $draftRecord->fc_contract_subject }} | Start Date: {{ $draftRecord->fc_start_date }} |
+            End Date: {{ $draftRecord->fc_end_date }}</strong></td>
+
+    <!-- LABELS PILL-->
+
+    @keyframes pop {
     0% {
-        transform: scale(1);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 15px rgba(255, 0, 0, 0.5);
+    transform: scale(1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 15px rgba(255, 0, 0, 0.5);
     }
 
     50% {
-        transform: scale(1.1);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 25px rgba(255, 0, 0, 0.8);
+    transform: scale(1.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 25px rgba(255, 0, 0, 0.8);
     }
 
     100% {
-        transform: scale(1);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 15px rgba(255, 0, 0, 0.5);
+    transform: scale(1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 15px rgba(255, 0, 0, 0.5);
     }
-}
+    }
 
-$('#student_username').removeClass('is-invalid').removeClass('is-valid');
+    $('#student_username').removeClass('is-invalid').removeClass('is-valid');
 
 
-                                    <!-- BADGE  -->
+    <!-- BADGE  -->
 
-                                <span class="badge badge-danger position-absolute rounded-circle px-3 py-2"
-                                    style="top: 10px; right: 10px; font-size: 16px; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
+    <span class="badge badge-danger position-absolute rounded-circle px-3 py-2" style="top: 10px; right: 10px; font-size: 16px; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); animation: pop 1.2s infinite;">
-                                    121
-                                </span>
+        121
+    </span>
 
 
-                                WORKFLOW REQUIRED COLUMNS
-                        ----------------------------------------
-                                aman_counter  =====> 1 // intials
-                                aman_added_by
-                                aman_status   =====> 1 // intials
-                                aman_date_added
-                                aman_type
-                                aman_reference
+    WORKFLOW REQUIRED COLUMNS
+    ----------------------------------------
+    aman_counter =====> 1 // intials
+    aman_added_by
+    aman_status =====> 1 // intials
+    aman_date_added
+    aman_type
+    aman_reference
 
-                                WORKFLOW STATUSES AND VALUES
-                        -----------------------------------------
+    WORKFLOW STATUSES AND VALUES
+    -----------------------------------------
 
-                                aman_counter  =====> 1 //   {1,1 for initiating approva}
-                                aman_status   =====> 1 //
+    aman_counter =====> 1 // {1,1 for initiating approva}
+    aman_status =====> 1 //
 
-                                aman_status   =====> 1 //   {1,2... approving the counter increases accordingly in approvals}
-                                aman_counter  =====> 1,2,3.... //
+    aman_status =====> 1 // {1,2... approving the counter increases accordingly in approvals}
+    aman_counter =====> 1,2,3.... //
 
-                                aman_status   =====> 10 //   {10,2... status  value is 10 for fully approved approvals}
-                                aman_counter  =====> 1,2,3.... //
+    aman_status =====> 10 // {10,2... status value is 10 for fully approved approvals}
+    aman_counter =====> 1,2,3.... //
 
-                                WORKFLOW BLADES AND CONTROLLERS CODE REQUIRED
-                        -----------------------------------------
-                        1.Contrller containing Approval View for new Approvers and Removing (MasterApprovalOrder)
+    WORKFLOW BLADES AND CONTROLLERS CODE REQUIRED
+    -----------------------------------------
+    1.Contrller containing Approval View for new Approvers and Removing (MasterApprovalOrder)
 
-                        public function aaTestApprovals()
-                        {
+    public function aaTestApprovals()
+    {
 
-                            $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
+    $data = ['LoggedUserAdmin' => Admin::where('id', '=', session('LoggedAdmin'))->first()];
 
-                            return view('master-approval-order.aa-test-approvals', $data);
-                        }
+    return view('master-approval-order.aa-test-approvals', $data);
+    }
 
-                        2.Contrller containing Logic to approve / delete / request more information (MaAideMemoireApprovalTest)
-                        3.Table which contains all recent approvals (master_approvals)
-                        4.Table which contains all approvals orders (master_approval_orders)
-
-
-                        WORKFLOW BLADE TO CHECK OF SOMEONE IF AMONGST THE APPROVERS CODE TO BE USED
-                        -----------------------------------------
-                        ($list->taf_counter == 2 && in_array(Helper::user_id(), $approvers))
-                        {
-
-                        }
-
-                            WORKFLOW APPROVAL CODE TO BE USED
-                        -----------------------------------------
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <?php
-
-                                $masterApproval = new MaAideMemoireApprovalTest();
-
-                                $accomodation = DB::table('aide_memoire_accomodation_nos')->where('id', 10033)->first();
-                                $aman_type    = 'HZA';
-                                // $aman_type = 'AIDE MEMOIRE';
-
-                                $masterApproval->display([
-                                    'table'         => 'aide_memoire_accomodation_nos',
-                                    'status'        => 'aman_status',
-                                    'counter'       => @$accomodation->aman_counter,
-                                    'counter_field' => 'aman_counter',
-                                    'id_field'      => 'id',
-
-                                    'where'         => @$aman_type,
-                                    'id'            => @$accomodation->id,
-                                    'notify_user'   => @$accomodation->am_added_by,
-                                    'reference'     => @$accomodation->aman_ref,
-                                    'extra'         => [
-                                        'labels' => [
-                                            '1' => 'Prepared By',
-                                            '2' => 'Tested By',
-                                            '3' => 'Verified By',
-                                        ],
-                                    ],
-                                ]);
-
-                                echo '<div style="clear:both"></div>';
-
-                            ?>
-                        </div>
-                    </div>
-
-       -------------------------------------------------------------------------------------------------------------
-
-              Full page code
-              -------------------------------------------------------------------------------------------------------------
-
-              <div class="w-40 bg-style min-h-100vh page-style">
+    2.Contrller containing Logic to approve / delete / request more information (MaAideMemoireApprovalTest)
+    3.Table which contains all recent approvals (master_approvals)
+    4.Table which contains all approvals orders (master_approval_orders)
 
 
-              $units_of_measures = master_data::where('md_master_code_id', '=', config('constants.options.UNIT_OF_MEASURE'))
-            ->orderBy('md_name')
-            ->select('md_id', 'md_name')
-            ->get();
+    WORKFLOW BLADE TO CHECK OF SOMEONE IF AMONGST THE APPROVERS CODE TO BE USED
+    -----------------------------------------
+    ($list->taf_counter == 2 && in_array(Helper::user_id(), $approvers))
+    {
 
-            <div class="card-footer">
-                        <div class="d-flex justify-content-center">
-                            {{ $allCourses->links('pagination::bootstrap-4') }}
-                        </div>
-                    </div>
+    }
+
+    WORKFLOW APPROVAL CODE TO BE USED
+    -----------------------------------------
+
+    <div class="row">
+        <div class="col-md-12">
+            <?php
+
+            $masterApproval = new MaAideMemoireApprovalTest();
+
+            $accomodation = DB::table('aide_memoire_accomodation_nos')->where('id', 10033)->first();
+            $aman_type = 'HZA';
+            // $aman_type = 'AIDE MEMOIRE';
+            
+            $masterApproval->display([
+                'table' => 'aide_memoire_accomodation_nos',
+                'status' => 'aman_status',
+                'counter' => @$accomodation->aman_counter,
+                'counter_field' => 'aman_counter',
+                'id_field' => 'id',
+
+                'where' => @$aman_type,
+                'id' => @$accomodation->id,
+                'notify_user' => @$accomodation->am_added_by,
+                'reference' => @$accomodation->aman_ref,
+                'extra' => [
+                    'labels' => [
+                        '1' => 'Prepared By',
+                        '2' => 'Tested By',
+                        '3' => 'Verified By',
+                    ],
+                ],
+            ]);
+
+            echo '<div style="clear:both"></div>';
+
+            ?>
+        </div>
+    </div>
+
+    -------------------------------------------------------------------------------------------------------------
+
+    Full page code
+    -------------------------------------------------------------------------------------------------------------
+
+    <div class="w-40 bg-style min-h-100vh page-style">
 
 
+        $units_of_measures = master_data::where('md_master_code_id', '=', config('constants.options.UNIT_OF_MEASURE'))
+        ->orderBy('md_name')
+        ->select('md_id', 'md_name')
+        ->get();
 
-                <div id="loading-gif">
-                    <img src="{{ URL::asset('assets/images/brand/loading.gif') }}" alt="Loading...">
-                </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-center">
+                {{ $allCourses->links('pagination::bootstrap-4') }}
+            </div>
+        </div>
+
+        <div id="loading-gif">
+            <img src="{{ URL::asset('assets/images/brand/loading.gif') }}" alt="Loading...">
+        </div>
 
         <style>
+            .swal2-container {
+                z-index: 99999 !important;
+            }
+        </style>
 
-        #loading-gif {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 9999;
-            /* Ensure it's on top of other content */
-        }
-    </style>
+        <style>
+            #loading-gif {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                /* Ensure it's on top of other content */
+            }
+        </style>
 
 
-function showLoading() {
-		$('#loading-gif').show();
-	}
 
-
-	function hideLoading() {
-		$('#loading-gif').hide();
-	}
-
-            if ($permission_exists) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Permission was already created.',
-            ], 409); // <-- Return a 409 Conflict status code
+        function showLoading() {
+        $('#loading-gif').show();
         }
 
 
-    <script>
-        document.getElementById('quiz-form').addEventListener('submit', function(e) {
+        function hideLoading() {
+        $('#loading-gif').hide();
+        }
+
+        if ($permission_exists) {
+        return response()->json([
+        'status' => 'error',
+        'message' => 'Permission was already created.',
+        ], 409); // <-- Return a 409 Conflict status code } <script>
+            document.getElementById('quiz-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
             Swal.fire({
-                title: 'Are you sure?',
-                text: "Once submitted, you won't be able to change your answers.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, submit it!'
+            title: 'Are you sure?',
+            text: "Once submitted, you won't be able to change your answers.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit it!'
             }).then((result) => {
-                if (result.isConfirmed) {
+            if (result.isConfirmed) {
 
-                    const submitBtn = e.target.querySelector('button[type="submit"]');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
 
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = 'Submitting...<i class="fas fa-spinner fa-spin"></i>';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Submitting...<i class="fas fa-spinner fa-spin"></i>';
 
-                    e.target.submit();
-                }
+            e.target.submit();
+            }
             });
-        });
-    </script>
+            });
+            </script>
 
 
-MAIL BACKUP
---------------------------------------------------------
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=huzaifabukenya227@gmail.com
-MAIL_PASSWORD=dmdzbelafzfsmelm
-MAIL_ENCRYPTION=tls
+            MAIL BACKUP
+            --------------------------------------------------------
+            MAIL_MAILER=smtp
+            MAIL_HOST=smtp.gmail.com
+            MAIL_PORT=587
+            MAIL_USERNAME=huzaifabukenya227@gmail.com
+            MAIL_PASSWORD=dmdzbelafzfsmelm
+            MAIL_ENCRYPTION=tls

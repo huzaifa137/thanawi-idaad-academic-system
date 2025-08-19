@@ -30,6 +30,20 @@ use App\Helpers\PermissionHelper;
         </li>
 
         <li class="slide">
+            <a class="side-menu__item" href="{{ route('manage.classes') }}">
+                <i class="fa fa-chalkboard-teacher fa-2x mr-3"></i>
+                Classes
+            </a>
+        </li>
+
+        <li class="slide">
+            <a class="side-menu__item" href="{{ route('subjects.dashboard') }}">
+                <i class="fa fa-layer-group fa-2x mr-3"></i>
+                Subjects
+            </a>
+        </li>
+
+        <li class="slide">
             <a class="side-menu__item" href="{{ route('school.teachers') }}">
                 <i class="fa fa-user-tie fa-2x mr-3"></i>
                 Teachers
@@ -37,9 +51,9 @@ use App\Helpers\PermissionHelper;
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ route('manage.classes') }}">
-                <i class="fa fa-chalkboard-teacher fa-2x mr-3"></i>
-                Classes
+            <a class="side-menu__item" href="{{ route('students.search') }}">
+                <i class="fa fa-user-graduate fa-2x mr-3"></i>
+                Students
             </a>
         </li>
 
