@@ -20,7 +20,7 @@
         </a>
     </div>
     <div class="col-12 col-sm-4 mb-2">
-        <a href="{{ route('students.move') }}" class="btn btn-dark w-100">
+        <a href="{{ route('students.transfer') }}" class="btn btn-dark w-100">
             <i class="fas fa-exchange-alt me-2"></i> Move Students
         </a>
     </div>
