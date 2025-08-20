@@ -311,9 +311,9 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
         Route::get('students-dashboard', 'studentPortal')->name('student.dashboard');
         Route::get('update-profile', action: 'updateProfiles')->name('students.update.profile');
-        Route::get('update-photo', 'updatePhoto')->name('students.update.photo');
-        Route::post('upload-fees', 'uploadFees')->name('students.upload.fees');
-        Route::get('/search', 'searchStudent')->name('students.search');
+        // Route::get('update-photo', 'updatePhoto')->name('students.update.photo');
+        // Route::post('upload-fees', 'uploadFees')->name('students.upload.fees');
+        Route::get('/search', 'searchStudent')->name('students.individual.search');
         Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
 
         Route::get('/students/{student}/edit', 'edit')->name('students.edit');
@@ -324,13 +324,8 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
         Route::get('/transfer-form', 'moveStudentForm')->name('students.transfer');
 
-        // Route for the AJAX call to get streams for a selected class
         Route::get('/streams/by-class', 'getStreamsByClass')->name('streams.by.class');
-
-        // New route for searching students
         Route::get('/students/search', 'searchStudentsByClassStream')->name('students.search');
-
-        // Route to handle the form submission for moving students
         Route::post('/students/move', 'moveStudent')->name('students.move');
 
     });
