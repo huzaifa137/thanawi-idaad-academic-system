@@ -261,7 +261,6 @@ class StudentController extends Controller
     public function storeStudent(Request $request)
     {
 
-
         $validated = $request->validate([
             // Required fields
             'firstname' => 'required|string|max:255',
