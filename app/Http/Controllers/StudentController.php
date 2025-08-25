@@ -348,7 +348,7 @@ class StudentController extends Controller
 
     public function update(Request $request, Student $student)
     {
-      
+
         $validated = $request->validate([
 
             'firstname' => 'required|string|max:255',
@@ -378,12 +378,11 @@ class StudentController extends Controller
             'gender' => $student->gender,
             'admission_number' => $student->admission_number,
 
-            // Send both the ID and the resolved name
             'senior_id' => $student->senior,
-            'senior' => Helper::recordMdname($student->senior), 
+            'senior' => Helper::recordMdname($student->senior),
 
             'stream_id' => $student->stream,
-            'stream' => Helper::recordMdname($student->stream), 
+            'stream' => Helper::recordMdname($student->stream),
 
             'primary_contact' => $student->primary_contact,
             'other_contact' => $student->other_contact,
@@ -431,4 +430,79 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Student updated successfully']);
     }
+
+    public function moveStudentForm()
+    {
+        $school_id = Session('LoggedSchool');
+
+        $classrooms = Classroom::where('school_id', $school_id)->get();
+
+        return view('Student.move-student', compact('school_id', 'classrooms'));
+    }
+
+    public function getStreamsByClass(Request $request)
+    {
+        $classId = $request->input('class_id');
+        $streams = Stream::where('class_id', $classId)->get();
+   
+        // Map streams to include helper processed names
+        $streams = $streams->map(function ($stream) {
+            $stream->display_name = Helper::recordMdname($stream->stream_id);
+            
+            return $stream;
+        });
+
+        return response()->json($streams);
+    }
+    public function searchStudentsByClassStream(Request $request)
+    {
+
+        $validated = $request->validate([
+            'school_id' => 'required|integer',
+            'senior' => 'required|string',
+            'stream' => 'required|string',
+        ]);
+
+        $students = Student::where('school_id', $validated['school_id'])
+            ->where('senior', $validated['senior'])
+            ->where('stream', $validated['stream'])
+            ->select('id', 'firstname', 'lastname', 'admission_number')
+            ->get();
+
+        return response()->json($students);
+    }
+
+    public function moveStudent(Request $request)
+    {
+
+        $validated = $request->validate([
+            'student_ids' => 'required|array',
+            'student_ids.*' => 'integer|exists:students,id',
+            'new_senior' => 'required|string|max:255',
+            'new_stream' => 'required|string|max:255',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            Student::whereIn('id', $validated['student_ids'])->update([
+                'senior' => $validated['new_senior'],
+                'stream' => $validated['new_stream'],
+            ]);
+
+            DB::commit();
+
+            return response()->json(['message' => 'Student(s) moved successfully!']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => 'Failed to move student(s).',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }

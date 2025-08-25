@@ -310,21 +310,24 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
     Route::controller(StudentController::class)->prefix('students')->group(function () {
 
         Route::get('students-dashboard', 'studentPortal')->name('student.dashboard');
-        Route::get('update-profile', 'updateProfiles')->name('students.update.profile');
-        Route::get('update-photo', 'updatePhoto')->name('students.update.photo');
-        Route::get('move', 'move')->name('students.move');
-        Route::post('upload-fees', 'uploadFees')->name('students.upload.fees');
-        Route::get('/search', 'searchStudent')->name('students.search');
+        Route::get('update-profile', action: 'updateProfiles')->name('students.update.profile');
+        // Route::get('update-photo', 'updatePhoto')->name('students.update.photo');
+        // Route::post('upload-fees', 'uploadFees')->name('students.upload.fees');
+        Route::get('/search', 'searchStudent')->name('students.individual.search');
         Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
 
         Route::get('/students/{student}/edit', 'edit')->name('students.edit');
 
         Route::get('/Information/{id}', 'showStudentInformation');
         Route::put('/update/{id}', 'updateStudentInformation');
-
-
-
         Route::post('/students/store', 'storeStudent')->name('students.store');
+
+        Route::get('/transfer-form', 'moveStudentForm')->name('students.transfer');
+
+        Route::get('/streams/by-class', 'getStreamsByClass')->name('streams.by.class');
+        Route::get('/students/search', 'searchStudentsByClassStream')->name('students.search');
+        Route::post('/students/move', 'moveStudent')->name('students.move');
+
     });
 
     Route::controller(SubjectController::class)->prefix('students')->group(function () {

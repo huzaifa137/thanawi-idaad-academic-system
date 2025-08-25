@@ -51,7 +51,7 @@ use App\Helpers\PermissionHelper;
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ route('students.search') }}">
+            <a class="side-menu__item" href="{{ route('students.individual.search') }}">
                 <i class="fa fa-user-graduate fa-2x mr-3"></i>
                 Students
             </a>

@@ -1,6 +1,6 @@
 <div class="row w-100 g-2">
     <div class="col-12 col-sm-4 mb-2">
-        <a href="{{ route('students.search') }}" class="btn btn-white text-dark w-100">
+        <a href="{{ route('students.individual.search') }}" class="btn btn-white text-dark w-100">
             <i class="fas fa-search me-2"></i> Search Student
         </a>
     </div>
@@ -15,17 +15,17 @@
         </a>
     </div>
     <div class="col-12 col-sm-4 mb-2">
-        <a href="{{ route('students.update.photo') }}" class="btn btn-secondary w-100">
+        <a href="javascript:void();" class="btn btn-secondary w-100">
             <i class="fas fa-camera me-2"></i> Update Photos
         </a>
     </div>
     <div class="col-12 col-sm-4 mb-2">
-        <a href="{{ route('students.move') }}" class="btn btn-dark w-100">
+        <a href="{{ route('students.transfer') }}" class="btn btn-dark w-100">
             <i class="fas fa-exchange-alt me-2"></i> Move Students
         </a>
     </div>
     <div class="col-12 col-sm-4 mb-2">
-        <a href="{{ route('students.upload.fees') }}" class="btn btn-info w-100">
+        <a href="javascript:void();" class="btn btn-info w-100">
             <i class="fas fa-file-upload me-2"></i> Upload Fees Balance
         </a>
     </div>
