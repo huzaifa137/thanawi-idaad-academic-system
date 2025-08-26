@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MasterDataController;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SubjectController;
@@ -330,8 +331,24 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
     });
 
-    Route::controller(SubjectController::class)->prefix('students')->group(function () {
-        Route::get('subjects-dashboard', 'subjectDashboard')->name('subjects.dashboard');
+    Route::controller(SubjectController::class)->prefix('subjects')->group(function () {
+
+        Route::get('topics', 'Topics')->name('subjects.topics');
+        Route::get('dashboard', 'dashboard')->name('subjects.dashboard');
+        Route::get('add-topics', 'addTopics')->name('subjects.addtopics');
 
     });
+
+    Route::controller(SubjectController::class)->group(function () {
+
+
+        Route::get('/topics/{id}', 'showTopic'); 
+        Route::put('/update-topics/{id}', 'updateTopic'); 
+        Route::delete('/topics/{id}', 'destroyTopic'); 
+
+        Route::post('/create-new-topic', 'storeNewTopic')->name('create.new-topic');
+        Route::post('/fetch-topics-by-senior', 'fetchTopicsBySenior')->name('fetch.topics.by.senior');
+
+    });
+
 });

@@ -109,7 +109,7 @@ class Helper extends Controller
         $disabled = ($disabled) ? "disabled" : "";
 
         $string = "";
-        $string .= '<select name="' . $id . '" id="' . $id . '" class="form-control" ' . $disabled . '>';
+        $string .= '<select name="' . $id . '" id="' . $id . '" class="form-control select2" ' . $disabled . '>';
         $string .= '<option value=""> -- Select -- </option>';
         foreach ($select as $row) {
             if ($part == 1) {
@@ -209,6 +209,25 @@ class Helper extends Controller
     public static function MasterRecordMerge($item1, $item2)
     {
         $items = [$item1, $item2];
+
+        $records = DB::table('master_datas')
+            ->whereIn('md_master_code_id', $items)
+            ->get();
+
+        return $records;
+    }
+
+
+    public static function fetchAllSubjects()
+    {
+
+        $Technical_Subjects  = config('constants.options.TECHNICAL_SUBJECTS');
+        $Mathematics  = config('constants.options.MATHEMATICS');
+        $Languages  = config('constants.options.LANGUAGES');
+        $Sciences  = config('constants.options.SCIENCES');
+        $Humanities  = config('constants.options.HUMANITIES');
+
+        $items = [$Technical_Subjects,$Mathematics,$Languages,$Sciences,$Humanities];
 
         $records = DB::table('master_datas')
             ->whereIn('md_master_code_id', $items)

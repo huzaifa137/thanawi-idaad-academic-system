@@ -1,6 +1,9 @@
 <!-- Back to top -->
 <a href="#top" id="back-to-top">
-	<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>
+	<svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+		<path d="M0 0h24v24H0V0z" fill="none" />
+		<path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
+	</svg>
 </a>
 <!-- Jquery js-->
 <script src="{{URL::asset('assets/js/vendors/jquery-3.5.1.min.js')}}"></script>
@@ -26,4 +29,15 @@
 @yield('js')
 <!-- Custom js-->
 <script src="{{URL::asset('assets/js/custom.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+
+<script>
+	$(document).ready(function () {
+		$('.select2').select2({
+			placeholder: "-- Select --",
+			allowClear: true,
+			width: '100%' // optional, ensures consistent styling
+		});
+	});
+</script>

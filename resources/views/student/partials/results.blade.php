@@ -19,34 +19,35 @@ use App\Http\Controllers\Helper;
         </thead>
         <tbody>
             @foreach($students as $student)
-            <tr>
-                <td>{{ $student->id }}</td>
-                <td>{{ $student->admission_number }}</td>
-                <td>{{ $student->firstname }} {{ $student->lastname }}</td>
-                <td>{{ Helper::recordMdname($student->senior) }}</td>
-                <td>{{ Helper::recordMdname($student->stream) }}</td>
-                <td>{{ $student->gender }}</td>
-                <td style="text-align: center;">
-                    <button class="btn btn-outline-primary btn-sm view-bio-btn" data-toggle="modal"
-                        data-target="#viewStudentModal" data-id="{{ $student->id }}"
-                        data-firstname="{{ $student->firstname }}" data-lastname="{{ $student->lastname }}"
-                        data-gender="{{ $student->gender }}" data-admission_number="{{ $student->admission_number }}"
-                        data-senior="{{ Helper::recordMdname($student->senior) }}"
-                        data-stream="{{ Helper::recordMdname($student->stream) }}"
-                        data-primary_contact="{{ $student->primary_contact }}"
-                        data-other_contact="{{ $student->other_contact }}"
-                        data-date_of_birth="{{ $student->date_of_birth }}" data-nationality="{{ $student->nationality }}"
-                        data-guardian_names="{{ $student->guardian_names }}"
-                        data-guardian_phone="{{ $student->guardian_phone }}">
-                        <i class="fa fa-id-card mr-1"></i> View Bio
-                    </button>
-                </td>
-            </tr>
+                <tr>
+                    <td>{{ $student->id }}</td>
+                    <td>{{ $student->admission_number }}</td>
+                    <td>{{ $student->firstname }} {{ $student->lastname }}</td>
+                    <td>{{ Helper::recordMdname($student->senior) }}</td>
+                    <td>{{ Helper::recordMdname($student->stream) }}</td>
+                    <td>{{ $student->gender }}</td>
+                    <td style="text-align: center;">
+                        <button class="btn btn-outline-primary btn-sm view-bio-btn" data-toggle="modal"
+                            data-target="#viewStudentModal" data-id="{{ $student->id }}"
+                            data-firstname="{{ $student->firstname }}" data-lastname="{{ $student->lastname }}"
+                            data-gender="{{ $student->gender }}" data-admission_number="{{ $student->admission_number }}"
+                            data-senior="{{ Helper::recordMdname($student->senior) }}"
+                            data-stream="{{ Helper::recordMdname($student->stream) }}"
+                            data-primary_contact="{{ $student->primary_contact }}"
+                            data-other_contact="{{ $student->other_contact }}"
+                            data-date_of_birth="{{ $student->date_of_birth }}" data-nationality="{{ $student->nationality }}"
+                            data-guardian_names="{{ $student->guardian_names }}"
+                            data-guardian_phone="{{ $student->guardian_phone }}">
+                            <i class="fa fa-id-card mr-1"></i> View Bio
+                        </button>
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>
 
-    <div class="modal fade" id="viewStudentModal" tabindex="-1" role="dialog" aria-labelledby="viewStudentModalLabel" aria-hidden="true">
+    <div class="modal fade" id="viewStudentModal" tabindex="-1" role="dialog" aria-labelledby="viewStudentModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
@@ -97,11 +98,11 @@ use App\Http\Controllers\Helper;
                         <dd class="col-sm-8" id="view_guardian_phone"></dd>
                     </dl>
                 </div>
-              <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" data-dismiss="modal">
-    <i class="fas fa-times"></i> Close
-  </button>
-</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
 
             </div>
         </div>
@@ -111,7 +112,7 @@ use App\Http\Controllers\Helper;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#viewStudentModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
 

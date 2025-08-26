@@ -15,9 +15,9 @@
 								</a>
 								<div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow p-4 show" x-placement="top-end" style="position: absolute; transform: translate3d(-8px, -329px, 0px); top: 0px; left: 0px; will-change: transform; color:black; background-color:#ceebff; border:1px solid #b8b8e7;">
 									<div class="border-bottom pb-3">
-										<h4 class="font-weight-bold border-bottom pb-3">Eprocurement Support Team</h4>
+										<h4 class="font-weight-bold border-bottom pb-3">Support Team</h4>
 										<h5 class="font-weight-bold">Email Addresses</h5>
-										<a class="text-dark d-block" href="{{ url('/' . $page='#') }}">eprocurement@comesa.int</a>
+										<a class="text-dark d-block" href="{{ url('/' . $page='#') }}">huzaifabukenya227@gmail.com</a>
 										<a class="text-primary d-block" href="{{ url('/' . $page='#') }}"></a>
 									</div>
 									<div class="border-bottom pb-3 pt-3 mb-3">
