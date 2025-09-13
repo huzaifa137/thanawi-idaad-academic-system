@@ -29,7 +29,7 @@ use App\Http\Controllers\Helper;
                                 <div class="col-lg-6 col-md-12">
                                     <div class="form-group">
                                         <label class="form-label">Permission Scope</label>
-                                        <select name="scope" id="scope" class="gender input-sm form-control">
+                                        <select name="scope" id="scope" class="gender input-sm form-control select2">
                                             <option value="">-- Select --</option>
                                             <option value="School">School</option>
                                             <option value="System">System</option>

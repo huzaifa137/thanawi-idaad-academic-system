@@ -255,7 +255,7 @@ class StudentController extends Controller
         $classRecord = Classroom::where('school_id', Session('LoggedSchool'))->get();
         $StreamRecord = Stream::where('school_id', Session('LoggedSchool'))->get();
 
-        return view('Student.student-portal', compact('school_id', 'classRecord', 'StreamRecord'));
+        return view('student.student-portal', compact('school_id', 'classRecord', 'StreamRecord'));
     }
 
     public function storeStudent(Request $request)
@@ -302,7 +302,7 @@ class StudentController extends Controller
     {
         $classRecord = Classroom::where('school_id', session('LoggedSchool'))->get();
 
-        return view('Student.student-search', compact(['classRecord']));
+        return view('student.student-search', compact(['classRecord']));
     }
 
     public function searchAjax(Request $request)
@@ -331,7 +331,7 @@ class StudentController extends Controller
                 return response()->json(['message' => 'Invalid criteria'], 400);
         }
 
-        $html = view('Student.partials.results', compact('students'))->render();
+        $html = view('student.partials.results', compact('students'))->render();
 
         return response()->json(['html' => $html]);
     }
@@ -343,7 +343,7 @@ class StudentController extends Controller
         $classRecord = Classroom::where('school_id', Session('LoggedSchool'))->get();
         $StreamRecord = Stream::where('school_id', Session('LoggedSchool'))->get();
 
-        return view('Student.student-information', compact(['students', 'classRecord', 'StreamRecord']));
+        return view('student.student-information', compact(['students', 'classRecord', 'StreamRecord']));
     }
 
     public function update(Request $request, Student $student)
@@ -437,7 +437,7 @@ class StudentController extends Controller
 
         $classrooms = Classroom::where('school_id', $school_id)->get();
 
-        return view('Student.move-student', compact('school_id', 'classrooms'));
+        return view('student.move-student', compact('school_id', 'classrooms'));
     }
 
     public function getStreamsByClass(Request $request)
