@@ -64,3 +64,36 @@ return [
 // @else
 // <p style="color: red">Access restricted</p>
 // @endif
+
+
+// Most use ones Logic Implementation
+// <<<< For Section and Routes>>>>
+// =====> Used on Routes and applied on controllers also to limit the functionality access from that side also
+// (Blade and Routes format Implementation)
+//  @if (PermissionHelper::userHasSpecificPermission(session('LoggedAdmin'), Helper::getPermissionCode('view', config('constants.module_names')[2]), config('constants.options.Land'), 'school'))
+// // (Controller format Implementation)
+// Helper::checkPermissionOrAbort(Helper::getPermissionCode('view', config('constants.module_names')[2]), config('constants.options.Land'));
+
+// <<<< For Custom Features Accessibility >>>>
+//  @if (PermissionHelper::userHasFeature(session('LoggedAdmin'), config('constants.options.addNewPlots')))
+
+// @if (PermissionHelper::userHasFeature(session('LoggedAdmin'), config('constants.options.addNewPlots')))
+//     <li class="nav-item">
+//         <a class="nav-link" href="javascript:void();">
+//             <i class="mdi mdi-domain ml-1"></i>
+//             <span style="padding-left: 2px;">Add New Estate Test</span>
+//         </a>
+//     </li>
+// @endif
+
+
+// Implementation Easily ===<>=== 
+
+
+// 1. (VIEW CLOSING ALL)
+// 2. (IMPLEMENTATION OF ONE LAYOUT IF NOT EDIT, DELETE, ETC)
+// -----------------------------------------------------------------------------------------
+// Helper::checkPermissionOrAbort(Helper::getPermissionCode('view', config('constants.module_names')[2]), config('constants.options.Land'));
+// Helper::checkCustomPermissionOrAbort(config('constants.options.sellPlots'));
+// ----> ADD,EDIT,DELETE,ETC 
+// @if (PermissionHelper::userHasSpecificPermission(session('LoggedAdmin'), Helper::getPermissionCode('add', config('constants.module_names')[2]), config('constants.options.Land'), 'school'))

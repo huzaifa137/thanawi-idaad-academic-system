@@ -3,15 +3,13 @@ namespace App\Http\Controllers;
 
 use DB;
 use Session;
-
 class Helper extends Controller
 {
-
     public static function user_id()
     {
         return $user = Session::get('LoggedAdmin');
     }
-
+    
     public static function logged_admin_user($user = "")
     {
         $user = (int) $user;
