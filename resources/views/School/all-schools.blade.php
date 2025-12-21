@@ -32,7 +32,7 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
 
             <div class="card-body p-3">
                 <div class="table-responsive">
-                    <table id="schoolsTable" class="table table-striped table-bordered table-hover align-middle">
+                    <table id="schoolsTable" class="table table-striped table-bordered align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 1px;">No</th>
@@ -58,7 +58,6 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
 
                             @forelse ($schools as $key => $school)
                                 <tr>
-
                                     <td class="fw-bold" style="width: 1px;">{{ $key + 1 }}</td>
                                     <td class="fw-bold">{{ $school->name }}</td>
                                     <td class="fw-bold">{{ $school->registration_code }}</td>
@@ -66,89 +65,83 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                     <td class="fw-bold">{{ Helper::recordMdname($school->population) }}</td>
                                     <td>
                                         @php
-                                            $status = $statusConfig[$school->school_status] ?? ['label' => 'Unknown', 'class' => 'text-muted', 'icon' => 'fas fa-question-circle'];
+                                            $status = $statusConfig[$school->school_status]
+                                                ?? ['label' => 'Unknown', 'class' => 'text-muted', 'icon' => 'fas fa-question-circle'];
                                         @endphp
                                         <span class="{{ $status['class'] }}">
                                             <i class="{{ $status['icon'] }}"></i> {{ $status['label'] }}
                                         </span>
                                     </td>
 
-                                    <td class="d-flex align-items-center gap-1">
-                                        <style>
-                                            .btn-inline-pink {
-                                                color: rgb(250, 12, 115);
-                                                border: 1px solid rgb(250, 12, 115);
-                                                background-color: transparent;
-                                            }
+                                    <td>
+    <div class="d-flex align-items-center">
 
-                                            .btn-inline-pink:hover {
-                                                background-color: rgb(250, 12, 115);
-                                                color: white;
-                                            }
+        <a href="{{ route('profile.individual.school', $school->id) }}"
+           class="btn btn-sm btn-outline-info"
+           title="View School Profile"
+           style="margin-right:6px;">
+            <i class="fas fa-university"></i>
+        </a>
 
-                                            .btn-inline-orange {
-                                                color: #FF9800;
-                                                border: 1px solid #FF9800;
-                                                ;
-                                                background-color: transparent;
-                                            }
+<a href="{{ route('school.term-dates', $school->id) }}"
+   class="btn btn-sm"
+   title="Select Date"
+   style="margin-right:6px; color:#e83e8c; border:1px solid #e83e8c; background-color:transparent;">
+    <i class="fas fa-calendar-alt"></i>
+</a>
 
-                                            .btn-inline-orange:hover {
-                                                background-color: #FF9800;
-                                                ;
-                                                color: white;
-                                            }
-                                        </style>
+<a href="{{ route('individual.school.teachers', $school->id) }}"
+   class="btn btn-sm"
+   title="Teachers"
+   style="margin-right:6px; color:#fd7e14; border:1px solid #fd7e14; background-color:transparent;">
+    <i class="fas fa-chalkboard-teacher"></i>
+</a>
 
-                                        <a href="{{ route('profile.individual.school', $school->id) }}"
-                                            class="btn btn-sm btn-outline-info" title="View School Profile">
-                                            <i class="fas fa-university"></i>
-                                        </a>
-                                        &nbsp;
 
-                                        <a href="{{ route('school.term-dates', $school->id) }}"
-                                            class="btn btn-sm btn-inline-pink" title="Select Date">
-                                            <i class="fas fa-calendar-alt"></i>
-                                        </a>
-                                        &nbsp;
+        <a href="{{ route('school.options', $school->id) }}"
+           class="btn btn-sm btn-outline-success"
+           title="School Options"
+           style="margin-right:6px;">
+            <i class="fas fa-cogs"></i>
+        </a>
 
-                                        <a href="{{ route('individual.school.teachers', $school->id) }}"
-                                            class="btn btn-sm btn-inline-orange" title="Teachers">
-                                            <i class="fas fa-chalkboard-teacher"></i>
-                                        </a>
-                                        &nbsp;
-                                        <a href="{{ route('school.options', $school->id) }}"
-                                            class="btn btn-sm btn-outline-success" title="View School Profile">
-                                            <i class="fas fa-cogs"></i>
-                                        </a>
-                                        &nbsp;
+        <a href="javascript:void(0);"
+           class="btn btn-sm btn-outline-secondary btn-change-school-status"
+           data-id="{{ $school->id }}"
+           data-status="{{ $school->school_status }}"
+           title="Change Status"
+           style="margin-right:6px;">
+            <i class="fas fa-sync-alt"></i>
+        </a>
 
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-sm btn-outline-info btn-change-school-status"
-                                            data-id="{{ $school->id }}" data-status="{{ $school->school_status }}"
-                                            title="Change Status">
-                                            <i class="fas fa-sync-alt"></i>
-                                        </a>
-                                        &nbsp;
+        <a href="javascript:void(0);"
+           class="btn btn-sm btn-outline-primary btn-edit"
+           data-id="{{ $school->id }}"
+           data-edit-url="{{ route('edit.school', $school->id) }}"
+           title="Edit"
+           style="margin-right:6px;">
+            <i class="fas fa-edit"></i>
+        </a>
 
-                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-primary btn-edit"
-                                            data-id="{{ $school->id }}" data-edit-url="{{ route('edit.school', $school->id) }}"
-                                            title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        &nbsp;
+        <a href="javascript:void(0);"
+           class="btn btn-sm btn-outline-danger btn-delete"
+           data-id="{{ $school->id }}"
+           title="Delete">
+            <i class="fas fa-trash-alt"></i>
+        </a>
 
-                                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-delete"
-                                            data-id="{{ $school->id }}" title="Delete">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
-                                    </td>
+    </div>
+</td>
+
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted py-4">No schools found.</td>
+                                    <td colspan="7" class="text-center text-muted py-4">
+                                        No schools found.
+                                    </td>
                                 </tr>
                             @endforelse
+
                         </tbody>
                     </table>
 
@@ -159,8 +152,8 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                 <form id="changeSchoolStatusForm">
                                     <div class="modal-header">
                                         <h5 class="modal-title">Change School Status</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span>&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">

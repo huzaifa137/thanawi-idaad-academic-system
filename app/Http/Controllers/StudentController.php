@@ -194,6 +194,8 @@ class StudentController extends Controller
 
     public function studentDashboard()
     {
+        // dd('welcome home zai ...');
+
         $studentId = session('LoggedStudent');
         $student = DB::table('users')->where('id', $studentId)->first();
 
@@ -296,6 +298,20 @@ class StudentController extends Controller
         $student = Student::create($validated);
 
         return response()->json(['message' => 'Student added successfully!']);
+    }
+
+    public function allStudents()
+    {
+        $students = Student::where('school_id', session('LoggedSchool'))
+            ->orderBy('senior')
+            ->orderBy('stream')
+            ->get();
+
+        $groupedStudents = $students->groupBy('senior')->map(function ($seniorGroup) {
+            return $seniorGroup->groupBy('stream');
+        });
+        
+        return view('student.all-students', compact('groupedStudents'));
     }
 
     public function searchStudent()
@@ -444,11 +460,11 @@ class StudentController extends Controller
     {
         $classId = $request->input('class_id');
         $streams = Stream::where('class_id', $classId)->get();
-   
+
         // Map streams to include helper processed names
         $streams = $streams->map(function ($stream) {
             $stream->display_name = Helper::recordMdname($stream->stream_id);
-            
+
             return $stream;
         });
 

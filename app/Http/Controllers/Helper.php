@@ -3,13 +3,15 @@ namespace App\Http\Controllers;
 
 use DB;
 use Session;
+use App\Models\AcademicYear;
+
 class Helper extends Controller
 {
     public static function user_id()
     {
         return $user = Session::get('LoggedAdmin');
     }
-    
+
     public static function logged_admin_user($user = "")
     {
         $user = (int) $user;
@@ -219,13 +221,13 @@ class Helper extends Controller
     public static function fetchAllSubjects()
     {
 
-        $Technical_Subjects  = config('constants.options.TECHNICAL_SUBJECTS');
-        $Mathematics  = config('constants.options.MATHEMATICS');
-        $Languages  = config('constants.options.LANGUAGES');
-        $Sciences  = config('constants.options.SCIENCES');
-        $Humanities  = config('constants.options.HUMANITIES');
+        $Technical_Subjects = config('constants.options.TECHNICAL_SUBJECTS');
+        $Mathematics = config('constants.options.MATHEMATICS');
+        $Languages = config('constants.options.LANGUAGES');
+        $Sciences = config('constants.options.SCIENCES');
+        $Humanities = config('constants.options.HUMANITIES');
 
-        $items = [$Technical_Subjects,$Mathematics,$Languages,$Sciences,$Humanities];
+        $items = [$Technical_Subjects, $Mathematics, $Languages, $Sciences, $Humanities];
 
         $records = DB::table('master_datas')
             ->whereIn('md_master_code_id', $items)
@@ -242,5 +244,12 @@ class Helper extends Controller
             ->get();
 
         return $records;
+    }
+
+    public static function active_year()
+    {
+        return $activeYear = AcademicYear::orderBy('id', 'desc')
+            ->where('is_active', 1)
+            ->value('name');
     }
 }

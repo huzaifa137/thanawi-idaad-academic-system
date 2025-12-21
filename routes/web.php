@@ -8,8 +8,11 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ClassandSubjectController;
 use App\Http\Controllers\UserRightsAndPreviledges;
+use App\Http\Controllers\ExamController;
 use App\Mail\userMail;
 use Illuminate\Support\Facades\Route;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -315,6 +318,7 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
         // Route::get('update-photo', 'updatePhoto')->name('students.update.photo');
         // Route::post('upload-fees', 'uploadFees')->name('students.upload.fees');
         Route::get('/search', 'searchStudent')->name('students.individual.search');
+        Route::get('/all-students', 'allStudents')->name('students.all.students');
         Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
 
         Route::get('/students/{student}/edit', 'edit')->name('students.edit');
@@ -341,14 +345,28 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
     Route::controller(SubjectController::class)->group(function () {
 
-
-        Route::get('/topics/{id}', 'showTopic'); 
-        Route::put('/update-topics/{id}', 'updateTopic'); 
-        Route::delete('/topics/{id}', 'destroyTopic'); 
+        Route::get('/topics/{id}', 'showTopic');
+        Route::put('/update-topics/{id}', 'updateTopic');
+        Route::delete('/topics/{id}', 'destroyTopic');
 
         Route::post('/create-new-topic', 'storeNewTopic')->name('create.new-topic');
         Route::post('/fetch-topics-by-senior', 'fetchTopicsBySenior')->name('fetch.topics.by.senior');
 
     });
 
+});
+
+
+Route::controller(ExamController::class)->group(function () {
+
+    Route::group(['middleware' => ['StudentAuth']], function () {
+
+        Route::get('/specific-school-students', 'schoolStudents')->name('all.specific.students');
+        Route::get('/manage-exams', 'manageExams')->name('manage.exams');
+        Route::get('/edit-exams', 'editExams')->name('edit.exams');
+
+
+        Route::post('/store-created-exam', 'storeCreatedExam');
+
+    });
 });

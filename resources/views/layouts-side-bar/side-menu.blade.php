@@ -65,18 +65,27 @@ use App\Helpers\PermissionHelper;
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ url('student/all-preview') }}">
+            <a class="side-menu__item" href="{{ route('all.specific.students') }}">
                 <i class="fa fa-scroll fa-2x mr-3"></i>
-                My Certificates
+                Exams
             </a>
         </li>
 
-        <li class="slide">
-            <a class="side-menu__item" href="{{ url('student/contact-us') }}">
-                <i class="fa fa-address-book fa-2x mr-3"></i>
-                Contact Us
-            </a>
-        </li>
+
+        <style>
+            .sub-menu {
+                display: none;
+                padding-left: 40px;
+            }
+
+            .slide.active>.sub-menu {
+                display: block;
+            }
+
+            .has-sub>a {
+                cursor: pointer;
+            }
+        </style>
 
 
         <li class="slide">
@@ -87,6 +96,17 @@ use App\Helpers\PermissionHelper;
         </li>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#helpSupportToggle').on('click', function (e) {
+                    e.preventDefault();
+                    $(this).parent('.slide').toggleClass('active');
+                });
+            });
+        </script>
+
         <script>
             document.getElementById('logoutMenu').addEventListener('click', function (event) {
                 event.preventDefault();

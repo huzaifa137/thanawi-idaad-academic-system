@@ -34,9 +34,11 @@ $controller = new Controller();
                                 <div class="col-lg-6 col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Academic Year Name</label>
-                                        <input type="text" name="name" class="form-control"
+                                        <input type="text" name="name" class="form-control" placeholder="e.g.2026"
+                                            required>
+                                        {{-- <input type="text" name="name" class="form-control"
                                             placeholder="e.g. 2024 - 2025" required pattern="\d{4} - \d{4}"
-                                            title="Please enter the academic year in the format: 2024 - 2025">
+                                            title="Please enter the academic year in the format: 2024 - 2025"> --}}
                                     </div>
                                 </div>
 
@@ -58,8 +60,8 @@ $controller = new Controller();
                                 <div class="col-lg-6 col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Start Date</label>
-                                        <input type="date" name="start_date" id="start_date" class="form-control"
-                                            required min="{{ $minDate }}" max="{{ $maxDate }}">
+                                        <input type="date" name="start_date" id="start_date" class="form-control" required
+                                            min="{{ $minDate }}" max="{{ $maxDate }}">
                                     </div>
                                 </div>
 
@@ -164,8 +166,7 @@ $controller = new Controller();
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Edit Academic Year</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
@@ -176,10 +177,11 @@ $controller = new Controller();
 
                                                 <div class="form-group">
                                                     <label for="edit_name">Year</label>
-                                                    <input type="text" id="edit_name" name="name"
-                                                        class="form-control" placeholder="e.g. 2024 - 2025" required
-                                                        pattern="\d{4} - \d{4}"
-                                                        title="Please enter the academic year in the format: 2024 - 2025">
+                                                    <input type="text" id="edit_name" name="name" class="form-control"
+                                                        placeholder="e.g.2026" required>
+                                                    {{-- <input type="text" id="edit_name" name="name" class="form-control"
+                                                        placeholder="e.g. 2024 - 2025" required pattern="\d{4} - \d{4}"
+                                                        title="Please enter the academic year in the format: 2024 - 2025"> --}}
                                                 </div>
 
                                                 <div class="form-group">
@@ -218,8 +220,8 @@ $controller = new Controller();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $('#createAcademicYearForm').on('submit', function(e) {
+        $(document).ready(function () {
+            $('#createAcademicYearForm').on('submit', function (e) {
                 e.preventDefault();
 
                 let isValid = true;
@@ -229,7 +231,7 @@ $controller = new Controller();
                 $form.find('.form-control, select').removeClass('is-invalid');
                 $form.find('.invalid-feedback').remove();
 
-                $form.find('input, select').each(function() {
+                $form.find('input, select').each(function () {
                     if (!$(this).val().trim()) {
                         $(this).addClass('is-invalid');
 
@@ -272,7 +274,7 @@ $controller = new Controller();
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 Swal.fire(
                                     'Submitted!',
                                     response.message,
@@ -283,7 +285,7 @@ $controller = new Controller();
                                 });
                                 $form[0].reset();
                             },
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 if (xhr.status === 422) {
                                     let errors = xhr.responseJSON.errors;
                                     for (let field in errors) {
@@ -298,7 +300,7 @@ $controller = new Controller();
                                         'error');
                                 }
                             },
-                            complete: function() {
+                            complete: function () {
                                 $submitBtn.prop('disabled', false).html(
                                     originalBtnHtml);
                             }
@@ -312,7 +314,7 @@ $controller = new Controller();
 
     <script>
         // Delete academic year functionality
-        $('tbody').on('click', '.btn-delete-academic-year', function() {
+        $('tbody').on('click', '.btn-delete-academic-year', function () {
             var yearId = $(this).data('id');
             var row = $(this).closest('tr');
 
@@ -332,7 +334,7 @@ $controller = new Controller();
                         data: {
                             _token: '{{ csrf_token() }}'
                         },
-                        success: function(response) {
+                        success: function (response) {
                             row.remove();
                             Swal.fire(
                                 'Deleted!',
@@ -340,7 +342,7 @@ $controller = new Controller();
                                 'success'
                             );
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
                             Swal.fire(
                                 'Error!',
                                 'Something went wrong while deleting.',
@@ -354,7 +356,7 @@ $controller = new Controller();
     </script>
 
     <script>
-        $(document).on('click', '.btn-edit-academic-year', function() {
+        $(document).on('click', '.btn-edit-academic-year', function () {
             const id = $(this).data('id');
 
             $('#edit_id').val(id);
@@ -365,7 +367,7 @@ $controller = new Controller();
             $('#editAcademicYearModal').modal('show');
         });
 
-        $('#editAcademicYearForm').on('submit', function(e) {
+        $('#editAcademicYearForm').on('submit', function (e) {
             e.preventDefault();
 
             const id = $('#edit_id').val();
@@ -374,7 +376,7 @@ $controller = new Controller();
                 url: '/academic-years/' + id,
                 type: 'POST',
                 data: $(this).serialize(),
-                success: function(response) {
+                success: function (response) {
                     $('#editAcademicYearModal').modal('hide');
 
                     Swal.fire('Updated!', 'Academic Year updated successfully.', 'success')
@@ -390,7 +392,7 @@ $controller = new Controller();
 
                 //     Swal.fire('Error!', errorText, 'error');
                 // }
-                error: function(data) {
+                error: function (data) {
                     $('body').html(data.responseText);
                 }
             });
@@ -398,8 +400,8 @@ $controller = new Controller();
     </script>
 
     <script>
-        $(document).ready(function() {
-            $('#academicYearsTable').on('click', '.activate-btn, .deactivate-btn', function() {
+        $(document).ready(function () {
+            $('#academicYearsTable').on('click', '.activate-btn, .deactivate-btn', function () {
                 const $btn = $(this);
                 const $row = $btn.closest('tr');
                 const id = $row.data('id');
@@ -422,13 +424,13 @@ $controller = new Controller();
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
-                            success: function(res) {
+                            success: function (res) {
                                 Swal.fire('Success', res.message, 'success').then(
                                     () => {
                                         location.reload();
                                     });
                             },
-                            error: function() {
+                            error: function () {
                                 Swal.fire('Error', 'Something went wrong!', 'error');
                             }
                         });

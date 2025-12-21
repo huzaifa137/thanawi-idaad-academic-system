@@ -29,4 +29,12 @@
             <i class="fas fa-file-upload me-2"></i> Upload Fees Balance
         </a>
     </div>
+
+<div class="col-12 col-sm-4 mb-2">
+    <a href="{{ route('students.all.students') }}" class="btn btn-white text-dark w-100">
+        <i class="fas fa-users me-2"></i> All Students
+    </a>
+</div>
+
+
 </div>
