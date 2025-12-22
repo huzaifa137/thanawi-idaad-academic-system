@@ -4,7 +4,6 @@ namespace App\Exports;
 use App\Models\Student;
 use App\Models\ClassStreamAssignment;
 use App\Models\ClassSubject;
-use App\Models\MasterData;
 use App\Http\Controllers\Helper;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -27,19 +26,27 @@ class ClassStudentsExport implements FromCollection, WithHeadings, WithMapping, 
      */
     protected function loadSubjects()
     {
-        $assignmentIds = ClassStreamAssignment::where('class_id', $this->classId)
+        $ClassStreams = ClassStreamAssignment::where('class_id', $this->classId)
             ->where('school_id', session('LoggedSchool'))
-            ->pluck('id');
+            ->pluck('stream_id');
 
-        $this->subjects = ClassSubject::whereIn('class_stream_assignment_id', $assignmentIds)
-            ->join('master_datas', 'class_subjects.subject_id', '=', 'master_datas.md_master_code_id')
-            ->select(
-                'master_datas.md_master_code_id',
-                'master_datas.md_name as subject_name'
-            )
+        // $this->subjects = ClassSubject::where('class_id', $this->classId)
+        //     ->where('school_id', session('LoggedSchool'))
+        //     ->whereIn('stream_id', $ClassStreams)
+        //     ->select('subject_id')
+        //     ->distinct()
+        //     ->pluck('subject_id');
+
+        $this->subjects = ClassSubject::where('class_id', $this->classId)
+            ->where('school_id', session('LoggedSchool'))
+            ->whereIn('stream_id', $ClassStreams)
+            ->select('subject_id')
             ->distinct()
-            ->orderBy('subject_name')
-            ->get();
+            ->pluck('subject_id')
+            ->map(function ($id) {
+                return Helper::item_md_name($id);
+            })
+            ->toArray();
     }
 
     public function collection()

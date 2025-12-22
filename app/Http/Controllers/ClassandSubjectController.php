@@ -48,7 +48,7 @@ class ClassandSubjectController extends Controller
 
     public function storeClass(Request $request)
     {
-        
+
         $request->validate([
             'class_id' => 'required',
             'class_stream' => 'required',
@@ -87,7 +87,7 @@ class ClassandSubjectController extends Controller
                 'date_added' => now(),
             ]);
 
-            $assignmentId = $classStreamAssignment->id;
+            $assignmentId = $request->class_stream;
 
             $subjectCategories = [
                 'technical_subjects' => 'technical',
@@ -103,9 +103,11 @@ class ClassandSubjectController extends Controller
                 if ($request->has($requestKey) && is_array($request->input($requestKey))) {
                     foreach ($request->input($requestKey) as $subjectId) {
                         ClassSubject::create([
-                            'class_stream_assignment_id' => $assignmentId,
+                            'class_id' => $request->input('class_id'),
+                            'stream_id' => $request->input('class_stream'),
                             'subject_id' => $subjectId,
                             'subject_type' => $subjectType,
+                            'school_id' => session('LoggedSchool'),
                         ]);
                     }
                 }
@@ -194,7 +196,7 @@ class ClassandSubjectController extends Controller
 
     public function removeSubjectTeacher1(Request $request)
     {
-        
+
         $request->validate([
             'subject_id' => 'required|exists:class_subjects,id',
         ]);
@@ -212,7 +214,7 @@ class ClassandSubjectController extends Controller
     }
 
 
-     public function assignSubjectTeacher2(Request $request)
+    public function assignSubjectTeacher2(Request $request)
     {
 
         $request->validate([
@@ -237,13 +239,13 @@ class ClassandSubjectController extends Controller
 
     public function removeSubjectTeacher2(Request $request)
     {
-        
+
         $request->validate([
             'subject_id' => 'required|exists:class_subjects,id',
         ]);
 
         $subject = ClassSubject::find($request->subject_id);
-        
+
         if (!$subject->subject_teacher_2) {
             return response()->json(['status' => 'error', 'message' => 'No Subject Teacher to remove.']);
         }

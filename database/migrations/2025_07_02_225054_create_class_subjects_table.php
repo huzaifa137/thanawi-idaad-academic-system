@@ -12,21 +12,15 @@ return new class extends Migration {
     {
         Schema::create('class_subjects', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('class_stream_assignment_id');
+            $table->unsignedBigInteger('class_id');
+            $table->unsignedBigInteger('stream_id');
             $table->unsignedBigInteger('subject_id');
+            $table->unsignedBigInteger('school_id');
             $table->unsignedBigInteger('subject_teacher_1')->nullable();
             $table->unsignedBigInteger('subject_teacher_2')->nullable();
-            $table->string('subject_type'); // e.g., 'technical', 'optional', 'mathematics', 'languages', etc.
+            $table->string('subject_type');
             $table->timestamps();
 
-            // Foreign key constraint
-            $table->foreign('class_stream_assignment_id')
-                ->references('id')
-                ->on('class_stream_assignments')
-                ->onDelete('cascade'); // If an assignment is deleted, delete its subjects
-
-            // Optional: Add unique constraint if a subject can only be of one type per assignment
-            // $table->unique(['class_stream_assignment_id', 'subject_id', 'subject_type']);
         });
     }
 

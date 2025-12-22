@@ -10,10 +10,14 @@ class ClassSubject extends Model
     use HasFactory;
 
     protected $fillable = [
-        'class_stream_assignment_id',
+        'class_id',
+        'stream_id',
         'subject_id',
         'subject_type',
+        'school_id',
     ];
+
+
 
     /**
      * Get the class-stream assignment that owns the subject.

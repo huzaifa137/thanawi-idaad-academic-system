@@ -194,8 +194,6 @@ class StudentController extends Controller
 
     public function studentDashboard()
     {
-        // dd('welcome home zai ...');
-
         $studentId = session('LoggedStudent');
         $student = DB::table('users')->where('id', $studentId)->first();
 

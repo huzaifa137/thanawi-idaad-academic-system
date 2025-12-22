@@ -10,7 +10,9 @@ use App\Http\Controllers\ClassandSubjectController;
 use App\Http\Controllers\UserRightsAndPreviledges;
 use App\Http\Controllers\ExamController;
 use App\Mail\userMail;
+use App\Http\Controllers\Helper;
 use Illuminate\Support\Facades\Route;
+use App\Models\ClassStreamAssignment;
 
 
 
@@ -30,6 +32,18 @@ Route::get('/send-test-mail', function () {
     Mail::to('youremail@example.com')->send(new userMail());
     return 'Email sent!';
 });
+
+// Get subjects 
+
+Route::get('/get-subjects', function () {
+
+
+    $uniqueStreamIds = ClassStreamAssignment::where('school_id', 2)
+        ->where('class_id', 147)
+        ->distinct()
+        ->pluck('id');
+});
+
 
 Route::controller(UserController::class)->group(function () {
 
