@@ -48,6 +48,7 @@ class ClassandSubjectController extends Controller
 
     public function storeClass(Request $request)
     {
+        
         $request->validate([
             'class_id' => 'required',
             'class_stream' => 'required',

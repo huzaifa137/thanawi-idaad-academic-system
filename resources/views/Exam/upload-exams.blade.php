@@ -52,12 +52,18 @@ use App\Http\Controllers\Helper;
                                                     <th>Exam</th>
                                                     <th>Class</th>
                                                     <th>Status</th>
+                                                    <th>Class List</th>
                                                     <th class="text-center">Action</th>
                                                 </tr>
                                             </thead>
 
                                             <tbody>
                                                 @if(isset($exams[$termKey]) && $exams[$termKey]->count())
+
+
+                                                    @if ($exams[$termKey]->count() > 0)
+
+                                                    @endif
 
                                                     @foreach ($exams[$termKey] as $exam)
 
@@ -99,23 +105,16 @@ use App\Http\Controllers\Helper;
                                                                 </td>
 
                                                                 <td class="text-center">
-                                                                    <a href="#" class="btn btn-sm btn-outline-secondary">
-                                                                        <i class="bi bi-pencil"></i> Edit Exam
+                                                                    <a href="{{ route('exams.download.classlist', ['exam' => $exam->id, 'class' => $classId]) }}"
+                                                                        class="btn btn-sm btn-primary">
+                                                                        <i class="bi bi-download"></i> Download XLS
                                                                     </a>
+                                                                </td>
 
-                                                                    <a href="#" class="btn btn-sm btn-outline-dark">
-                                                                        <i class="bi bi-journal-text"></i> Subject Papers
+                                                                <td class="text-center">
+                                                                    <a href="#" class="btn btn-sm btn-warning text-dark">
+                                                                        <i class="bi bi-upload"></i> Publish Results
                                                                     </a>
-
-                                                                    @if($exam->ce_status == 'Published')
-                                                                        <a href="#" class="btn btn-sm btn-info">
-                                                                            <i class="bi bi-bar-chart"></i> Analyze Results
-                                                                        </a>
-                                                                    @else
-                                                                        <a href="#" class="btn btn-sm btn-success">
-                                                                            <i class="bi bi-upload"></i> Publish Results
-                                                                        </a>
-                                                                    @endif
                                                                 </td>
                                                             </tr>
 

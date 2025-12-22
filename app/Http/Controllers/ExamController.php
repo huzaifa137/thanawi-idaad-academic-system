@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
+use App\Exports\ClassStudentsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\AcademicYear;
 use App\Models\CreatedExam;
 use App\Models\MasterData;
 use App\Models\TermDate;
+use App\Models\Student;
+
 
 class ExamController extends Controller
 {
@@ -86,5 +90,29 @@ class ExamController extends Controller
     {
 
         return view('Exam.edit-exams');
+    }
+
+    public function uploadExams()
+    {
+        $activeYear = Helper::active_year();
+
+        $exams = CreatedExam::where('ce_exam_year', $activeYear)
+            ->where('ce_exam_status', 0)
+            ->orderBy('ce_term')
+            ->orderBy('ce_date_created', 'desc')
+            ->get()
+            ->groupBy('ce_term');
+
+        return view('Exam.upload-exams', compact('exams', 'activeYear'));
+    }
+
+    public function downloadClassList($examId, $classId)
+    {
+        $exam = CreatedExam::findOrFail($examId);
+
+        return Excel::download(
+            new ClassStudentsExport($classId),
+            Helper::item_md_name($classId) . '_Class_List.xlsx'
+        );
     }
 }

@@ -364,6 +364,10 @@ Route::controller(ExamController::class)->group(function () {
         Route::get('/specific-school-students', 'schoolStudents')->name('all.specific.students');
         Route::get('/manage-exams', 'manageExams')->name('manage.exams');
         Route::get('/edit-exams', 'editExams')->name('edit.exams');
+        Route::get('/upload-exams', 'uploadExams')->name('upload.exams');
+        Route::get('/exams/{exam}/class/{class}/download', 'downloadClassList')->name('exams.download.classlist');
+
+
 
 
         Route::post('/store-created-exam', 'storeCreatedExam');
