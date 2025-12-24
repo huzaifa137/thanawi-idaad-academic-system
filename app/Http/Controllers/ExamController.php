@@ -15,6 +15,7 @@ use App\Models\StudentResult;
 use App\Models\StudentExamSummary;
 use App\Imports\ClassResultsImport;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Mpdf\Mpdf;
 
 class ExamController extends Controller
 {
@@ -24,7 +25,8 @@ class ExamController extends Controller
         $school_id = session('LoggedSchool');
 
         if (!$school_id) {
-            dd('Please select a school to proceed ...');
+            return redirect()->route('student.dashboard')
+                ->with('error', 'Please select a school to proceed.');
         }
 
         $activeYear = AcademicYear::orderBy('id', 'desc')
@@ -273,6 +275,38 @@ class ExamController extends Controller
         return $pdf->download("class_ranking_{$className}_{$examName}.pdf");
     }
 
+    // Report Generation / English Versions
+    // public function downloadReportCard($examId, $classId)
+    // {
+    //     $schoolId = session('LoggedSchool');
+
+    //     $students = StudentResult::where('exam_id', $examId)
+    //         ->where('class_id', $classId)
+    //         ->where('school_id', $schoolId)
+    //         ->with('student')
+    //         ->get()
+    //         ->groupBy('student_id');
+
+    //     $className = Helper::item_md_name($classId);
+    //     $examName = Helper::db_item_from_column('created_exams', $examId, 'ce_exam_name');
+
+    //     $pdf = Pdf::loadView('Exam.report-card-template', [
+    //         'students' => $students,
+    //         'className' => $className,
+    //         'examName' => $examName,
+    //         'schoolName' => 'Wisdom Islamic Primary School - Kinyogogo',
+    //     ])
+    //         ->setPaper('a4', 'portrait')
+    //         // Reduced margins to '0' here because we will handle them in CSS 
+    //         // for better precision with borders.
+    //         ->setOption('margin-top', 0)
+    //         ->setOption('margin-bottom', 0)
+    //         ->setOption('margin-left', 0)
+    //         ->setOption('margin-right', 0);
+
+    //     return $pdf->download("ReportCard_{$className}_{$examName}.pdf");
+    // }
+
     public function downloadReportCard($examId, $classId)
     {
         $schoolId = session('LoggedSchool');
@@ -286,21 +320,27 @@ class ExamController extends Controller
 
         $className = Helper::item_md_name($classId);
         $examName = Helper::db_item_from_column('created_exams', $examId, 'ce_exam_name');
+        $schoolName = Helper::current_logged_school(Session('LoggedSchool'));
 
-        $pdf = Pdf::loadView('Exam.report-card-template', [
-            'students' => $students,
-            'className' => $className,
-            'examName' => $examName,
-            'schoolName' => 'Wisdom Islamic Primary School - Kinyogogo',
-        ])
-            ->setPaper('a4', 'portrait')
-            // Reduced margins to '0' here because we will handle them in CSS 
-            // for better precision with borders.
-            ->setOption('margin-top', 0)
-            ->setOption('margin-bottom', 0)
-            ->setOption('margin-left', 0)
-            ->setOption('margin-right', 0);
+        $html = view('Exam.arabic-report-card-template', compact(
+            'students',
+            'className',
+            'examName',
+            'schoolName',
 
-        return $pdf->download("ReportCard_{$className}_{$examName}.pdf");
+        ))->render();
+
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'default_font' => 'dejavusans'
+        ]);
+
+        // $mpdf->SetDirectionality('rtl'); // CRITICAL
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output("ReportCard_{$className}_{$examName}.pdf", 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="ReportCard.pdf"');
     }
 }

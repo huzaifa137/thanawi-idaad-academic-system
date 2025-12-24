@@ -284,6 +284,9 @@ class Helper extends Controller
 
     public static function gradeFromAverage($average)
     {
+
+        // English and Arabic 
+        
         // if ($average >= 80 && $average <= 100) {
         //     return 'Mumtaz/ممتاز';
         // } elseif ($average >= 70 && $average < 80) {
@@ -295,17 +298,44 @@ class Helper extends Controller
         // } else {
         //     return 'Rasib/راسب';
         // }
+
+        // English Alone
+
+        // if ($average >= 80 && $average <= 100) {
+        //     return 'Mumtaz';
+        // } elseif ($average >= 70 && $average < 80) {
+        //     return 'Jayid Jiddan';
+        // } elseif ($average >= 60 && $average < 70) {
+        //     return 'Jayid';
+        // } elseif ($average >= 50 && $average < 60) {
+        //     return 'Maqbul';
+        // } else {
+        //     return 'Rasib';
+        // }
+
+        // Arabic Alone
+
         if ($average >= 80 && $average <= 100) {
-            return 'Mumtaz';
+            return 'ممتاز';
         } elseif ($average >= 70 && $average < 80) {
-            return 'Jayid Jiddan';
+            return 'جيد جدًا';
         } elseif ($average >= 60 && $average < 70) {
-            return 'Jayid';
+            return 'جيد';
         } elseif ($average >= 50 && $average < 60) {
-            return 'Maqbul';
+            return 'مقبول';
         } else {
-            return 'Rasib';
+            return 'راسب';
         }
+    }
+
+
+    public static function current_logged_school($school_id)
+    {
+        $schoolName = DB::table('schools')
+            ->where('id', operator: $school_id)
+            ->value('name');
+
+        return $schoolName;
     }
 
 }

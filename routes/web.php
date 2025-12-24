@@ -327,7 +327,7 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
     Route::controller(StudentController::class)->prefix('students')->group(function () {
 
-        Route::get('students-dashboard', 'studentPortal')->name('student.dashboard');
+        Route::get('students-dashboard', 'studentPortal')->name('all.students.dashboard');
         Route::get('update-profile', action: 'updateProfiles')->name('students.update.profile');
         // Route::get('update-photo', 'updatePhoto')->name('students.update.photo');
         // Route::post('upload-fees', 'uploadFees')->name('students.upload.fees');

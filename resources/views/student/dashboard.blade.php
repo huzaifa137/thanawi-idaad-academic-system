@@ -21,6 +21,17 @@ $controller = new Controller();
         <div class="page-header">
             <h1 class="page-title">
 
+                @if(session('error'))
+                    <script>
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Attention',
+                            text: '{{ session('error') }}',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    </script>
+                @endif
+
                 @if (PermissionHelper::userPermissionSectionAccess(session('LoggedStudent'), 158, 'school'))
                     Welcome,
 
@@ -41,7 +52,6 @@ $controller = new Controller();
                         });
                     @endif
                 </script>
-
 
                 {{-- @if (!empty($student->firstname) && !empty($student->lastname))
                 {{ $student->firstname }} {{ $student->lastname }}
