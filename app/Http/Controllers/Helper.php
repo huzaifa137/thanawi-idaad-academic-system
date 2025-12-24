@@ -47,6 +47,15 @@ class Helper extends Controller
             ->value('id');
     }
 
+    public static function get_teacher_name($teacher_id)
+    {
+        $teacher_id = (int) $teacher_id;
+
+        return DB::table('teachers')
+            ->where('id', $teacher_id)
+            ->value('firstname') ?? 'No Record Found';
+    }
+
     public static function category_name($user = "")
     {
         $user = (int) $user;
@@ -286,7 +295,7 @@ class Helper extends Controller
     {
 
         // English and Arabic 
-        
+
         // if ($average >= 80 && $average <= 100) {
         //     return 'Mumtaz/ممتاز';
         // } elseif ($average >= 70 && $average < 80) {

@@ -10,51 +10,12 @@
 
                 <li aria-haspopup="true">
                     <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
-                        <i class="fas fa-file-alt hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
-                        Dashboard <i class="fa fa-angle-down horizontal-icon"></i>
-                    </a>
-                    <ul class="sub-menu">
-                        <li><a href="#">Phone Tracking </a>
-                        </li>
-                        <li><a href="#">Active Trackers</a></li>
-                    </ul>
-                </li>
-
-
-                <li aria-haspopup="true">
-                    <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
-                        <i class="fas fa-chalkboard-teacher hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
-                        Courses & Lessons <i class="fa fa-angle-down horizontal-icon"></i>
-                    </a>
-                    <ul class="sub-menu">
-                        <li><a href="{{ url('/courses/add-course') }}">Add Course</a></li>
-                        <li><a href="{{ url('/courses/all-courses') }}">All Courses</a></li>
-                        <li><a href="{{ url('/courses/add-course-module') }}">Course Modules</a></li>
-                        <li><a href="{{ url('/quiz/all-quizze-and-assignments') }}">Quiz & Assignments</a></li>
-                        <li><a href="{{ url('/code-editor/programming') }}">Interractive Code Editors</a></li>
-                        <li><a href="{{ url('/certificates/all-preview') }}">certificates & Badges</a></li>
-
-                    </ul>
-                </li>
-
-                <li aria-haspopup="true">
-                    <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
                         <i class="fas fa-users hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
                         Users <i class="fa fa-angle-down horizontal-icon"></i>
                     </a>
                     <ul class="sub-menu">
                         <li><a href="{{ url('/users/users-register') }}">Register new User</a></li>
                         <li><a href="{{ url('/users/users-information') }}">View users information</a></li>
-                    </ul>
-                </li>
-
-                <li aria-haspopup="true">
-                    <a href="{{ url('/' . ($page = '#')) }}" class="sub-icon">
-                        <i class="fas fa-chart-bar hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
-                        Contact Us <i class="fa fa-angle-down horizontal-icon"></i>
-                    </a>
-                    <ul class="sub-menu">
-                        <li><a href="{{ url('/courses/contact-us') }}">Messages</a></li>
                     </ul>
                 </li>
 
@@ -68,6 +29,44 @@
                         <li><a href="{{ url('master-data/master-code-to-data') }}">Master Data</a></li>
                     </ul>
                 </li>
+
+                <li class="logout-item" style="float: right;">
+                    <a href="{{ route('admin-logout') }}" class="logout-link"
+                        style="display: flex; align-items: center;">
+                        <i class="fas fa-sign-out-alt hor-icon" style="font-size: 24px; margin-right: 8px;"></i>
+                        <span>Logout</span>
+                    </a>
+                    <form id="logout-form" action="{{ route('admin-logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </li>
+
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const logoutLink = document.querySelector('.logout-link');
+                        logoutLink.addEventListener('click', function (e) {
+                            e.preventDefault(); // prevent default link action
+
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: "You will be logged out of the system!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, logout!',
+                                cancelButtonText: 'Cancel'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Submit the logout form
+                                    document.getElementById('logout-form').submit();
+                                }
+                            });
+                        });
+                    });
+                </script>
 
             </ul>
         </nav>

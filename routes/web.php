@@ -9,7 +9,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ClassandSubjectController;
 use App\Http\Controllers\UserRightsAndPreviledges;
 use App\Http\Controllers\ExamController;
-use App\Mail\userMail;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Helper;
 use Illuminate\Support\Facades\Route;
 use App\Models\ClassStreamAssignment;
@@ -27,29 +27,19 @@ use App\Models\ClassStreamAssignment;
 |
  */
 
+Route::get('/set-admin-session', function () {
+    session(['LoggedAdmin' => 1]);
 
-Route::get('/send-test-mail', function () {
-    Mail::to('youremail@example.com')->send(new userMail());
-    return 'Email sent!';
+    return dd('Admin Session has been set !!!');
 });
-
-// Get subjects 
-
-Route::get('/get-subjects', function () {
-
-
-    $uniqueStreamIds = ClassStreamAssignment::where('school_id', 2)
-        ->where('class_id', 147)
-        ->distinct()
-        ->pluck('id');
-});
-
 
 Route::controller(UserController::class)->group(function () {
 
     Route::group(['prefix' => '/users'], function () {
 
         Route::get('/user-logout', 'userLogout')->name('user-logout');
+        Route::post('/admin-logout', 'adminLogout')->name('admin-logout');
+
         Route::get('/student-logout', 'studentLogout')->name('student-logout');
 
         Route::group(['middleware' => ['AdminAuth']], function () {
@@ -60,17 +50,20 @@ Route::controller(UserController::class)->group(function () {
             Route::get('/users-profile', 'userProfile')->name('users-profile');
             Route::get('/users-register', 'userRegister');
             Route::get('/users-information', 'userInformation')->name('users.user-information');
-            Route::get('user-account-information/{id}', 'userAccountInformation');
+            Route::get('user-account-information/{id}', [UserController::class, 'userAccountInformation'])
+                ->name('users.account-information');
             Route::get('/home-page', 'homePage')->name('home.page');
             Route::get('/register', 'register')->name('users.register');
             Route::get('/edit-user-information', 'editUserInformation');
-            Route::get('/edit-specific-user/{userid}', 'editSpecificUser');
+            Route::get('/edit-specific-user/{userid}', 'editSpecificUser')->name('users.edit-specific-user');
             Route::get('/terms-and-conditions', 'user_terms_and_conditions')->name('users.terms-and-conditions');
+            Route::get('/users/delete-user/{id}', 'deleteUserAccount')->name('users.delete-user');
+
         });
 
         Route::post('auth-user-selected-school', 'authUserSelectedSchool')->name('auth-user-selected-school');
         Route::post('store-internal-user', 'storeInternalUser')->name('store-internal-user');
-        Route::post('update-internal-user', 'storeUpdatedInternalUser')->name('update-internal-user');
+        Route::post('update-internal-user', 'storeUpdatedInternalUser')->name('update.internal-user');
         Route::post('save-role', 'saveUserRole')->name('save-role');
         Route::post('store-role-update', 'storeRoleUpdate')->name('store-role-update');
         Route::post('store-updated-information', 'storeUpdatedInformation')->name('store-updated-information');
@@ -166,35 +159,10 @@ Route::controller(StudentController::class)->group(function () {
             Route::get('/dashboard', 'studentDashboard')->name('student.dashboard');
             Route::get('/profile', 'studentProfile')->name('student.profile');
             Route::get('/edit-student-profile', 'editStudentProfile');
-            Route::get('/courses-and-lessons', 'coursesAndLessons')->name('student.courses.lessons');
-            Route::get('/lessons-and-study', 'lessonsAndStudy')->name('student.lesson.study');
-            Route::get('/cart', 'addCart')->name('student.cart');
-            Route::get('/cart/remove/{id}', 'removeCart')->name('cart.remove');
-            Route::get('/checkout', 'checkout')->name('student.checkout');
-            Route::get('/courses/filter', 'filterCourses')->name('student.courses.filter');
-            Route::get('/course-details/{id}', 'courseDetails')->name('course.details');
-            Route::get('/course-study/{id}', 'courseStudy')->name('course.study');
-            Route::get('/ongoing-lesson/{id}', 'lessonStudying')->name('lesson.ongoing');
-            Route::get('/lesson-details/{id}', 'showLesson')->name('student.lessons.details');
-            Route::get('/show/{quiz}', 'showQuizForm')->name('student.quizzes.show');
-            Route::get('/all-preview', 'previewAllCertificates')->name('certificates.all');
-            Route::get('/{course}/certificate/download', 'download')->name('certificate.download');
-            Route::get('/contact-us', 'contactUs')->name('contact.us');
-
-            Route::post('/submit-message', 'submitMesage')->name('student.submit.message');
-            Route::post('/{lesson}/complete', 'lessonComplete')->name('student.lessons.complete');
-            Route::post('/{quiz}/submit', 'submitQuiz')->name('student.quizzes.submit');
-            Route::post('/checkout-process', 'processCheckout')->name('checkout.process');
-            Route::post('/add-to-cart/{id}', 'addToCartAction')->name('student.add.cart');
-            Route::post('/enroll-course-cart-action/{id}', 'enrollCourseCartAction')->name('student.enroll.course.action');
-            Route::post('/cart/update-quantity', 'updateQuantity')->name('cart.updateQuantity');
         });
     });
 
     Route::get('/select-current-school', 'selectCurrentSchool')->name('select.current.school');
-
-    Route::get('/student/view-course-information/{id}', 'viewCourseInformation')->name('view.course.information');
-
 });
 
 Route::controller(SchoolController::class)->group(function () {

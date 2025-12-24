@@ -361,6 +361,8 @@ class SchoolController extends Controller
 
     public function storeTermDate(Request $request)
     {
+        dd($request->all());
+        
         $validated = $request->validate([
             'academic_year_id' => 'required|exists:academic_years,id',
             'term' => 'required|string|max:255',

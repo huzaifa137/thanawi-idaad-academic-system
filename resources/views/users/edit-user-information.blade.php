@@ -128,17 +128,50 @@
                         </span>
                     </div>
 
+                    <!-- Include Font Awesome -->
+                    <link rel="stylesheet"
+                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
                     <div class="col-md-4" style="padding-top:1rem;">
                         <label>Password<span class="text-danger"></span></label>
-                        <input type="password" name="password" id="password" class="input-sm form-control"
-                            placeholder="Enter Password">
+                        <div class="input-group">
+                            <input type="password" name="password" id="password" class="input-sm form-control"
+                                placeholder="Enter Password">
+                            <span class="input-group-text" style="cursor:pointer;"
+                                onclick="togglePassword('password', this)">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                        </div>
                     </div>
 
                     <div class="col-md-4" style="padding-top:1rem;">
                         <label>Confirm Password<span class="text-danger"></span></label>
-                        <input type="password" name="confirm_password" id="confirm_password"
-                            class="input-sm form-control" placeholder="Enter Confirm password">
+                        <div class="input-group">
+                            <input type="password" name="confirm_password" id="confirm_password"
+                                class="input-sm form-control" placeholder="Enter Confirm password">
+                            <span class="input-group-text" style="cursor:pointer;"
+                                onclick="togglePassword('confirm_password', this)">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                        </div>
                     </div>
+
+                    <script>
+                        function togglePassword(fieldId, icon) {
+                            const input = document.getElementById(fieldId);
+                            const i = icon.querySelector('i');
+                            if (input.type === "password") {
+                                input.type = "text";
+                                i.classList.remove('fa-eye');
+                                i.classList.add('fa-eye-slash');
+                            } else {
+                                input.type = "password";
+                                i.classList.remove('fa-eye-slash');
+                                i.classList.add('fa-eye');
+                            }
+                        }
+                    </script>
+
                 </div>
 
                 <div class="row">
@@ -168,11 +201,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("userForm");
             const submitButton = form.querySelector("button[type='submit']");
 
-            form.addEventListener("submit", function(e) {
+            form.addEventListener("submit", function (e) {
                 e.preventDefault();
 
                 const username = document.getElementById("username").value.trim();

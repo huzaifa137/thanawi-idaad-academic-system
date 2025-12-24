@@ -37,6 +37,7 @@
                             <tr>
                                 <th style="width: 1px;">No.</th>
                                 <th>Username</th>
+                                <th>Role</th>
                                 <th>Email</th>
                                 <th>Actions</th>
                             </tr>
@@ -84,35 +85,39 @@
 
 
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             $('#table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route('users.user-information') }}',
                 columns: [{
-                        data: null,
-                        name: 'serial',
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
-                        data: 'username',
-                        name: 'username'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
+                    data: null,
+                    name: 'serial',
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
                     }
+                },
+                {
+                    data: 'username',
+                    name: 'username'
+                },
+                {
+                    data: 'user_role',
+                    name: 'user_role'
+                },
+                {
+                    data: 'email',
+                    name: 'email'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
                 ],
                 pageLength: 10,
                 lengthMenu: [10, 25, 50, 100],
@@ -125,7 +130,7 @@
                 buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
             });
 
-            $(document).on('click', '.dropdown-toggle', function(e) {
+            $(document).on('click', '.dropdown-toggle', function (e) {
                 var $el = $(this).next('.dropdown-menu');
                 var isVisible = $el.is(':visible');
                 $('.dropdown-menu').hide();
@@ -135,7 +140,7 @@
                 e.stopPropagation();
             });
 
-            $(document).on('click', function(e) {
+            $(document).on('click', function (e) {
                 if (!$(e.target).closest('.dropdown').length) {
                     $('.dropdown-menu').hide();
                 }
@@ -143,6 +148,26 @@
         });
     </script>
 
+    <script>
+        $(document).on('click', '.delete-user', function (e) {
+            e.preventDefault(); // prevent default link
+            var url = $(this).attr('href');
+            var name = $(this).data('name');
 
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Are you sure you want to delete ${name}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        });
     </script>
+
 @endsection

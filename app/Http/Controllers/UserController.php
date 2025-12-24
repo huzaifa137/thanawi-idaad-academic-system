@@ -315,7 +315,16 @@ class UserController extends Controller
         } else {
             return redirect('/');
         }
-        return back();
+    }
+
+    public function adminLogout()
+    {
+        if (session()->has('LoggedAdmin')) {
+            session()->flush();
+            return redirect('/');
+        } else {
+            return redirect('/');
+        }
     }
 
     public function studentLogout()
@@ -461,7 +470,7 @@ class UserController extends Controller
             'email' => 'required',
             'selected_school_id' => 'required',
         ]);
-        
+
         $school_id = $request->selected_school_id;
         $user = DB::table('users')->where('email', $request->email)->first();
 
@@ -580,21 +589,41 @@ class UserController extends Controller
 
         if ($request->ajax()) {
             return datatables()->of($users)
+                ->addColumn('username', function ($user) {
+
+                    if ($user->user_role == 5) {
+                        return Helper::get_teacher_name($user->username);
+                    }
+                    return $user->username;
+                })
+                ->addColumn('user_role', function ($user) {
+                    switch ($user->user_role) {
+                        case 0:
+                            return 'School Admin';
+                        case 1:
+                            return 'System Administrator';
+                        case 5:
+                            return 'Teacher';
+                        default:
+                            return 'Unknown';
+                    }
+                })
                 ->addColumn('action', function ($user) {
                     $links = [];
-                    $links[] = '<a class="dropdown-item" href="user-account-information/' . $user->id . '"><i class="fa fa-fw fa-eye"></i> View</a>';
-                    $links[] = '<a class="dropdown-item" href="/users/edit-specific-user/' . $user->id . '"><i class="fa fa-fw fa-edit"></i> Edit</a>';
-                    $links[] = '<a onclick="return confirm(\'Are you sure you want to delete ' . $user->firstname . ' ' . $user->lastname . '?\'); " class="dropdown-item" href="delete-user/' . $user->id . '"><i class="fa fa-fw fa-times"></i> Delete</a>';
+                    $links[] = '<a class="dropdown-item" href="' . route('users.account-information', $user->id) . '"><i class="fa fa-fw fa-eye"></i> View</a>';
+                    $links[] = '<a class="dropdown-item" href="' . route('users.edit-specific-user', $user->id) . '"><i class="fa fa-fw fa-edit"></i> Edit</a>';
+                    $links[] = '<a class="dropdown-item delete-user" href="' . route('users.delete-user', $user->id) . '" data-name="' . $user->firstname . ' ' . $user->lastname . '"><i class="fa fa-fw fa-times"></i> Delete</a>';
 
                     return '<div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton' . $user->id . '" data-bs-toggle="dropdown" aria-expanded="false">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton' . $user->id . '">
-                                ' . implode('', $links) . '
-                            </ul>
-                        </div>';
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton' . $user->id . '" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton' . $user->id . '">
+                                    ' . implode('', $links) . '
+                                </ul>
+                            </div>';
                 })
+
                 ->make(true);
         }
 
@@ -710,15 +739,6 @@ class UserController extends Controller
         return back()->with('success', 'User Information has been updated successfully');
     }
 
-    public function deleteUser($id)
-    {
-        $data = User::find($id);
-
-        $data->delete();
-
-        return back()->with('success', 'user ' . $data->username . ' has been deleted successfully');
-    }
-
     public function editRecord($md_id)
     {
 
@@ -773,7 +793,7 @@ class UserController extends Controller
     {
 
         // ACCOUNT STATUSES
-// --------------------------------------
+        // --------------------------------------
         // 1.Banned     ====> 0
         // 2.Locked     ====> 8
         // 3.Suspended  ====> 9
@@ -785,11 +805,6 @@ class UserController extends Controller
             'password' => [
                 'required',
                 'string',
-                'min:6',
-                'regex:/[A-Z]/',
-                'regex:/[a-z]/',
-                'regex:/[0-9]/',
-                'regex:/[@$!%*?&#]/',
             ],
         ], [
             'password.required' => 'The password field is required.',
@@ -801,9 +816,15 @@ class UserController extends Controller
         $user = new User;
 
         $user->username = $request->username;
+        $user->phonenumber = $request->phonenumber;
+        $user->firstname = $request->firstname;
+        $user->lastname = $request->lastname;
+        $user->gender = $request->gender;
         $user->email = $request->email;
+        $user->country = $request->country;
+        $user->user_role = 1;
         $user->password = Hash::make($request->password);
-        $save = $user->save();
+        $user->save();
 
         $data = [
             'email' => $request->email,
@@ -835,12 +856,12 @@ class UserController extends Controller
                 [
                     'password' => [
                         'required',
-                        'string',
-                        'min:6',
-                        'regex:/[A-Z]/',
-                        'regex:/[a-z]/',
-                        'regex:/[0-9]/',
-                        'regex:/[@$!%*?&#]/',
+                        // 'string',
+                        // 'min:6',
+                        // 'regex:/[A-Z]/',
+                        // 'regex:/[a-z]/',
+                        // 'regex:/[0-9]/',
+                        // 'regex:/[@$!%*?&#]/',
                     ],
                 ],
                 [
@@ -890,4 +911,16 @@ class UserController extends Controller
             return back()->with('success', 'User account has been updated successfully');
         }
     }
+
+    public function deleteUserAccount($id)
+    {
+        $user = User::find($id);
+
+        if ($user) {
+            $user->delete();
+            return redirect()->back()->with('success', 'user ' . $user->username . ' has been deleted successfully');
+        }
+        return redirect()->back()->with('fail', 'User not found.');
+    }
+
 }

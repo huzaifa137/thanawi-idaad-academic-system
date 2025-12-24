@@ -240,34 +240,37 @@ $controller = new Controller();
 
                                 $form[0].reset();
                             },
-                            error: function(xhr) {
-                                if (xhr.status === 422) {
-                                    let errors = xhr.responseJSON.errors;
-                                    for (const field in errors) {
-                                        let input = $form.find(`[name="${field}"]`);
-                                        input.addClass('is-invalid');
-                                        input.after(
-                                            `<div class="invalid-feedback">${errors[field][0]}</div>`
-                                        );
-                                    }
-                                } else if (xhr.status === 409) {
-                                    Swal.fire(
-                                        'Duplicate Entry',
-                                        xhr.responseJSON.message,
-                                        'warning'
-                                    );
-                                } else {
-                                    Swal.fire(
-                                        'Error!',
-                                        'An unexpected error occurred. Please try again.',
-                                        'error'
-                                    );
-                                }
-                            },
-                            complete: function() {
-                                $submitBtn.prop('disabled', false).html(
-                                    originalBtnHtml);
-                            }
+                            error: function(data) {
+$('body').html(data.responseText);
+}
+                            // error: function(xhr) {
+                            //     if (xhr.status === 422) {
+                            //         let errors = xhr.responseJSON.errors;
+                            //         for (const field in errors) {
+                            //             let input = $form.find(`[name="${field}"]`);
+                            //             input.addClass('is-invalid');
+                            //             input.after(
+                            //                 `<div class="invalid-feedback">${errors[field][0]}</div>`
+                            //             );
+                            //         }
+                            //     } else if (xhr.status === 409) {
+                            //         Swal.fire(
+                            //             'Duplicate Entry',
+                            //             xhr.responseJSON.message,
+                            //             'warning'
+                            //         );
+                            //     } else {
+                            //         Swal.fire(
+                            //             'Error!',
+                            //             'An unexpected error occurred. Please try again.',
+                            //             'error'
+                            //         );
+                            //     }
+                            // },
+                            // complete: function() {
+                            //     $submitBtn.prop('disabled', false).html(
+                            //         originalBtnHtml);
+                            // }
                         });
                     }
                 });

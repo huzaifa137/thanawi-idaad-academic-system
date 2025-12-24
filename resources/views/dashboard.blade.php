@@ -11,7 +11,7 @@
     <!--Page header-->
     <div class="page-header">
         <div class="page-leftheader">
-            <h4 class="page-title">UP Dashboard</h4>
+            <h4 class="page-title">Smart Schools Dashboard</h4>
         </div>
     </div>
     <!--End Page header-->
@@ -19,114 +19,7 @@
 @section('content')
     <!-- Row -->
     
-    <div class="row">
-        <div class="col-xl-12 col-md-12 col-lg-12">
-            <div class="row">
-                <!-- Total Users -->
-                <div class="col-xl-4 col-lg-4 col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Updated SVG for Users -->
-                            <svg class="card-custom-icon text-primary icon-dropshadow-primary" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z">
-                                </path>
-                            </svg>
-                            <p class="mb-1">Total Users</p>
-                            <h2 class="mb-1 font-weight-bold">1,257</h2>
-                            <div class="progress progress-sm mt-3 bg-primary-transparent">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
-                                    style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Total Devices -->
-                <div class="col-xl-4 col-lg-4 col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Updated SVG for Devices -->
-                            <svg class="card-custom-icon text-success icon-dropshadow-success" viewBox="0 0 24 24">
-                                <path
-                                    d="M16 0H8c-1.1 0-1.99.89-1.99 1.99L6 22.01c0 1.1.89 1.99 1.99 1.99h8c1.1 0 1.99-.89 1.99-1.99L18 1.99c0-1.1-.89-1.99-1.99-1.99zm0 18H8V4h8v14z">
-                                </path>
-                            </svg>
-                            <p class="mb-1">Total Devices</p>
-                            <h2 class="mb-1 font-weight-bold">3,205</h2>
-                            <div class="progress progress-sm mt-3 bg-success-transparent">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
-                                    style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active Trackers -->
-                <div class="col-xl-4 col-lg-4 col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Updated Icon for Active Trackers (using FontAwesome) -->
-                            <i class="fas fa-map-marker-alt card-custom-icon text-info icon-dropshadow-info"
-                                style="font-size: 36px;"></i>
-                            <p class="mb-1">Active Trackers</p>
-                            <h2 class="mb-1 font-weight-bold">768</h2>
-                            <div class="progress progress-sm mt-3 bg-info-transparent">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
-                                    style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Secondary Metrics -->
-        <div class="col-xl-12 col-lg-6">
-            <div class="row">
-                <!-- Geofence Alerts -->
-                <div class="col-xl-4 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Updated Icon for Geofence Alerts (using FontAwesome) -->
-                            <i class="fas fa-exclamation-triangle card-custom-icon text-danger icon-dropshadow-danger"
-                                style="font-size: 36px;"></i>
-                            <p class="mb-1">Geofence Alerts</p>
-                            <h2 class="mb-0 font-weight-bold">15</h2>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Notifications Sent -->
-                <div class="col-xl-4 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Updated Icon for Notifications Sent (using FontAwesome) -->
-                            <i class="fas fa-bell card-custom-icon text-warning icon-dropshadow-warning"
-                                style="font-size: 36px;"></i>
-                            <p class="mb-1">Notifications Sent</p>
-                            <h2 class="mb-0 font-weight-bold">5,896</h2>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Issues Resolved -->
-                <div class="col-xl-4 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Updated Icon for Issues Resolved (using FontAwesome) -->
-                            <i class="fas fa-check-circle card-custom-icon text-success icon-dropshadow-success"
-                                style="font-size: 36px;"></i>
-                            <p class="mb-1">Issues Resolved</p>
-                            <h2 class="mb-0 font-weight-bold">78</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
+    
 
 
     </div>
