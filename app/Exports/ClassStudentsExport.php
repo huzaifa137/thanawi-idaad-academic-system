@@ -21,21 +21,12 @@ class ClassStudentsExport implements FromCollection, WithHeadings, WithMapping, 
         $this->loadSubjects();
     }
 
-    /**
-     * Load all subjects attached to this class (all streams combined)
-     */
+
     protected function loadSubjects()
     {
         $ClassStreams = ClassStreamAssignment::where('class_id', $this->classId)
             ->where('school_id', session('LoggedSchool'))
             ->pluck('stream_id');
-
-        // $this->subjects = ClassSubject::where('class_id', $this->classId)
-        //     ->where('school_id', session('LoggedSchool'))
-        //     ->whereIn('stream_id', $ClassStreams)
-        //     ->select('subject_id')
-        //     ->distinct()
-        //     ->pluck('subject_id');
 
         $this->subjects = ClassSubject::where('class_id', $this->classId)
             ->where('school_id', session('LoggedSchool'))
@@ -62,13 +53,14 @@ class ClassStudentsExport implements FromCollection, WithHeadings, WithMapping, 
     {
         $headers = [
             'No',
+            'Student ID',
             'Full Name',
             'Class',
             'Stream',
         ];
 
         foreach ($this->subjects as $subject) {
-            $headers[] = $subject->subject_name;
+            $headers[] = $subject;
         }
 
         return $headers;
@@ -80,12 +72,12 @@ class ClassStudentsExport implements FromCollection, WithHeadings, WithMapping, 
 
         $row = [
             $no++,
+            $student->id,
             $student->firstname . ' ' . $student->lastname,
             Helper::item_md_name($this->classId),
             Helper::item_md_name($student->stream),
         ];
 
-        // Empty columns for subject marks
         foreach ($this->subjects as $subject) {
             $row[] = '';
         }

@@ -380,11 +380,14 @@ Route::controller(ExamController::class)->group(function () {
         Route::get('/edit-exams', 'editExams')->name('edit.exams');
         Route::get('/upload-exams', 'uploadExams')->name('upload.exams');
         Route::get('/exams/{exam}/class/{class}/download', 'downloadClassList')->name('exams.download.classlist');
-
-
+        Route::get('/generate-exams-results', 'calculateExamResults')->name('generate.exams.results');
+        Route::get('/exams/{exam}/{class}/ranking', 'downloadRankedResults')->name('exams.download.ranked');
+        Route::get('/exams/download/reportcard/{exam}/{class}', 'downloadReportCard')->name('exams.download.reportcard');
 
 
         Route::post('/store-created-exam', 'storeCreatedExam');
+        Route::post('/exams/upload-results', 'uploadResults')->name('exams.upload.results');
+        Route::post('/exams/compute-results', 'computeResults')->name('exams.compute.results');
 
     });
 });

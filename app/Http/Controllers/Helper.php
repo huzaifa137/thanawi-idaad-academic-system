@@ -88,6 +88,15 @@ class Helper extends Controller
         return $md_id;
     }
 
+    public static function studentStream($studentId)
+    {
+        $studentStream = DB::table('students')
+            ->where('id', $studentId)
+            ->value('stream');
+
+        return $studentStream;
+    }
+
     public static function course_information($course_id)
     {
         $courseName = DB::table('courses')
@@ -252,4 +261,51 @@ class Helper extends Controller
             ->where('is_active', 1)
             ->value('name');
     }
+
+
+    public static function db_item_from_column($db_table, $item_id, $item_column)
+    {
+        $specificItem = DB::table($db_table)
+            ->where('id', $item_id)
+            ->value($item_column);
+
+        return $specificItem;
+    }
+
+    public static function school_student_fullName($user = "")
+    {
+        $user = (int) $user;
+
+        return DB::table('students')
+            ->where('id', $user)
+            ->select(DB::raw("CONCAT(firstname, ' ', lastname) as full_name"))
+            ->value('full_name');
+    }
+
+    public static function gradeFromAverage($average)
+    {
+        // if ($average >= 80 && $average <= 100) {
+        //     return 'Mumtaz/ممتاز';
+        // } elseif ($average >= 70 && $average < 80) {
+        //     return 'Jayid Jiddan/جيد جدًا';
+        // } elseif ($average >= 60 && $average < 70) {
+        //     return 'Jayid/جيد';
+        // } elseif ($average >= 50 && $average < 60) {
+        //     return 'Maqbul/مقبول';
+        // } else {
+        //     return 'Rasib/راسب';
+        // }
+        if ($average >= 80 && $average <= 100) {
+            return 'Mumtaz';
+        } elseif ($average >= 70 && $average < 80) {
+            return 'Jayid Jiddan';
+        } elseif ($average >= 60 && $average < 70) {
+            return 'Jayid';
+        } elseif ($average >= 50 && $average < 60) {
+            return 'Maqbul';
+        } else {
+            return 'Rasib';
+        }
+    }
+
 }

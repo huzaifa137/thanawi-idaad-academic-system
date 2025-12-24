@@ -4,7 +4,11 @@ use App\Http\Controllers\Helper;
 @extends('layouts-side-bar.master')
 @section('content')
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .swal2-container.swal2-backdrop-show {
+            z-index: 20000 !important;
+        }
+    </style>
 
     <div class="side-app">
         <div class="row">
@@ -16,6 +20,8 @@ use App\Http\Controllers\Helper;
                 </div>
             </div>
         </div>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
         <div class="row">
             <div class="col-12">
@@ -112,9 +118,11 @@ use App\Http\Controllers\Helper;
                                                                 </td>
 
                                                                 <td class="text-center">
-                                                                    <a href="#" class="btn btn-sm btn-warning text-dark">
-                                                                        <i class="bi bi-upload"></i> Publish Results
-                                                                    </a>
+                                                                    <button class="btn btn-sm btn-warning text-dark upload-results-btn"
+                                                                        data-exam-id="{{ $exam->id }}" data-class-id="{{ $classId }}"
+                                                                        data-exam-name="{{ $exam->ce_exam_name }}">
+                                                                        <i class="bi bi-upload"></i> Upload Results
+                                                                    </button>
                                                                 </td>
                                                             </tr>
 
@@ -136,6 +144,108 @@ use App\Http\Controllers\Helper;
                             </div>
 
                         @endforeach
+
+
+                        <div class="modal fade" id="uploadResultsModal" tabindex="-1"
+                            aria-labelledby="uploadResultsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <form method="POST" action="{{ route('exams.upload.results') }}"
+                                    enctype="multipart/form-data" class="modal-content border-0 shadow-lg"
+                                    id="uploadResultsForm">
+                                    @csrf
+
+                                    <div class="modal-header bg-light">
+                                        <h5 class="modal-title d-flex align-items-center" id="uploadResultsModalLabel">
+                                            <i class="bi bi-file-earmark-excel-fill text-success me-2 fs-4"></i>
+                                            <span>Upload Results – <strong id="examTitle"
+                                                    class="text-primary"></strong></span>
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body p-4">
+                                        <input type="hidden" name="exam_id" id="exam_id">
+                                        <input type="hidden" name="class_id" id="class_id">
+
+                                        <div class="alert alert-warning border-0 bg-light-warning d-flex align-items-center mb-4"
+                                            role="alert">
+                                            <i class="bi bi-exclamation-triangle-fill me-3 fs-4 text-warning"></i>
+                                            <div>
+                                                <small class="text-uppercase fw-bold d-block">Important Note</small>
+                                                Please upload the exact Excel file template that was previously downloaded
+                                                to ensure data mapping is correct.
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+
+                                            @if ($errors->any())
+                                                <div class="alert alert-danger">
+                                                    <ul class="mb-0">
+                                                        @foreach ($errors->all() as $error)
+                                                            <li>{{ $error }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <label class="form-label fw-bold m-0 text-dark">Excel Data Import</label>
+                                                <span
+                                                    class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3">Required</span>
+                                            </div>
+
+                                            <div class="position-relative rounded-4 bg-light border border-2 border-dashed border-primary d-flex align-items-center justify-content-center"
+                                                style="height: 180px; transition: all 0.3s ease;">
+                                                <input type="file" name="results_file" id="file-input-1"
+                                                    class="position-absolute top-0 start-0 w-100 h-100 opacity-0"
+                                                    style="cursor: pointer; z-index: 5;" accept=".xlsx,.xls" required>
+
+                                                <div class="text-center p-3">
+                                                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm"
+                                                        style="width: 54px; height: 54px;">
+                                                        <i class="bi bi-cloud-arrow-up fs-3"></i>
+                                                    </div>
+                                                    <h6 class="fw-bold mb-1" id="label-1">Drop your Excel file here</h6>
+                                                    <p class="text-muted small mb-0" id="sub-label-1">or click to browse
+                                                        computer</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between mt-2 px-1">
+                                                <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Supports:
+                                                    .xlsx, .xls</small>
+                                                <small class="text-muted">Max: 10MB</small>
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                            document.getElementById('file-input-1').addEventListener('change', function (e) {
+                                                const name = e.target.files[0]?.name;
+                                                if (name) {
+                                                    document.getElementById('label-1').innerText = name;
+                                                    document.getElementById('label-1').classList.add('text-primary');
+                                                    document.getElementById('sub-label-1').innerText = "File selected successfully";
+                                                }
+                                            });
+                                        </script>
+                                    </div>
+
+                                    <div class="modal-footer bg-light border-top-0 px-4 py-3">
+                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                            <i class="bi bi-x-circle me-1"></i> Cancel
+                                        </button>
+                                        <button type="submit" class="btn btn-primary px-4 shadow-sm" id="confirmUploadBtn">
+                                            <i class="bi bi-check-circle me-1"></i> Confirm & Upload
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
@@ -149,10 +259,71 @@ use App\Http\Controllers\Helper;
     </div>
     </div>
 
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Upload Successful',
+                text: "{{ session('success') }}",
+                confirmButtonColor: '#0d6efd'
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+        <script>
+            $(document).ready(function () {
+                var modal = new bootstrap.Modal(document.getElementById('uploadResultsModal'));
+                modal.show();
+            });
+        </script>
+    @endif
 
 @endsection
 
-<!-- Load jQuery and SweetAlert2 from CDNs -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).on('click', '.upload-results-btn', function () {
+
+        let examId = $(this).data('exam-id');
+        let classId = $(this).data('class-id');
+        let examName = $(this).data('exam-name');
+
+        $('#exam_id').val(examId);
+        $('#class_id').val(classId);
+        $('#examTitle').text(examName);
+
+        $('#uploadResultsModal').modal('show');
+
+    });
+
+    $(document).ready(function () {
+
+        $('#uploadResultsForm').on('submit', function (e) {
+
+            if (!this.checkValidity()) {
+                return;
+            }
+
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Confirm Upload',
+                html: 'Are you sure you want to upload and process these results?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, upload',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#confirmUploadBtn').prop('disabled', true).html('Uploading... <i class="fas fa-spinner fa-spin"></i>');
+                    this.submit();
+                }
+            });
+        });
+    });
+</script>
