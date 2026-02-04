@@ -2,1052 +2,1060 @@
 <html lang="en">
 
 <head>
-    <title>Smart Schools</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet" />
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-
-    <link rel="stylesheet" href="/assets007/css/animate.css" />
-
-    <link rel="stylesheet" href="/assets007/css/owl.carousel.min.css" />
-    <link rel="stylesheet" href="/assets007/css/owl.theme.default.min.css" />
-    <link rel="stylesheet" href="/assets007/css/magnific-popup.css" />
-
-    <link rel="stylesheet" href="/assets007/css/bootstrap-datepicker.css" />
-    <link rel="stylesheet" href="/assets007/css/jquery.timepicker.css" />
-
-    <link rel="icon" href="{{ URL::asset('assets/images/brand/favicon.ico') }}" type="image/x-icon" />
-    <link rel="stylesheet" href="/assets007/css/style.css" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uganda Examination Grading System | Idaad & Thanawi Results Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        input::placeholder,
-        textarea::placeholder {
-            color: #888;
-            opacity: 1;
+        :root {
+            --primary: #0D4B1E;
+            --primary-light: #1E7A3D;
+            --secondary: #F2A900;
+            --accent: #1A73E8;
+            --dark: #0C2915;
+            --light: #F8FCF9;
+            --gray: #5F6C72;
+            --gray-light: #E8F0E9;
+            --white: #FFFFFF;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --radius-lg: 20px;
         }
 
-        .form-control::placeholder {
-            color: #888;
-            opacity: 1;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        .block-23 ul li a {
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--dark);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--white);
+            padding: 1.6rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header-scrolled {
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 16px;
             text-decoration: none;
         }
 
-        .block-23 ul li a .icon {
-            min-width: 20px;
-            text-align: center;
-            font-size: 18px;
-            color: #000;
+        .logo-icon {
+            width: 54px;
+            height: 54px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 24px;
+            transition: transform 0.3s ease;
         }
 
-        .block-23 ul li a .text {
-            display: inline-block;
+        .logo:hover .logo-icon {
+            transform: rotate(-10deg);
         }
 
-        .user-img {
-            width: 60px;
-            height: 60px;
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 3.5rem;
+            /* Increased gap */
+            margin-left: auto;
+            /* Push navigation to the right */
+            margin-right: 2rem;
+            /* Add space before buttons */
+        }
+
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .header-cta {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 75, 30, 0.15);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary-light);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(13, 75, 30, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 10rem 0 6rem;
+            background: linear-gradient(135deg, rgba(248, 252, 249, 0.9) 0%, rgba(232, 240, 233, 0.7) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-pattern {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            background-image: radial-gradient(var(--primary-light) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.03;
+            z-index: -1;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .hero-text h1 span {
+            color: var(--primary);
+            position: relative;
+        }
+
+        .hero-text p {
+            font-size: 1.15rem;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
+            max-width: 540px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3.5rem;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .visual-card {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visual-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .grade-circle {
+            width: 160px;
+            height: 160px;
+            background: conic-gradient(var(--secondary) 75%, var(--secondary) 25%);
             border-radius: 50%;
-            background-size: cover;
-            background-position: center;
-            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2.5rem;
+            position: relative;
         }
-    </style>
 
-</head>
+        .grade-circle::before {
+            content: '';
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background-color: var(--white);
+            border-radius: 50%;
+        }
 
-<body>
+        .grade-circle span {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            z-index: 1;
+        }
 
-    <?php
-use App\Http\Controllers\Helper;
-use App\Http\Controllers\Controller;
-$controller = new Controller();
-    ?>
+        .visual-info {
+            text-align: center;
+            color: var(--gray);
+        }
 
-    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-        <div class="container">
+        /* Features */
+        .section {
+            padding: 6rem 0;
+        }
 
-            <a href="{{ url('users/home-page') }}">
-                <img src="{{ asset('assets007/images/logo_no_bg.png') }}" alt="Smart Schools Logo"
-                    style="height: 5rem;">
-            </a>
+        .section-title {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
 
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 1.2rem;
+        }
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="oi oi-menu"></span> Menu
-            </button>
+        .section-title p {
+            color: var(--gray);
+            max-width: 650px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
 
-            <div class="collapse navbar-collapse" id="ftco-nav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a href="#home" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#about" class="nav-link">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#courses" class="nav-link">Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#testimony" class="nav-link">Testimonials</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#contact" class="nav-link">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('/users/login') }}" class="nav-link">Login</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!-- END nav -->
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2.5rem;
+        }
 
-    <div class="hero-wrap js-fullheight" style="background-image: url('/assets007/images/bg_3.jpg')" id="home">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
-                <div class="col-md-7 ftco-animate">
-                    <span class="subheading">Welcome to Smart Schools</span>
-                    <h1 class="mb-4">We Are Online Platform For Make Learn</h1>
-                    <p class="caps">
-                        The best place to master programming — designed for Uganda’s junior developers and students.
-                    </p>
-                    <p class="mb-0">
-                        <a href="#courses" class="btn btn-primary" id="courses-btn">Our Courses</a>
-                        <a href="#about" class="btn btn-white" id="about-btn">Learn More</a>
-                    </p>
+        .feature {
+            background-color: var(--light);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
 
-                </div>
-            </div>
-        </div>
-    </div>
+        .feature:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(13, 75, 30, 0.1);
+        }
 
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(13, 75, 30, 0.08);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.8rem;
+            color: var(--primary);
+            font-size: 28px;
+            transition: all 0.3s ease;
+        }
 
-    <section class="ftco-section ftco-no-pb ftco-no-pt">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-7"></div>
-                <div class="col-md-5 order-md-last">
-                    <div class="login-wrap p-4 p-md-5">
-                        <h3 class="mb-4">Register for free now</h3>
-                        <form action="javascript:void();" class="signup-form">
-                            <div class="form-group">
-                                <label class="label" for="">User Name</label>
-                                <input type="text" class="form-control" id="student_username"
-                                    placeholder="enter username" />
-                            </div>
-                            <div class="form-group">
-                                <label class="label" for="">Email Address</label>
-                                <input type="email" class="form-control" id="student_mail"
-                                    placeholder="enter your email" />
-                            </div>
-                            <div class="form-group">
-                                <label class="label" for="password">Password</label>
-                                <input type="password" id="student_password" class="form-control"
-                                    placeholder="create your password" />
-                            </div>
-                            <div class="form-group">
-                                <label class="label" for="password">Confirm Password</label>
-                                <input type="password" id="student_confirm_password" class="form-control"
-                                    placeholder="Confirm Password" />
-                            </div>
-                            <div class="form-group d-flex justify-content-center mt-4">
-                                <button type="submit" class="btn btn-primary submit" id="submitUserInformation">
-                                    create an account
-                                    <span class="fa fa-paper-plane"></span>
-                                </button>
-                            </div>
-                        </form>
-                        <p class="text-center">
-                            Already have an account? <a href="{{ url('/users/login') }}">Sign In</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        .feature:hover .feature-icon {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: scale(1.1);
+        }
 
-    <section class="ftco-section services-section" id="about">
-        <div class="container">
-            <div class="row d-flex">
-                <div class="col-md-6 heading-section pr-md-5 ftco-animate d-flex align-items-center">
-                    <div class="w-100 mb-4 mb-md-0">
-                        <span class="subheading">Welcome to Smart Schools</span>
-                        <h2 class="mb-4">Uganda’s Premier Online Learning Center for Programming</h2>
-                        <p>
-                            Smart Schools is dedicated to empowering junior developers and students by providing
-                            high-quality, accessible programming courses in Luganda and English.
-                        </p>
-                        <p>
-                            Our platform offers interactive lessons, expert guidance, and real-world projects that
-                            prepare you for success in today’s tech world.
-                        </p>
-                        <div class="d-flex video-image align-items-center mt-md-4">
-                            <a href="https://www.youtube.com/@UgandanProgrammer"
-                                class="video img d-flex align-items-center justify-content-center"
-                                style="background-image: url(/assets007/images/about.jpg)" target="_blank"
-                                rel="noopener noreferrer">
-                                <span class="fa fa-play-circle"></span>
-                            </a>
+        .feature h3 {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
 
-                            <h4 class="ml-4">Discover programming with Smart Schools — Watch our introduction
-                                video</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
+        .feature p {
+            color: var(--gray);
+            line-height: 1.7;
+        }
 
-                        <div class="col-md-12 col-lg-6 d-flex align-self-stretch ftco-animate">
-                            <div class="services">
-                                <div class="icon d-flex align-items-center justify-content-center">
-                                    <span class="fas fa-book-open fa-2x"></span>
-                                </div>
-                                <div class="media-body">
-                                    <h3 class="heading mb-3">Top Quality Content</h3>
-                                    <p>
-                                        Carefully crafted lessons that make programming simple and practical for
-                                        learners at all levels.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+        /* Process Section - UPDATED */
+        .process-container {
+            position: relative;
+            margin-top: 4rem;
+        }
 
+        .process-timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
 
-                        <div class="col-md-12 col-lg-6 d-flex align-self-stretch ftco-animate">
-                            <div class="services">
-                                <div class="icon d-flex align-items-center justify-content-center">
-                                    <span class="fas fa-chalkboard-teacher fa-2x"></span>
-                                </div>
-                                <div class="media-body">
-                                    <h3 class="heading mb-3">Experienced Instructors</h3>
-                                    <p>
-                                        Learn from skilled Smart Schoolss who understand local challenges and
-                                        opportunities.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+        /* Horizontal line connecting the steps */
+        .process-timeline::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            /* Position at the middle of step numbers */
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-light), var(--secondary), var(--accent));
+            z-index: 1;
+            border-radius: 2px;
+        }
 
+        .process-step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            max-width: 250px;
+        }
 
-                        <div class="col-md-12 col-lg-6 d-flex align-self-stretch ftco-animate">
-                            <div class="services">
-                                <div class="icon d-flex align-items-center justify-content-center">
-                                    <span class="fas fa-question-circle fa-2x"></span>
-                                </div>
-                                <div class="media-body">
-                                    <h3 class="heading mb-3">Interactive Quizzes</h3>
-                                    <p>
-                                        Test your knowledge with engaging quizzes that reinforce your learning progress.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background-color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            border: 5px solid var(--primary-light);
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 3;
+        }
 
+        .step-content h3 {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
 
-                        <div class="col-md-12 col-lg-6 d-flex align-self-stretch ftco-animate">
-                            <div class="services">
-                                <div class="icon d-flex align-items-center justify-content-center">
-                                    <span class="fas fa-certificate fa-2x"></span>
-                                </div>
-                                <div class="media-body">
-                                    <h3 class="heading mb-3">Get Certified</h3>
-                                    <p>
-                                        Earn recognized certificates to showcase your programming skills and boost your
-                                        career prospects.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        .step-content p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
 
-            </div>
-        </div>
-    </section>
+        /* CTA */
+        .cta {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    <section class="ftco-section bg-light" id="courses">
-        <div class="container">
-            <div class="row justify-content-center pb-4">
-                <div class="col-md-12 heading-section text-center ftco-animate">
-                    <span class="subheading">Start Learning Today</span>
-                    <h2 class="mb-4">Choose Course</h2>
-                </div>
-            </div>
-            <div class="row">
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
 
-                @foreach ($allCourses as $course)
-                    <div class="col-md-4 ftco-animate">
-                        <div class="project-wrap">
-                            <a href="javscript:void();" class="img"
-                                style="background-image: url('{{ $course->thumbnail ? asset('storage/' . $course->thumbnail) : '/assets007/images/work-6.jpg' }}')">
-                                <span class="price">Software</span>
-                            </a>
+        .cta::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
 
-                            <div class="text p-4">
-                                <h3><a href="javscript:void();">{{ $course->title }}</a></h3>
-                                <h5 class="text-info">
-                                    ({{ $course->pricing_category == 1 ? 'Paid' : 'Free Course' }})
-                                </h5>
-                                <ul class="d-flex justify-content-between">
-                                    <li><span class="flaticon-shower"></span>Ugx{{ $course->old_price }}</li>
-                                    <li class="price">Ugx{{ $course->selling_price }}</li>
-                                </ul>
+        .cta h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            position: relative;
+            z-index: 2;
+        }
 
-                                <!-- Added Buttons -->
-                                <div class="mt-3 d-flex justify-content-between">
-                                    <a href="{{ url('/student/view-course-information/' . $course->id) }}"
-                                        class="btn btn-sm btn-outline-primary">View More</a>
-                                    <a href="{{ url('/student/courses-and-lessons') }} "
-                                        class="btn btn-sm btn-success">Enroll
-                                        in Course</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+        .cta p {
+            font-size: 1.2rem;
+            max-width: 650px;
+            margin: 0 auto 3rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
 
-            </div>
+        .cta .btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
 
-            <div class="col-md-12 text-center mt-5">
-                <a href="{{ url('/student/courses-and-lessons') }} " class="btn btn-primary">See All Courses</a>
-            </div>
+        .cta .btn:hover {
+            background-color: #ffb700;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
 
-        </div>
-    </section>
+        /* Footer */
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 5rem 0 2.5rem;
+        }
 
-    <section class="ftco-section ftco-counter img" id="section-counter"
-        style="background-image: url(/assets007/images/bg_4.jpg)">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-                    <div class="block-18 d-flex align-items-center">
-                        <div class="icon"><span class="flaticon-online"></span></div>
-                        <div class="text">
-                            <strong class="number" data-number="100">0</strong>
-                            <span>Online Courses</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-                    <div class="block-18 d-flex align-items-center">
-                        <div class="icon"><span class="flaticon-graduated"></span></div>
-                        <div class="text">
-                            <strong class="number" data-number="4500">0</strong>
-                            <span>Students Enrolled</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-                    <div class="block-18 d-flex align-items-center">
-                        <div class="icon"><span class="flaticon-instructor"></span></div>
-                        <div class="text">
-                            <strong class="number" data-number="10">0</strong>
-                            <span>Experts Instructors</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-                    <div class="block-18 d-flex align-items-center">
-                        <div class="icon"><span class="flaticon-tools"></span></div>
-                        <div class="text">
-                            <strong class="number" data-number="300">0</strong>
-                            <span>Hours Content</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3.5rem;
+            margin-bottom: 4rem;
+        }
 
-    <section class="ftco-section ftco-about img">
-        <div class="container">
-            <div class="row d-flex">
-                <div class="col-md-12 about-intro">
-                    <div class="row">
-                        <div class="col-md-6 d-flex">
-                            <div class="d-flex about-wrap">
-                                <div class="img d-flex align-items-center justify-content-center"
-                                    style="background-image: url(/assets007/images/about-1.jpg)"></div>
-                                <div class="img-2 d-flex align-items-center justify-content-center"
-                                    style="background-image: url(/assets007/images/about.jpg)"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 pl-md-5 py-5">
-                            <div class="row justify-content-start pb-3">
-                                <div class="col-md-12 heading-section ftco-animate">
-                                    <span class="subheading">Enhance Your Skills</span>
-                                    <h2 class="mb-4">Start Learning Programming Today</h2>
-                                    <p>
-                                        Smart Schools gives you the opportunity to learn programming in a simple,
-                                        practical, and local way — no matter your background or where you are.
-                                    </p>
-                                    <p>
-                                        Whether you're a student or aspiring developer, our courses are designed to
-                                        equip you with real-world skills that open doors to tech careers in Uganda and
-                                        beyond.
-                                    </p>
-                                    <p>
-                                        <a href="#contact" class="btn btn-primary">Get in touch with us</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        .footer-col h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.8rem;
+            color: var(--white);
+            font-weight: 700;
+        }
 
+        .footer-logo .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            margin-bottom: 1.5rem;
+        }
 
-    <section class="ftco-section testimony-section bg-light" id="testimony">
-        <div class="overlay" style="background-image: url(/assets007/images/bg_2.jpg)"></div>
-        <div class="container">
-            <div class="row pb-4">
-                <div class="col-md-7 heading-section ftco-animate">
-                    <span class="subheading">Testimonials</span>
-                    <h2 class="mb-4">What Our Students Say</h2>
-                </div>
-            </div>
-        </div>
-        <div class="container container-2">
-            <div class="row ftco-animate">
-                <div class="col-md-12">
-                    <div class="carousel-testimony owl-carousel">
-                        <div class="item">
-                            <div class="testimony-wrap py-4">
-                                <div class="text">
-                                    <p class="star">
-                                        <span class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span>
-                                    </p>
-                                    <p class="mb-4">
-                                        Learning programming in Luganda helped me understand concepts faster. Ugandan
-                                        Programmer is perfect for beginners like me!
-                                    </p>
-                                    <div class="d-flex align-items-center">
-                                        <div class="user-img"
-                                            style="background-image: url(/assets007/images/person_4.jpg)"></div>
-                                        <div class="pl-3">
-                                            <p class="name">Sarah Nakato</p>
-                                            <span class="position">Computer Science Student, Makerere University</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        .footer-logo p {
+            opacity: 0.8;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
 
-                        <div class="item">
-                            <div class="testimony-wrap py-4">
-                                <div class="text">
-                                    <p class="star">
-                                        <span class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span>
-                                    </p>
-                                    <p class="mb-4">
-                                        The hands-on exercises and projects made learning enjoyable. I’ve already built
-                                        my first website thanks to this platform.
-                                    </p>
-                                    <div class="d-flex align-items-center">
-                                        <div class="user-img"
-                                            style="background-image: url(/assets007/images/person_2.jpg)"></div>
-                                        <div class="pl-3">
-                                            <p class="name">John Musoke</p>
-                                            <span class="position">Junior Developer, Kampala</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        .footer-links {
+            list-style: none;
+        }
 
-                        <div class="item">
-                            <div class="testimony-wrap py-4">
-                                <div class="text">
-                                    <p class="star">
-                                        <span class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span>
-                                    </p>
-                                    <p class="mb-4">
-                                        I love that the platform uses simple language and real examples. It makes
-                                        programming feel less scary.
-                                    </p>
-                                    <div class="d-flex align-items-center">
-                                        <div class="user-img"
-                                            style="background-image: url(/assets007/images/person_3.jpg)"></div>
-                                        <div class="pl-3">
-                                            <p class="name">Brenda Achieng</p>
-                                            <span class="position">High School Graduate, Jinja</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
 
-                        <div class="item">
-                            <div class="testimony-wrap py-4">
-                                <div class="text">
-                                    <p class="star">
-                                        <span class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span>
-                                    </p>
-                                    <p class="mb-4">
-                                        The courses are very clear and beginner-friendly. I'm confident I can become a
-                                        developer with Smart Schools.
-                                    </p>
-                                    <div class="d-flex align-items-center">
-                                        <div class="user-img"
-                                            style="background-image: url(/assets007/images/person_1.jpg)"></div>
-                                        <div class="pl-3">
-                                            <p class="name">Isaac Kiggundu</p>
-                                            <span class="position">Aspiring Web Developer, Mbarara</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-                        <div class="item">
-                            <div class="testimony-wrap py-4">
-                                <div class="text">
-                                    <p class="star">
-                                        <span class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span><span class="fa fa-star"></span><span
-                                            class="fa fa-star"></span>
-                                    </p>
-                                    <p class="mb-4">
-                                        Finally a platform that teaches programming in a way I understand. The Luganda
-                                        explanations are a big help!
-                                    </p>
-                                    <div class="d-flex align-items-center">
-                                        <div class="user-img"
-                                            style="background-image: url(/assets007/images/person_2.jpg)"></div>
-                                        <div class="pl-3">
-                                            <p class="name">Kiberu Enoch</p>
-                                            <span class="position">Self-Taught Coder, Wakiso</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
 
-                    </div> <!-- carousel -->
-                </div>
-            </div>
-        </div>
-    </section>
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
 
+        .social-icon {
+            width: 42px;
+            height: 42px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
 
-    <section class="ftco-section" id="contact">
-        <div class="container">
-            <h1 class="mb-4 bread text-center">Contact us</h1>
+        .social-icon:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-3px);
+        }
 
-            <div class="row justify-content-center">
-                <div class="col-md-12">
-                    <div class="wrapper">
-                        <div class="row no-gutters">
-                            <div class="col-lg-12 col-md-7 order-md-last d-flex align-items-stretch">
-                                <div class="contact-wrap w-100 p-md-5 p-4">
-                                    <h3 class="mb-4">Get in touch</h3>
-                                    <form method="POST" id="contactForm" name="contactForm" class="contactForm">
-                                        <div class="row">
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
 
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="name">Full Name</label>
-                                                    <input type="text" class="form-control" name="name" id="name"
-                                                        placeholder="Enter your fullname" />
-                                                </div>
-                                            </div>
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
 
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="email">Email Address</label>
-                                                    <input type="email" class="form-control" name="email" id="email"
-                                                        placeholder="Enter your email" />
-                                                </div>
-                                            </div>
+            .hero-text h1 {
+                font-size: 2.8rem;
+            }
 
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="phonenumber">Phonenumber</label>
-                                                    <input type="text" class="form-control" name="phonenumber"
-                                                        id="phonenumber" placeholder="Enter phonenumber" />
-                                                </div>
-                                            </div>
+            .process-timeline {
+                flex-wrap: wrap;
+                gap: 3rem;
+                justify-content: center;
+            }
 
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="subject">Subject</label>
-                                                    <input type="text" class="form-control" name="subject" id="subject"
-                                                        placeholder="Enter subject of your message" />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label class="label" for="#">Message</label>
-                                                    <textarea name="message" class="form-control" id="message" cols="30"
-                                                        rows="4"
-                                                        placeholder="please provide your message here"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <input type="submit" value="Send Message" class="btn btn-primary" />
-                                                    <div class="submitting"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="ftco-footer ftco-no-pt">
-        <div class="container">
-            <div class="row mb-5">
-                <!-- About -->
-                <div class="col-md pt-5">
-                    <div class="ftco-footer-widget pt-md-5 mb-4">
-                        <h2 class="ftco-heading-2">About</h2>
-                        <p>
-                            Smart Schools is an online platform that teaches programming and tech skills in a
-                            simple and accessible way — using both English and Luganda. We aim to empower the next
-                            generation of Ugandan developers.
-                        </p>
-                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft">
-                            <li class="ftco-animate">
-                                <a href="https://www.youtube.com/@UgandanProgrammer"><span
-                                        class="fab fa-youtube"></span></a>
-                            </li>
-                            <li class="ftco-animate">
-                                <a href="https://www.tiktok.com/@ugandanprogrammer"><span
-                                        class="fab fa-tiktok"></span></a>
-                            </li>
-                            <li class="ftco-animate">
-                                <a href="javscript:void();"><span class="fab fa-facebook"></span></a>
-                            </li>
-                            <li class="ftco-animate">
-                                <a href="javscript:void();"><span class="fab fa-instagram"></span></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-
-                <!-- Help Desk -->
-                <div class="col-md pt-5">
-                    <div class="ftco-footer-widget pt-md-5 mb-4 ml-md-5">
-                        <h2 class="ftco-heading-2">Help Desk</h2>
-                        <ul class="list-unstyled">
-                            <li><a href="javscript:void();" class="py-2 d-block">Support & FAQs</a></li>
-                            <li><a href="javscript:void();" class="py-2 d-block">Terms of Service</a></li>
-                            <li><a href="javscript:void();" class="py-2 d-block">Privacy Policy</a></li>
-                            <li><a href="javscript:void();" class="py-2 d-block">Contact Us</a></li>
-                            <li><a href="javscript:void();" class="py-2 d-block">Refund Policy</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Recent Courses -->
-                <div class="col-md pt-5">
-                    <div class="ftco-footer-widget pt-md-5 mb-4">
-                        <h2 class="ftco-heading-2">Popular Courses</h2>
-                        <ul class="list-unstyled">
-                            <li><a href="javscript:void();" class="py-2 d-block">Intro to Web Development (HTML,
-                                    CSS)</a></li>
-                            <li><a href="javscript:void();" class="py-2 d-block">JavaScript for Beginners</a></li>
-                            <li><a href="javscript:void();" class="py-2 d-block">Python in Luganda</a></li>
-                            <li><a href="javscript:void();" class="py-2 d-block">Building Apps with Flutter</a></li>
-                            <li><a href="javscript:void();" class="py-2 d-block">Computer Basics for Students</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Contact Info -->
-                <div class="col-md pt-5">
-                    <div class="ftco-footer-widget pt-md-5 mb-4">
-                        <h2 class="ftco-heading-2">Have Questions?</h2>
-                        <div class="block-23 mb-3">
-                            <ul>
-                                <li>
-                                    <a href="javscript:void();">
-                                        <span class="icon fa fa-map-marker"></span>
-                                        <span class="text">Plot 45, Kira Road, Kampala, Uganda</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="tel:+256702082209">
-                                        <span class="icon fa fa-phone"></span>
-                                        <span class="text">+256 702 082 209</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="mailto:info@ugandanprogrammer.com">
-                                        <span class="icon fa fa-envelope"></span>
-                                        <span class="text">info@ugandanprogrammer.com</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Footer Bottom -->
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <p>
-                        &copy;
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script> Smart Schools. All rights reserved. Built By a Ugandan
-                        developer.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-    <div id="ftco-loader" class="show fullscreen">
-        <svg class="circular" width="48px" height="48px">
-            <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
-            <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
-                stroke="#F96D00" />
-        </svg>
-    </div>
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        integrity="sha512-yH5A1bHH1wD0Yz7hzKILnEMWlfYug8zTWQKvZVGWlqMgOX3DUr2CChXWTZQoOJqpbKnTgIgZRlgSU2Qg+Kz+3A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <script>
-        function togglePassword(fieldId, icon) {
-            const input = document.getElementById(fieldId);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove("fa-eye");
-                icon.classList.add("fa-eye-slash");
-            } else {
-                input.type = "password";
-                icon.classList.remove("fa-eye-slash");
-                icon.classList.add("fa-eye");
+            .process-timeline::before {
+                display: none;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            $('#submitUserInformation').on('click', function (e) {
-                e.preventDefault();
+        @media (max-width: 900px) {
+            .header-wrapper {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
 
-                var button = $(this);
+            .nav-menu {
+                margin: 0;
+                gap: 2rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
 
-                var username = $('#student_username').val();
-                var email = $('#student_mail').val();
-                var password = $('#student_password').val();
-                var confirmPassword = $('#student_confirm_password').val();
+            .header-cta {
+                margin-top: 0.5rem;
+            }
 
-                var errorMessages = [];
+            .hero {
+                padding: 8rem 0 4rem;
+            }
 
-                $('#student_username, #student_mail, #student_password, #student_confirm_password')
-                    .removeClass('is-invalid is-valid');
-                $('input[type="checkbox"]').removeClass('is-invalid');
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+        }
 
-                if (!username) {
-                    errorMessages.push("Username is required.");
-                    $('#student_username').addClass('is-invalid');
-                } else {
-                    $('#student_username').addClass('is-valid');
-                }
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.4rem;
+            }
 
-                var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                if (!email) {
-                    errorMessages.push("Email is required.");
-                    $('#student_mail').addClass('is-invalid');
-                } else if (!emailRegex.test(email)) {
-                    errorMessages.push("Please enter a valid email address.");
-                    $('#student_mail').addClass('is-invalid');
-                } else {
-                    $('#student_mail').addClass('is-valid');
-                }
+            .hero-actions {
+                flex-direction: column;
+            }
 
-                if (!password) {
-                    errorMessages.push("Password is required.");
-                    $('#student_password').addClass('is-invalid');
-                }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
 
-                if (!confirmPassword) {
-                    errorMessages.push("Confirm Password is required.");
-                    $('#student_confirm_password').addClass('is-invalid');
-                }
+            .hero-stats {
+                flex-direction: column;
+                gap: 2rem;
+            }
 
-                if (password && confirmPassword && password !== confirmPassword) {
-                    errorMessages.push("Passwords do not match.");
-                    $('#student_password, #student_confirm_password').addClass('is-invalid');
-                }
+            .section-title h2 {
+                font-size: 2rem;
+            }
 
-                var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-                if (password && !passwordRegex.test(password)) {
-                    errorMessages.push(
-                        "Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character."
-                    );
-                    $('#student_password').addClass('is-invalid');
-                }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
 
-                if (errorMessages.length > 0) {
-                    Swal.fire({
-                        title: 'Error!',
-                        html: '<ul style="text-align: left; padding-left: 20px;">' +
-                            errorMessages.map((msg, i) => `<li>${i + 1}. ${msg}</li>`).join('') +
-                            '</ul>',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
+            .cta h2 {
+                font-size: 2.2rem;
+            }
 
-                    button.prop('disabled', false).html(
-                        '<i class="fe fe-arrow-right"></i> Create a new account');
-                    return;
-                }
+            .process-timeline {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
 
+            .process-step {
+                max-width: 100%;
+            }
+        }
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'Please confirm that all the information is correct before creating your account.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, create my account!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 2rem;
+            }
 
-                        button.prop('disabled', true).html(
-                            '<i class="fe fe-arrow-right"></i> Creating account ... <i class="fa fa-spinner fa-spin"></i>'
-                        );
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
 
-                        var form_data = new FormData();
-                        form_data.append('_token', '{{ csrf_token() }}');
-                        form_data.append('username', username);
-                        form_data.append('email', email);
-                        form_data.append('password', password);
-                        form_data.append('confirmPassword', confirmPassword);
+            .cta h2 {
+                font-size: 1.8rem;
+            }
 
-                        $.ajax({
-                            url: "{{ route('user-account-creation') }}",
-                            method: "POST",
-                            data: form_data,
-                            processData: false,
-                            contentType: false,
-                            success: function (response) {
-                                if (response.status) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: response.title || 'OTP SENT',
-                                        html: response.message ||
-                                            'Your account has been successfully created.',
-                                        confirmButtonText: 'OK'
-                                    }).then(() => {
-                                        window.location.href = response
-                                            .redirect_url ?? '/dashboard';
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: response.title ||
-                                            'Account Creation Failed',
-                                        html: response.message ||
-                                            'There was an issue creating your account.',
-                                        confirmButtonText: 'OK'
-                                    });
-                                }
+            .nav-menu {
+                gap: 1.5rem;
+            }
+        }
 
-                                button.prop('disabled', false).html(
-                                    '<i class="fe fe-arrow-right"></i> Create a new account'
-                                );
-                            },
-                            // error: function(data) {
-                            //     const response = data.responseJSON;
-                            //     Swal.fire({
-                            //         icon: 'error',
-                            //         title: 'Error',
-                            //         html: response?.message ??
-                            //             'Unexpected error occurred.',
-                            //         confirmButtonText: 'OK'
-                            //     });
+        @media (max-width: 1100px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2.5rem;
+            }
+        }
 
-                            //     button.prop('disabled', false).html(
-                            //         '<i class="fe fe-arrow-right"></i> Create a new account'
-                            //     );
-                            // }
-                            error: function (data) {
-                                $('body').html(data.responseText);
-                            }
-                        });
-                    } else {
-                        button.prop('disabled', false).html(
-                            '<i class="fe fe-arrow-right"></i> Create a new account');
-                    }
-                });
-            });
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container header-wrapper">
+            <a href="{{ url('/') }}" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Uganda Grading System</h1>
+                    <p>Idaad & Thanawi Results</p>
+                </div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#process" class="nav-link">Process</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+
+            <div class="header-cta">
+                <a href="{{ url('users/login') }}">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </a>
+
+                <button class="btn btn-primary">
+                    <i class="fas fa-play"></i> Demo
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg-pattern"></div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>National Grading <span>Excellence</span></h1>
+                <p>A modern, transparent, and efficient system for grading Idaad and Thanawi examination results across Uganda. Ensuring accuracy and fairness for every student.</p>
+
+                <div class="hero-actions">
+                    <a href="{{ url('/users/login')}}" class="btn btn-primary" style="text-decoration: none;">
+                        <i class="fas fa-rocket"></i> Get Started
+                    </a>
+                    <a href="{{ url('users/login') }}" class="btn btn-outline" style="text-decoration: none;">
+                        <i class="fas fa-file-alt"></i> View Sample Report
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value">100%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">750k+</div>
+                        <div class="stat-label">Students Served</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">3k+</div>
+                        <div class="stat-label">Schools Registered</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="visual-card">
+                    <div class="grade-circle">
+                        <span>A+</span>
+                    </div>
+                    <div class="visual-info">
+                        <h3 style="color: var(--dark); margin-bottom: 0.5rem;">Performance Excellence</h3>
+                        <p>Students achieving distinction increased by <strong style="color: var(--primary);">100%</strong> with our standardized system</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Advanced Grading Platform</h2>
+                <p>Our system combines cutting-edge technology with educational expertise to deliver the most accurate and reliable grading for Uganda's examinations.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Intelligent Algorithms</h3>
+                    <p>Advanced AI algorithms ensure consistent grading based on national standards, with continuous learning and improvement capabilities.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Bank-Level Security</h3>
+                    <p>End-to-end encryption, multi-factor authentication, and secure cloud infrastructure protect sensitive student data and examination integrity.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Comprehensive Analytics</h3>
+                    <p>Detailed performance analytics, trend identification, and educational insights for students, schools, and national education planning.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section - UPDATED -->
+    <section class="section" id="process">
+        <div class="container">
+            <div class="section-title">
+                <h2>Streamlined Grading Process</h2>
+                <p>Our efficient 4-step workflow ensures accuracy and transparency in examination grading and result distribution.</p>
+            </div>
+
+            <div class="process-container">
+                <div class="process-timeline">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Data Collection</h3>
+                            <p>Secure digital submission of examination papers with automated validation and error detection.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Automated Grading</h3>
+                            <p>System processes results using AI-powered algorithms aligned with national grading standards.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Quality Control</h3>
+                            <p>Multi-level verification by qualified examiners ensures accuracy before final approval.</p>
+                        </div>
+                    </div>
+
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Result Distribution</h3>
+                            <p>Secure access to results via web portal, mobile app, SMS, and official school notifications.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Experience Modern Examination Grading</h2>
+            <p>Join the national movement towards accurate, transparent, and efficient assessment of Idaad and Thanawi examination results.</p>
+            <button class="btn">
+                <i class="fas fa-user-graduate"></i> Access online Portal
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col footer-logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <p>The official national platform for Idaad and Thanawi examination grading, developed in partnership with Uganda's Ministry of Education and Sports.</p>
+                    <div class="social-icons">
+                        <a href="javascript:void();" class="social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="javascript:void();" class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="javascript:void();" class="social-icon">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="#features"><i class="fas fa-cogs"></i> Features</a></li>
+                        <li><a href="#process"><i class="fas fa-sitemap"></i> Process</a></li>
+                        <li><a href="#contact"><i class="fas fa-headset"></i> Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="javascript:void();"><i class="fas fa-file-pdf"></i> Grading Manual</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-video"></i> Tutorial Videos</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-chart-line"></i> Performance Data</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-newspaper"></i> Updates</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-shield-alt"></i> Security</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Contact Information</h3>
+                    <ul class="footer-links">
+                        <li><a href="javascript:void();"><i class="fas fa-map-marker-alt"></i> Ministry of Education, Kampala</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-phone"></i> +256 800 123 456</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-envelope"></i> support@ugresults.go.ug</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 6:00 PM</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-globe"></i> www.ugresults.go.ug</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>
+                    &copy; <span id="year"></span> Uganda Examination Grading System.
+                    All rights reserved. | Ministry of Education and Sports
+                </p>
+            </div>
+
+            <script>
+                document.getElementById("year").textContent = new Date().getFullYear();
+            </script>
+
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('header-scrolled');
+            } else {
+                header.classList.remove('header-scrolled');
+            }
         });
 
-        $(document).ready(function () {
-            $('#contactForm').on('submit', function (e) {
-                e.preventDefault();
+        // Button interactions
 
-                let name = $('#name').val().trim();
-                let email = $('#email').val().trim();
-                let phonenumber = $('#phonenumber').val().trim();
-                let subject = $('#subject').val().trim();
-                let message = $('#message').val().trim();
+        // Animate features on scroll
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
 
-                let errorMessages = [];
-
-                $('#name, #email, #phonenumber, #subject, #message').removeClass('is-invalid is-valid');
-
-                if (!name) {
-                    errorMessages.push("Full Name is required.");
-                    $('#name').addClass('is-invalid');
-                } else {
-                    $('#name').addClass('is-valid');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
                 }
+            });
+        }, observerOptions);
 
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!email) {
-                    errorMessages.push("Email is required.");
-                    $('#email').addClass('is-invalid');
-                } else if (!emailRegex.test(email)) {
-                    errorMessages.push("Please enter a valid email address.");
-                    $('#email').addClass('is-invalid');
-                } else {
-                    $('#email').addClass('is-valid');
+        // Animate features
+        document.querySelectorAll('.feature').forEach(feature => {
+            feature.style.opacity = '0';
+            feature.style.transform = 'translateY(20px)';
+            feature.style.transition = 'opacity 0.6s, transform 0.6s';
+            observer.observe(feature);
+        });
+
+        // Animate process steps
+        document.querySelectorAll('.process-step').forEach(step => {
+            step.style.opacity = '0';
+            step.style.transform = 'translateY(20px)';
+            step.style.transition = 'opacity 0.6s, transform 0.6s';
+            observer.observe(step);
+        });
+
+        // Counter animation for stats
+        const statValues = document.querySelectorAll('.stat-value');
+        statValues.forEach(stat => {
+            const originalText = stat.textContent;
+            const target = parseInt(originalText.replace(/[^0-9]/g, ''));
+            const suffix = originalText.replace(/[0-9]/g, '');
+
+            let count = 0;
+            const duration = 1500; // 1.5 seconds
+            const increment = target / (duration / 16); // 60fps
+
+            const updateCounter = () => {
+                if (count < target) {
+                    count += increment;
+                    if (count > target) count = target;
+                    stat.textContent = Math.floor(count) + suffix;
+                    requestAnimationFrame(updateCounter);
                 }
+            };
 
-                if (!phonenumber) {
-                    errorMessages.push("Phonenumber is required.");
-                    $('#phonenumber').addClass('is-invalid');
-                } else {
-                    $('#phonenumber').addClass('is-valid');
-                }
-
-                if (!subject) {
-                    errorMessages.push("Subject is required.");
-                    $('#subject').addClass('is-invalid');
-                } else {
-                    $('#subject').addClass('is-valid');
-                }
-
-                if (!message) {
-                    errorMessages.push("Message is required.");
-                    $('#message').addClass('is-invalid');
-                } else {
-                    $('#message').addClass('is-valid');
-                }
-
-                if (errorMessages.length > 0) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Form Incomplete',
-                        html: '<ul style="text-align: left;">' + errorMessages.map(msg =>
-                            `<li>${msg}</li>`).join('') + '</ul>',
-                    });
-                    return;
-                }
-
-                Swal.fire({
-                    title: 'Send Message?',
-                    text: "Are you sure you want to submit this message?",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, Send it!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-
-                        let formData = new FormData();
-                        formData.append('_token', '{{ csrf_token() }}');
-                        formData.append('name', name);
-                        formData.append('email', email);
-                        formData.append('phonenumber', phonenumber);
-                        formData.append('subject', subject);
-                        formData.append('message', message);
-
-                        $.ajax({
-                            url: "{{ route('contact-message-information') }}",
-                            method: 'POST',
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            beforeSend: function () {
-                                $('.submitting').html(
-                                    '<i class="fa fa-spinner fa-spin"></i> Sending...'
-                                );
-                            },
-                            success: function (response) {
-                                if (response.status) {
-                                    Swal.fire('Success', response.message ||
-                                        'Your message has been sent.', 'success');
-                                    $('#contactForm')[0].reset();
-                                    $('#contactForm .form-control').removeClass(
-                                        'is-valid is-invalid');
-                                } else {
-                                    Swal.fire('Error', response.message ||
-                                        'Failed to send message.', 'error');
-                                }
-                                $('.submitting').html('');
-                            },
-                            error: function (data) {
-                                $('body').html(data.responseText);
-                            }
-                        });
+            const statObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCounter();
+                        statObserver.unobserve(entry.target);
                     }
                 });
             });
+
+            statObserver.observe(stat);
         });
     </script>
-
-
-    <script src="/assets007/js/jquery.min.js"></script>
-    <script src="/assets007/js/jquery-migrate-3.0.1.min.js"></script>
-    <script src="/assets007/js/popper.min.js"></script>
-    <script src="/assets007/js/bootstrap.min.js"></script>
-    <script src="/assets007/js/jquery.easing.1.3.js"></script>
-    <script src="/assets007/js/jquery.waypoints.min.js"></script>
-    <script src="/assets007/js/jquery.stellar.min.js"></script>
-    <script src="/assets007/js/owl.carousel.min.js"></script>
-    <script src="/assets007/js/jquery.magnific-popup.min.js"></script>
-    <script src="/assets007/js/jquery.animateNumber.min.js"></script>
-    <script src="/assets007/js/bootstrap-datepicker.js"></script>
-    <script src="/assets007/js/scrollax.min.js"></script>
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="/assets007/js/google-map.js"></script>
-    <script src="/assets007/js/main.js"></script>
 </body>
 
 </html>
