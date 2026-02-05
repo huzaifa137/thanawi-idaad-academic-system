@@ -20,15 +20,17 @@ class AdminAuth
     public function handle(Request $request, Closure $next): Response
     {
 
-        if (! session()->has('LoggedAdmin') &&
+        if (
+            !session()->has('LoggedAdmin') &&
             ($request->path() != 'users/login' &&
                 $request->path() != 'users/register' &&
                 $request->path() != 'users/home-page' &&
                 $request->path() != 'users/user-otp' &&
-                ! $request->routeIs('auth-user-check') &&
-                ! $request->routeIs('auth-user-check') &&
-                ! $request->routeIs('regenerate-otp') &&
-                ! $request->routeIs('password/reset') &&
+                $request->path() != 'users/public-portal' &&
+                !$request->routeIs('auth-user-check') &&
+                !$request->routeIs('auth-user-check') &&
+                !$request->routeIs('regenerate-otp') &&
+                !$request->routeIs('password/reset') &&
                 $request->path() != 'users/forgot-password')
         ) {
             Session::put('url.intended', $request->url());
@@ -38,13 +40,17 @@ class AdminAuth
 
         }
 
-        if (session()->has('LoggedStudent') &&
-            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->path() == 'users/home-page' || $request->routeIs('auth-user-check'))) {
+        if (
+            session()->has('LoggedStudent') &&
+            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->path() == 'users/home-page' || $request->routeIs('auth-user-check'))
+        ) {
             return redirect('/student/dashboard');
         }
 
-        if (session()->has('LoggedAdmin') &&
-            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->path() == 'users/home-page' || $request->routeIs('auth-user-check'))) {
+        if (
+            session()->has('LoggedAdmin') &&
+            ($request->path() == 'users/login' || $request->path() == 'users/register' || $request->path() == 'users/home-page' || $request->routeIs('auth-user-check'))
+        ) {
             return redirect('/');
         }
 

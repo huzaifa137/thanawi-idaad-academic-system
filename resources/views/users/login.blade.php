@@ -593,6 +593,42 @@
                 gap: 1rem;
             }
         }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 3rem 0;
+            height: 3px;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    var(--primary-light) 25%,
+                    var(--secondary) 50%,
+                    var(--primary-light) 75%,
+                    transparent 100%);
+            border-radius: 3px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--secondary);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .divider::before {
+            left: 30%;
+        }
+
+        .divider::after {
+            right: 30%;
+        }
     </style>
 </head>
 
@@ -619,19 +655,21 @@
 
             <div class="welcome-message">
                 <h2>Secure Access to National Examination Data</h2>
-                <p>Login to the official government platform for standardized grading of Idaad and Thanawi examination results across Uganda.</p>
+                <p>Login to the official government platform for standardized grading of Idaad and Thanawi examination
+                    results across Uganda.</p>
             </div>
 
             <div class="portal-features">
                 <div class="feature-card">
                     <div class="feature-header">
                         <div class="feature-icon">
-                            <i class="fas fa-shield-check"></i>
+                            <i class="fas fa-shield"></i>
                         </div>
                         <div class="feature-title">Government-Grade Security</div>
                     </div>
                     <div class="feature-description">
-                        Multi-layer encryption, biometric verification, and blockchain-secured data storage ensure maximum security for sensitive examination data.
+                        Multi-layer encryption, biometric verification, and blockchain-secured data storage ensure
+                        maximum security for sensitive examination data.
                     </div>
                 </div>
 
@@ -643,7 +681,8 @@
                         <div class="feature-title">Real-Time Analytics</div>
                     </div>
                     <div class="feature-description">
-                        Advanced analytics dashboard with predictive insights and comprehensive reporting for educational planning and policy development.
+                        Advanced analytics dashboard with predictive insights and comprehensive reporting for
+                        educational planning and policy development.
                     </div>
                 </div>
             </div>
@@ -654,8 +693,12 @@
                     <span>ISO 27001 Certified • GDPR Compliant</span>
                 </div>
                 <div class="copyright">
-                    © 2023 Ministry of Education & Sports
+                    © <span id="year"></span> Ministry of Education & Sports
                 </div>
+
+                <script>
+                    document.getElementById("year").textContent = new Date().getFullYear();
+                </script>
             </div>
         </div>
 
@@ -686,7 +729,8 @@
                     <label for="username" class="form-label">User ID / Registration Number</label>
                     <div class="input-group">
                         <i class="fas fa-id-card input-icon"></i>
-                        <input type="text" id="username" class="form-input" placeholder="Enter your user ID or registration number" required>
+                        <input type="text" id="username" class="form-input"
+                            placeholder="Enter your user ID or registration number" required>
                     </div>
                 </div>
 
@@ -694,7 +738,8 @@
                     <label for="password" class="form-label">Secure Password</label>
                     <div class="input-group">
                         <i class="fas fa-lock input-icon"></i>
-                        <input type="password" id="password" class="form-input" placeholder="Enter your secure password" required>
+                        <input type="password" id="password" class="form-input" placeholder="Enter your secure password"
+                            required>
                         <button type="button" class="password-toggle" id="togglePassword">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -706,7 +751,7 @@
                         <input type="checkbox" id="remember">
                         <label for="remember">Remember this device</label>
                     </div>
-                    <a href="#" class="forgot-password">Forgot password?</a>
+                    <a href="{{ url('/users/forgot-password') }}" class="forgot-password">Forgot password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary">
@@ -715,46 +760,8 @@
 
                 <div class="divider"></div>
 
-                <style>
-                    .divider {
-                        display: flex;
-                        align-items: center;
-                        margin: 3rem 0;
-                        height: 3px;
-                        background: linear-gradient(90deg,
-                                transparent 0%,
-                                var(--primary-light) 25%,
-                                var(--secondary) 50%,
-                                var(--primary-light) 75%,
-                                transparent 100%);
-                        border-radius: 3px;
-                        position: relative;
-                        overflow: visible;
-                    }
-
-                    .divider::before,
-                    .divider::after {
-                        content: '';
-                        position: absolute;
-                        width: 12px;
-                        height: 12px;
-                        background: var(--secondary);
-                        border-radius: 50%;
-                        top: 50%;
-                        transform: translateY(-50%);
-                    }
-
-                    .divider::before {
-                        left: 30%;
-                    }
-
-                    .divider::after {
-                        right: 30%;
-                    }
-                </style>
-
                 <a href="{{url('/')}}" class="btn btn-secondary" style="text-decoration: none;">
-                    <i class="fas fa-home"></i> Back to Home Portal
+                    <i class="fas fa-home"></i> Back to Homepage
                 </a>
 
             </form>
@@ -762,7 +769,7 @@
     </div>
     <script>
         // Role selection functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const roleButtons = document.querySelectorAll('.role-btn');
 
             // Set initial active state
@@ -770,7 +777,7 @@
 
             // Add click event to each role button
             roleButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const selectedRole = this.getAttribute('data-role');
 
                     // Remove active class from all buttons
@@ -817,7 +824,7 @@
             const passwordInput = document.getElementById('password');
 
             if (togglePassword && passwordInput) {
-                togglePassword.addEventListener('click', function() {
+                togglePassword.addEventListener('click', function () {
                     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                     passwordInput.setAttribute('type', type);
 

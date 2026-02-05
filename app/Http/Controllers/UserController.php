@@ -564,6 +564,11 @@ class UserController extends Controller
         return view('home-page', compact(['allCourses']));
     }
 
+    public function publicPortal()
+    {
+        return view('public-portal');
+    }
+
     public function editUserInformation()
     {
 

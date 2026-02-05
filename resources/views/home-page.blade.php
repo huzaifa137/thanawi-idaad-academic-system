@@ -764,9 +764,9 @@
                     </button>
                 </a>
 
-                <button class="btn btn-primary">
-                    <i class="fas fa-play"></i> Demo
-                </button>
+                <a href="{{ url('/users/public-portal') }}" class="btn btn-primary" style="text-decoration: none;">
+                    <i class="fas fa-user-graduate"></i> Portal
+                </a>
             </div>
         </div>
     </header>
@@ -777,7 +777,8 @@
         <div class="container hero-content">
             <div class="hero-text">
                 <h1>National Grading <span>Excellence</span></h1>
-                <p>A modern, transparent, and efficient system for grading Idaad and Thanawi examination results across Uganda. Ensuring accuracy and fairness for every student.</p>
+                <p>A modern, transparent, and efficient system for grading Idaad and Thanawi examination results across
+                    Uganda. Ensuring accuracy and fairness for every student.</p>
 
                 <div class="hero-actions">
                     <a href="{{ url('/users/login')}}" class="btn btn-primary" style="text-decoration: none;">
@@ -811,7 +812,8 @@
                     </div>
                     <div class="visual-info">
                         <h3 style="color: var(--dark); margin-bottom: 0.5rem;">Performance Excellence</h3>
-                        <p>Students achieving distinction increased by <strong style="color: var(--primary);">100%</strong> with our standardized system</p>
+                        <p>Students achieving distinction increased by <strong
+                                style="color: var(--primary);">100%</strong> with our standardized system</p>
                     </div>
                 </div>
             </div>
@@ -823,7 +825,8 @@
         <div class="container">
             <div class="section-title">
                 <h2>Advanced Grading Platform</h2>
-                <p>Our system combines cutting-edge technology with educational expertise to deliver the most accurate and reliable grading for Uganda's examinations.</p>
+                <p>Our system combines cutting-edge technology with educational expertise to deliver the most accurate
+                    and reliable grading for Uganda's examinations.</p>
             </div>
 
             <div class="features-grid">
@@ -832,7 +835,8 @@
                         <i class="fas fa-brain"></i>
                     </div>
                     <h3>Intelligent Algorithms</h3>
-                    <p>Advanced AI algorithms ensure consistent grading based on national standards, with continuous learning and improvement capabilities.</p>
+                    <p>Advanced AI algorithms ensure consistent grading based on national standards, with continuous
+                        learning and improvement capabilities.</p>
                 </div>
 
                 <div class="feature">
@@ -840,7 +844,8 @@
                         <i class="fas fa-lock"></i>
                     </div>
                     <h3>Bank-Level Security</h3>
-                    <p>End-to-end encryption, multi-factor authentication, and secure cloud infrastructure protect sensitive student data and examination integrity.</p>
+                    <p>End-to-end encryption, multi-factor authentication, and secure cloud infrastructure protect
+                        sensitive student data and examination integrity.</p>
                 </div>
 
                 <div class="feature">
@@ -848,7 +853,8 @@
                         <i class="fas fa-chart-bar"></i>
                     </div>
                     <h3>Comprehensive Analytics</h3>
-                    <p>Detailed performance analytics, trend identification, and educational insights for students, schools, and national education planning.</p>
+                    <p>Detailed performance analytics, trend identification, and educational insights for students,
+                        schools, and national education planning.</p>
                 </div>
             </div>
         </div>
@@ -859,7 +865,8 @@
         <div class="container">
             <div class="section-title">
                 <h2>Streamlined Grading Process</h2>
-                <p>Our efficient 4-step workflow ensures accuracy and transparency in examination grading and result distribution.</p>
+                <p>Our efficient 4-step workflow ensures accuracy and transparency in examination grading and result
+                    distribution.</p>
             </div>
 
             <div class="process-container">
@@ -868,7 +875,8 @@
                         <div class="step-number">1</div>
                         <div class="step-content">
                             <h3>Data Collection</h3>
-                            <p>Secure digital submission of examination papers with automated validation and error detection.</p>
+                            <p>Secure digital submission of examination papers with automated validation and error
+                                detection.</p>
                         </div>
                     </div>
 
@@ -876,7 +884,8 @@
                         <div class="step-number">2</div>
                         <div class="step-content">
                             <h3>Automated Grading</h3>
-                            <p>System processes results using AI-powered algorithms aligned with national grading standards.</p>
+                            <p>System processes results using AI-powered algorithms aligned with national grading
+                                standards.</p>
                         </div>
                     </div>
 
@@ -884,7 +893,8 @@
                         <div class="step-number">3</div>
                         <div class="step-content">
                             <h3>Quality Control</h3>
-                            <p>Multi-level verification by qualified examiners ensures accuracy before final approval.</p>
+                            <p>Multi-level verification by qualified examiners ensures accuracy before final approval.
+                            </p>
                         </div>
                     </div>
 
@@ -892,7 +902,8 @@
                         <div class="step-number">4</div>
                         <div class="step-content">
                             <h3>Result Distribution</h3>
-                            <p>Secure access to results via web portal, mobile app, SMS, and official school notifications.</p>
+                            <p>Secure access to results via web portal, mobile app, SMS, and official school
+                                notifications.</p>
                         </div>
                     </div>
                 </div>
@@ -904,10 +915,11 @@
     <section class="cta">
         <div class="container">
             <h2>Experience Modern Examination Grading</h2>
-            <p>Join the national movement towards accurate, transparent, and efficient assessment of Idaad and Thanawi examination results.</p>
-            <button class="btn">
+            <p>Join the national movement towards accurate, transparent, and efficient assessment of Idaad and Thanawi
+                examination results.</p>
+            <a href="{{ url('/users/public-portal') }}" class="btn" style="text-decoration: none;">
                 <i class="fas fa-user-graduate"></i> Access online Portal
-            </button>
+            </a>
         </div>
     </section>
 
@@ -919,7 +931,8 @@
                     <div class="logo-icon">
                         <i class="fas fa-university"></i>
                     </div>
-                    <p>The official national platform for Idaad and Thanawi examination grading, developed in partnership with Uganda's Ministry of Education and Sports.</p>
+                    <p>The official national platform for Idaad and Thanawi examination grading, developed in
+                        partnership with Uganda's Ministry of Education and Sports.</p>
                     <div class="social-icons">
                         <a href="javascript:void();" class="social-icon">
                             <i class="fab fa-twitter"></i>
@@ -957,10 +970,13 @@
                 <div class="footer-col">
                     <h3>Contact Information</h3>
                     <ul class="footer-links">
-                        <li><a href="javascript:void();"><i class="fas fa-map-marker-alt"></i> Ministry of Education, Kampala</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-map-marker-alt"></i> Ministry of Education,
+                                Kampala</a></li>
                         <li><a href="javascript:void();"><i class="fas fa-phone"></i> +256 800 123 456</a></li>
-                        <li><a href="javascript:void();"><i class="fas fa-envelope"></i> support@ugresults.go.ug</a></li>
-                        <li><a href="javascript:void();"><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 6:00 PM</a></li>
+                        <li><a href="javascript:void();"><i class="fas fa-envelope"></i> support@ugresults.go.ug</a>
+                        </li>
+                        <li><a href="javascript:void();"><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 6:00 PM</a>
+                        </li>
                         <li><a href="javascript:void();"><i class="fas fa-globe"></i> www.ugresults.go.ug</a></li>
                     </ul>
                 </div>
