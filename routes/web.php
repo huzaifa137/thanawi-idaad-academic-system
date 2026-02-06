@@ -182,8 +182,6 @@ Route::controller(SchoolController::class)->group(function () {
 
     Route::delete('/academic-years/{id}', 'destroyTerm')->name('academic-years.destroy');
     Route::post('/store-term-dates', 'storeTermDate')->name('term-dates.store');
-    Route::post('/select-school', 'selectSchool')->name('school.select');
-
 });
 
 Route::controller(TeacherController::class)->group(function () {

@@ -80,7 +80,7 @@ $controller = new Controller();
                                     <div class="form-group">
                                         <label class="form-label">Registration Code</label>
                                         <input class="form-control" type="search" name="registration_code"
-                                            value="{{ $school->registration_code }}">
+                                            value="{{ $school->registration_code }}" disabled>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Contact Phone Number</label>

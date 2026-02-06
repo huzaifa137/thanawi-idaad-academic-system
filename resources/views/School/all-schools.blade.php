@@ -83,23 +83,16 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                                 <i class="fas fa-university"></i>
                                             </a>
 
-                                            <a href="{{ route('school.term-dates', $school->id) }}" class="btn btn-sm"
+                                            {{-- <a href="{{ route('school.term-dates', $school->id) }}" class="btn btn-sm"
                                                 title="Select Date"
                                                 style="margin-right:6px; color:#e83e8c; border:1px solid #e83e8c; background-color:transparent;">
                                                 <i class="fas fa-calendar-alt"></i>
-                                            </a>
+                                            </a> --}}
 
-                                            <a href="{{ route('individual.school.teachers', $school->id) }}" class="btn btn-sm"
+                                            {{-- <a href="{{ route('individual.school.teachers', $school->id) }}" class="btn btn-sm"
                                                 title="Teachers"
                                                 style="margin-right:6px; color:#fd7e14; border:1px solid #fd7e14; background-color:transparent;">
                                                 <i class="fas fa-chalkboard-teacher"></i>
-                                            </a>
-
-
-                                            {{-- <a href="{{ route('school.options', $school->id) }}"
-                                                class="btn btn-sm btn-outline-success" title="School Options"
-                                                style="margin-right:6px;">
-                                                <i class="fas fa-cogs"></i>
                                             </a> --}}
 
                                             <a href="javascript:void(0);"
@@ -116,7 +109,7 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-delete"
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-delete disabled"
                                                 data-id="{{ $school->id }}" title="Delete">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>

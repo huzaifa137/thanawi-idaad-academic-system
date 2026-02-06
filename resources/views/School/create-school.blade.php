@@ -21,9 +21,11 @@ $controller = new Controller();
         <div class="row">
             <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
                 <div class="card bg-primary">
-                    <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="card-header d-flex justify-content-between align-items-center"
+                        style="background-color: #253F2D;">
                         <h4 class="card-title mb-0 text-white">Create New School</h4>
-                        <a href="{{ route('school.allSchools') }}" class="btn btn-info">
+                        <a href="{{ route('school.allSchools') }}" class="btn text-white"
+                            style="background-color: #287C44;">
                             <i class="fas fa-school me-2"></i> All Schools
                         </a>
                     </div>
@@ -34,8 +36,8 @@ $controller = new Controller();
                                     <div class="form-group">
                                         <label class="form-label">School Type</label>
                                         <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_TYPE'), '', 'school_type');
-                                        ?>
+    echo Helper::DropMasterData(config('constants.options.SCHOOL_TYPE'), '', 'school_type');
+                                                    ?>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="example-email">Email</label>
@@ -45,26 +47,26 @@ $controller = new Controller();
                                     <div class="form-group">
                                         <label class="form-label">Gender</label>
                                         <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_GENDER'), '', 'gender');
-                                        ?>
+    echo Helper::DropMasterData(config('constants.options.SCHOOL_GENDER'), '', 'gender');
+                                                    ?>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Regional Level</label>
                                         <?php
-                                        echo Helper::DropMasterData(config('constants.options.REGIONAL_LEVEL'), '', 'regional_level');
-                                        ?>
+    echo Helper::DropMasterData(config('constants.options.REGIONAL_LEVEL'), '', 'regional_level');
+                                                    ?>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">School Ownership</label>
                                         <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_OWNERSHIP'), '', 'school_ownership', 1);
-                                        ?>
+    echo Helper::DropMasterData(config('constants.options.SCHOOL_OWNERSHIP'), '', 'school_ownership', 1);
+                                                    ?>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Boarding Status</label>
                                         <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_GENDER'), '', 'boarding_status', 1);
-                                        ?>
+    echo Helper::DropMasterData(config('constants.options.SCHOOL_GENDER'), '', 'boarding_status', 1);
+                                                    ?>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-12">
@@ -75,13 +77,15 @@ $controller = new Controller();
                                     <div class="form-group">
                                         <label class="form-label">School Products</label>
                                         <?php
-                                        echo Helper::DropMasterData(config('constants.options.SCHOOL_PRODUCTS'), '', 'school_product', 1);
-                                        ?>
+    echo Helper::DropMasterData(config('constants.options.SCHOOL_PRODUCTS'), '', 'school_product', 1);
+                                                    ?>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Registration Code</label>
-                                        <input class="form-control" type="search" name="registration_code">
+                                        <input class="form-control" type="text" name="registration_code"
+                                            value="{{ $registrationCode }}" readonly>
                                     </div>
+
                                     <div class="form-group">
                                         <label class="form-label">Contact Phone Number</label>
                                         <input class="form-control" type="tel" name="phone">
@@ -89,13 +93,13 @@ $controller = new Controller();
                                     <div class="form-group mb-0">
                                         <label class="form-label">Population</label>
                                         <?php
-                                        echo Helper::DropMasterDataAsc(config('constants.options.SCHOOL_POPULATION'), '', 'population', 1);
-                                        ?>
+    echo Helper::DropMasterData(config('constants.options.SCHOOL_POPULATION'), '', 'population', 1);
+                                                    ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-4 text-left">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn text-white" style="background-color: #287C44;">
                                     <i class="fas fa-paper-plane"></i> Submit
                                 </button>
                             </div>
@@ -113,8 +117,8 @@ $controller = new Controller();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $('#createSchoolForm').on('submit', function(e) {
+        $(document).ready(function () {
+            $('#createSchoolForm').on('submit', function (e) {
                 e.preventDefault();
 
                 let isValid = true;
@@ -123,7 +127,7 @@ $controller = new Controller();
 
                 $form.find('.form-control, select').removeClass('is-invalid');
 
-                $form.find('input, select').each(function() {
+                $form.find('input, select').each(function () {
                     if (!$(this).val().trim()) {
                         $(this).addClass('is-invalid');
 
@@ -166,7 +170,7 @@ $controller = new Controller();
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 Swal.fire(
                                     'Submitted!',
                                     'School has been created successfully.',
@@ -174,10 +178,10 @@ $controller = new Controller();
                                 );
                                 $form[0].reset();
                             },
-                            error: function(data) {
+                            error: function (data) {
                                 $('body').html(data.responseText);
                             },
-                            complete: function() {
+                            complete: function () {
                                 $submitBtn.prop('disabled', false).html(
                                     originalBtnHtml);
                             }
