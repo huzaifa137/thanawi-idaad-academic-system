@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login | Uganda National Grading System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -629,6 +630,18 @@
         .divider::after {
             right: 30%;
         }
+
+        .error-text {
+            color: #e3342f;
+            font-size: 13px;
+            margin-top: 6px;
+            display: block;
+        }
+
+        button:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -695,10 +708,6 @@
                 <div class="copyright">
                     © <span id="year"></span> Ministry of Education & Sports
                 </div>
-
-                <script>
-                    document.getElementById("year").textContent = new Date().getFullYear();
-                </script>
             </div>
         </div>
 
@@ -724,37 +733,43 @@
                 </button>
             </div>
 
-            <form class="login-form" id="loginForm">
+            <form class="login-form" id="loginForm" action="{{ route('auth-user-check') }}" method="POST">
+                @csrf
+
+                <input type="hidden" name="role" id="login_role" value="student">
+
                 <div class="form-group">
                     <label for="username" class="form-label">User ID / Registration Number</label>
                     <div class="input-group">
                         <i class="fas fa-id-card input-icon"></i>
-                        <input type="text" id="username" class="form-input"
-                            placeholder="Enter your user ID or registration number" required>
+                        <input type="text" id="username" name="username" class="form-input"
+                            placeholder="Enter your user ID or registration number">
                     </div>
+                    <small class="error-text" id="username-error"></small>
                 </div>
+
 
                 <div class="form-group">
                     <label for="password" class="form-label">Secure Password</label>
                     <div class="input-group">
                         <i class="fas fa-lock input-icon"></i>
-                        <input type="password" id="password" class="form-input" placeholder="Enter your secure password"
-                            required>
+                        <input type="password" id="password" name="password" class="form-input"
+                            placeholder="Enter your secure password">
                         <button type="button" class="password-toggle" id="togglePassword">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
+                    <small class="error-text" id="password-error"></small>
                 </div>
 
                 <div class="form-options">
-                    <div class="remember-me">
-                        <input type="checkbox" id="remember">
+                    <div class="remember-me"> <input type="checkbox" name="remember" id="remember" value="1">
                         <label for="remember">Remember this device</label>
                     </div>
                     <a href="{{ url('/users/forgot-password') }}" class="forgot-password">Forgot password?</a>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="loginBtn">
                     <i class="fas fa-shield-alt"></i> Authenticate & Continue
                 </button>
 
@@ -767,6 +782,7 @@
             </form>
         </div>
     </div>
+
     <script>
         // Role selection functionality
         document.addEventListener('DOMContentLoaded', function () {
@@ -774,22 +790,18 @@
 
             // Set initial active state
             let activeRole = 'student';
+            const roleInput = document.getElementById('login_role');
 
-            // Add click event to each role button
             roleButtons.forEach(button => {
                 button.addEventListener('click', function () {
                     const selectedRole = this.getAttribute('data-role');
 
-                    // Remove active class from all buttons
-                    roleButtons.forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-
-                    // Add active class to clicked button
+                    roleButtons.forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
-                    activeRole = selectedRole;
 
-                    // Update form labels based on role (optional)
+                    activeRole = selectedRole;
+                    roleInput.value = selectedRole; // 🔥 THIS IS KEY
+
                     updateFormForRole(selectedRole);
                 });
             });
@@ -807,12 +819,12 @@
                         passwordLabel.textContent = 'Student Password';
                         break;
                     case 'teacher':
-                        usernameLabel.textContent = 'Teacher ID';
+                        usernameLabel.textContent = 'Teacher ID / Email';
                         usernameInput.placeholder = 'Enter your teacher identification number';
                         passwordLabel.textContent = 'Teacher Password';
                         break;
                     case 'admin':
-                        usernameLabel.textContent = 'Administrator ID';
+                        usernameLabel.textContent = 'Administrator ID / Email';
                         usernameInput.placeholder = 'Enter your administrator credentials';
                         passwordLabel.textContent = 'Admin Password';
                         break;
@@ -842,6 +854,80 @@
             updateFormForRole(activeRole);
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Store original button HTML
+            const originalBtnHtml = loginBtn.innerHTML;
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Clear previous errors
+                document.querySelectorAll('.error-text').forEach(el => el.textContent = '');
+
+                // 🔒 Disable button + show spinner
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Logging in...`;
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                    .then(async response => {
+                        const data = await response.json();
+                        if (!response.ok) {
+                            throw data;
+                        }
+                        return data;
+                    })
+                    .then(data => {
+                        // ✅ Success → redirect (button stays disabled)
+                        if (data.status && data.redirect) {
+                            window.location.href = data.redirect;
+                        } else {
+                            throw { message: 'Redirect missing' };
+                        }
+                    })
+                    .catch(data => {
+                        // ❌ Re-enable button on error
+                        loginBtn.disabled = false;
+                        loginBtn.innerHTML = originalBtnHtml;
+
+                        // Validation errors
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(key => {
+                                const errorEl = document.getElementById(`${key}-error`);
+                                if (errorEl) {
+                                    errorEl.textContent = data.errors[key][0];
+                                }
+                            });
+                        }
+
+                        // Other errors
+                        if (data.message && !data.errors) {
+                            alert(data.message);
+                        }
+                    });
+            });
+        });
+    </script>
+
+
+    {{--
+    <script> debugging issues
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script> --}}
+
 </body>
 
 </html>

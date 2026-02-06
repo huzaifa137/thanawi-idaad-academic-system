@@ -14,22 +14,23 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-
             $table->id();
-            $table->text('username')->nullable();
-            $table->text('email')->nullable();
-            $table->text('password')->nullable();
-            $table->integer('user_role')->default(0);
-            $table->integer('temp_otp')->nullable();
-            $table->integer('registration_status')->default(0);
-            $table->text('firstname')->nullable();
-            $table->text('lastname')->nullable();
-            $table->text('gender')->nullable();
-            $table->text('phonenumber')->nullable();
-            $table->integer('account_status')->default(10);
-            $table->text('country')->nullable();
-            $table->timestamps();
 
+            $table->string('name');
+            $table->string('username')->unique(); // registration number / staff ID / admin ID
+            $table->string('email')->nullable()->unique();
+
+            $table->string('password');
+
+            $table->enum('user_role', ['student', 'teacher', 'admin']);
+
+            $table->unsignedBigInteger('profile_id')
+                ->comment('ID from students / teachers / administrators table');
+
+            $table->boolean('is_active')->default(true);
+            $table->timestamp('last_login_at')->nullable();
+            $table->timestamps();
+            $table->index(['user_role', 'profile_id']);
         });
     }
 

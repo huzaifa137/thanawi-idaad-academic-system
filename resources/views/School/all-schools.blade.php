@@ -18,32 +18,33 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
     <div class="side-app">
 
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div class="card-header  text-white d-flex justify-content-between align-items-center" style="background-color: #253F2D;">
                 <h5 class="mb-0">All Schools</h5>
-                <a href="{{ route('school.create-school') }}" class="btn btn-sm btn-info">
+                <a href="{{ route('school.create-school') }}" class="btn btn-sm" style="background-color: #287C44;">
                     <span
-                        class="rounded-circle bg-white text-info d-inline-flex align-items-center justify-content-center me-1"
+                        class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center me-1"
                         style="width: 20px; height: 20px;">
                         <i class="fas fa-plus" style="font-size: 12px;"></i>
                     </span>
-                    Add School
+                    <span class="text-white">Add School</span>
                 </a>
             </div>
 
             <div class="card-body p-3">
                 <div class="table-responsive">
                     <table id="schoolsTable" class="table table-striped table-bordered align-middle">
-                        <thead class="table-light">
+                        <thead class="custom-header">
                             <tr>
-                                <th style="width: 1px;">No</th>
+                                <th>No</th>
                                 <th>School Name</th>
                                 <th>School Code</th>
                                 <th>School Type</th>
                                 <th>School Population</th>
                                 <th>Status</th>
-                                <th style="width: 90px;">Actions</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
+
                         <tbody>
 
                             @php

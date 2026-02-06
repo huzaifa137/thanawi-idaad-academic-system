@@ -35902,8 +35902,8 @@ a.icon:hover {
 }
 
 .table thead {
-    background-color: #ADD8E6;
-    color: white;
+    background-color: #0D4B1E  ;
+    color: #fff !important;
     font-weight: bold;
 }
 
@@ -35935,6 +35935,11 @@ a.icon:hover {
     background-color: #ffffff;
 }
 
+.custom-header th {
+    color: #fff;
+    background-color: #0D4B1E;
+    font-weight: bold;
+}
 
 /*---End profile---*/
 
