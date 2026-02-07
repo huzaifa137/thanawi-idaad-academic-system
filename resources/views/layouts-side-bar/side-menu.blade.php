@@ -29,26 +29,12 @@ use App\Helpers\PermissionHelper;
             </a>
         </li>
 
-        <li class="slide">
-            <a class="side-menu__item" href="{{ route('manage.classes') }}">
-                <i class="fa fa-chalkboard-teacher fa-2x mr-3"></i>
-                Classes
-            </a>
-        </li>
-
-        <li class="slide">
-            <a class="side-menu__item" href="{{ route('subjects.dashboard') }}">
-                <i class="fa fa-layer-group fa-2x mr-3"></i>
-                Subjects
-            </a>
-        </li>
-
-        <li class="slide">
+        {{-- <li class="slide">
             <a class="side-menu__item" href="{{ route('school.teachers') }}">
                 <i class="fa fa-user-tie fa-2x mr-3"></i>
                 Teachers
             </a>
-        </li>
+        </li> --}}
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('students.individual.search') }}">
@@ -57,12 +43,12 @@ use App\Helpers\PermissionHelper;
             </a>
         </li>
 
-        <li class="slide">
+        {{-- <li class="slide">
             <a class="side-menu__item" href="{{ url('/user-rights-and-previledges/setup') }}">
                 <i class="fas fa-user-shield fa-2x mr-3"></i>
                 Rights & Previledges
             </a>
-        </li>
+        </li> --}}
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('all.specific.students') }}">

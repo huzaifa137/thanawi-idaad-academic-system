@@ -4,9 +4,7 @@ use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SchoolController;
-use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\ClassandSubjectController;
 use App\Http\Controllers\UserRightsAndPreviledges;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\GradingController;
@@ -225,29 +223,6 @@ Route::controller(TeacherController::class)->group(function () {
 
 });
 
-Route::controller(ClassandSubjectController::class)->group(function () {
-
-    Route::get('create-class', 'createClass')->name('school.create-class');
-    Route::get('manage-classes', 'manageClasses')->name('manage.classes');
-    Route::get('manage-class-streams/{id}', 'manageClassStreams')->name('manage.class.streams');
-    Route::get('/class-stream-subjects/{classId}/{streamId}', 'attachedStreamSubjects')->name('class.stream.subjects');
-    Route::get('edit-class-subjects', 'editClassSubjects')->name('school.edit-class-subject');
-
-    Route::post('/schools/class/store', 'storeClass')->name('schools.class-store');
-    Route::post('/assign-class-supervisor', 'assignSupervisor')->name('class.assignSupervisor');
-    Route::post('/remove-class-supervisor', 'removeSupervisor')->name('class.removeSupervisor');
-    Route::post('/remove-class-teacher', 'removeClassTeacher')->name('class.removeClassTeacher');
-    Route::post('/assign-class-teacher', 'assignClassTeacher')->name('class.assignClassTeacher');
-
-    Route::delete('/streams/{stream}', 'deleteStream')->name('streams.delete');
-
-    Route::post('/assign-class-subject-teacher-one', 'assignSubjectTeacher1')->name('class.assignSubjectTeacher1');
-    Route::post('/remove-class-subject-teacher-one', 'removeSubjectTeacher1')->name('class.removeSubjectTeacher1');
-
-    Route::post('/assign-class-subject-teacher-two', 'assignSubjectTeacher2')->name('class.assignSubjectTeacher2');
-    Route::post('/remove-class-subject-teacher-two', 'removeSubjectTeacher2')->name('class.removeSubjectTeacher2');
-});
-
 
 Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
@@ -318,26 +293,6 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
         Route::post('/students/move', 'moveStudent')->name('students.move');
 
     });
-
-    Route::controller(SubjectController::class)->prefix('subjects')->group(function () {
-
-        Route::get('topics', 'Topics')->name('subjects.topics');
-        Route::get('dashboard', 'dashboard')->name('subjects.dashboard');
-        Route::get('add-topics', 'addTopics')->name('subjects.addtopics');
-
-    });
-
-    Route::controller(SubjectController::class)->group(function () {
-
-        Route::get('/topics/{id}', 'showTopic');
-        Route::put('/update-topics/{id}', 'updateTopic');
-        Route::delete('/topics/{id}', 'destroyTopic');
-
-        Route::post('/create-new-topic', 'storeNewTopic')->name('create.new-topic');
-        Route::post('/fetch-topics-by-senior', 'fetchTopicsBySenior')->name('fetch.topics.by.senior');
-
-    });
-
 });
 
 
@@ -366,20 +321,6 @@ Route::controller(ExamController::class)->group(function () {
 Route::controller(GradingController::class)->group(function () {
 
     Route::group(['middleware' => ['StudentAuth']], function () {
-
-        // Route::get('/specific-school-students', 'schoolStudents')->name('all.specific.students');
-        // Route::get('/manage-exams', 'manageExams')->name('manage.exams');
-        // Route::get('/edit-exams', 'editExams')->name('edit.exams');
-        // Route::get('/upload-exams', 'uploadExams')->name('upload.exams');
-        // Route::get('/exams/{exam}/class/{class}/download', 'downloadClassList')->name('exams.download.classlist');
-        // Route::get('/generate-exams-results', 'calculateExamResults')->name('generate.exams.results');
-        // Route::get('/exams/{exam}/{class}/ranking', 'downloadRankedResults')->name('exams.download.ranked');
-        // Route::get('/exams/download/reportcard/{exam}/{class}', 'downloadReportCard')->name('exams.download.reportcard');
-
-
-        // Route::post('/store-created-exam', 'storeCreatedExam');
-        // Route::post('/exams/upload-results', 'uploadResults')->name('exams.upload.results');
-        // Route::post('/exams/compute-results', 'computeResults')->name('exams.compute.results');
 
     });
 });
