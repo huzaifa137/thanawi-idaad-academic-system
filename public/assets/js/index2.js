@@ -77,7 +77,7 @@ $(function(e){
 		  }
 		},
 		series: chartdata3,
-		color:[ '#4454c3', '#f72d66','#cedbfd']
+		color:[ '#0D4B1F', '#f72d66','#cedbfd']
 	};
 	var chart5 = document.getElementById('myfirstchart');
 	var barChart5 = echarts.init(chart5);
@@ -99,12 +99,12 @@ $(function(e){
 					data: [68, 55, 45],
 					backgroundColor: [
 						"#2dce89",
-						"#4454c3",
+						"#0D4B1F",
 						"#ff5b51"
 					],
 					hoverBackgroundColor: [
 						"#2dce89",
-						"#4454c3",
+						"#0D4B1F",
 						"#ff5b51"
 					]
 				}]

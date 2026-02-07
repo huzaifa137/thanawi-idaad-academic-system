@@ -37,7 +37,7 @@ $controller = new Controller();
                                     @csrf
                                     <div class="card-body text-center">
                                         <div class="text-left text-dark">
-                                            <h3 style="color: #4454c3;">Send us a message </h3>
+                                            <h3 style="color: #0D4B1F;">Send us a message </h3>
                                         </div>
 
                                         <div class="form-group">

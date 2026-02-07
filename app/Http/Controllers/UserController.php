@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Mail;
+use Session;
 
 class UserController extends Controller
 {
@@ -108,7 +109,7 @@ class UserController extends Controller
                 'email' => $email,
                 'username' => $username,
                 'resetUrl' => $resetUrl,
-                'title' => 'SMART SCHOOLS : Reset Password Link',
+                'title' => 'Idaad & Thanawi Exam System : Reset Password Link',
             ];
 
             Mail::send('emails.reset_email', $data, function ($message) use ($data) {
@@ -357,7 +358,7 @@ class UserController extends Controller
     public function checkUser(Request $request)
     {
 
-    // dd($request->all());
+        // dd($request->all());
 
         $validator = Validator::make(
             $request->all(),
@@ -664,7 +665,6 @@ class UserController extends Controller
 
     public function homePage()
     {
-
         $allCourses = [];
 
         return view('home-page', compact(['allCourses']));

@@ -127,7 +127,7 @@
 	$('#vmap2').vectorMap({
 		map: 'asia_mill',
 		showTooltip: true,
-		backgroundColor: '#4454c3',
+		backgroundColor: '#0D4B1F',
 		hoverColor: '#00cccc'
 	});
 	$('#vmap3').vectorMap({

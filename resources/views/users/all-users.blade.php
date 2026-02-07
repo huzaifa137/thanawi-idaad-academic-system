@@ -118,7 +118,7 @@ use App\Http\Controllers\Helper;
 
                 <div class="card-body p-3">
                     <div class="table-responsive">
-                        <table id="schoolsTable" class="table table-striped table-bordered table-hover align-middle">
+                        <table id="schoolsTable" class="table table-striped table-bordered  align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>

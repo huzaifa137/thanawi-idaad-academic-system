@@ -4,7 +4,7 @@
         <div class="d-flex">
             <a class="header-brand" href="{{ url('/' . ($page = '#')) }}">
                 <img src="{{ URL::asset('assets/images/brand/logo.png') }}" class="header-brand-img desktop-lgo"
-                    alt="Smart Schools logo">
+                    alt="Idaad & Thanawi Exam System logo">
             </a>
 
 
@@ -58,10 +58,11 @@
                             <div class="dropdown-divider"></div>
                         </div>
 
-                        <a class="dropdown-item d-flex" href="{{ url('/school-profile') }}">
-                            <i class="fas fa-graduation-cap	 fa-2x mr-3"></i>
-                            <div class="mt-1">School Profile</div>
+                        <a class="dropdown-item d-flex" href="{{ url('/add-academic-year') }}">
+                            <i class="fas fa-clock fa-2x mr-3"></i>
+                            <div class="mt-1">Active Year</div>
                         </a>
+
 
                         <a class="dropdown-item d-flex"
                             href="{{ url('/update-teacher-profile', Session('LoggedStudent')) }}">

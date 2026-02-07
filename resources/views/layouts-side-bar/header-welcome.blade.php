@@ -4,7 +4,7 @@
         <div class="d-flex">
             <a class="header-brand" href="{{ url('/' . ($page = '#')) }}">
                 <img src="{{ URL::asset('assets/images/brand/logo.png') }}" class="header-brand-img desktop-lgo"
-                    alt="Smart Schools logo">
+                    alt="Idaad & Thanawi Exam System logo">
 
             </a>
             <div class="dropdown side-nav">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div>
-                <h4 class="mt-4 font-weight-bold"><span class="display-name">Smart Schools</h4>
+                <h4 class="mt-4 font-weight-bold"><span class="display-name">Idaad & Thanawi Exam System</h4>
             </div>
 
         </div>

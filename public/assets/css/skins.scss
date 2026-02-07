@@ -688,7 +688,7 @@ body {
 /*-- Color-sidebar closed-menu ---*/
 .color-sidebar {
   .app-sidebar {
-    background: #4454c3 !important;
+    background: #0D4B1F !important;
     border-right: 1px solid rgba(255, 255, 255, 0.07);
     box-shadow: 0px 10px 10px 20px rgba(38, 43, 72, 0.11), 10px 10px 15px -5px rgba(38, 43, 72, 0.13);
   }
@@ -717,7 +717,7 @@ body {
 
   .app-sidebar-help {
     border-top: 1px solid rgba(255, 255, 255, 0.07);
-    background: #4454c3;
+    background: #0D4B1F;
 
     a {
       color: #fff !important;
@@ -795,7 +795,7 @@ body {
     background: none;
 
     &.active, &:hover {
-      color: #4454c3 !important;
+      color: #0D4B1F !important;
     }
   }
 
@@ -820,19 +820,19 @@ body {
 
   .slide-menu a {
     &.active, &:hover {
-      color: #4454c3 !important;
+      color: #0D4B1F !important;
       background: transparent;
     }
   }
 
   .side-menu__label:hover {
-    color: #4454c3 !important;
+    color: #0D4B1F !important;
     background: transparent;
   }
 
   .side-menu__item {
     &.active .side-menu__icon, &:hover .side-menu__icon, &:focus .side-menu__icon {
-      color: #4454c3;
+      color: #0D4B1F;
     }
   }
 

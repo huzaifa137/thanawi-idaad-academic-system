@@ -19,7 +19,7 @@
 	margin: 0 auto;
 	height: 100%;
 	width: 4px;
-	background-color: #4454c3;
+	background-color: #0D4B1F;
 }
 .timeline h2 {
 	margin: 0px auto;
@@ -93,7 +93,7 @@
 }
 .timeline .timeline-items .timeline-item::after {
 	content: '';
-	background: #4454c3;
+	background: #0D4B1F;
 	width: 30px;
 	height: 30px;
 	position: absolute;

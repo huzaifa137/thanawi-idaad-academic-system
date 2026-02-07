@@ -34,7 +34,8 @@ return [
         // 1.SCHOOOL
 
         'School' => 16,
-
+        'ThanawiPapers' => 20,
+        'IdaadPapers' => 21,
     ],
 ];
 

@@ -22,6 +22,7 @@ class ExamController extends Controller
 
     public function schoolStudents()
     {
+        // Admin
         $school_id = session('LoggedSchool');
 
         if (!$school_id) {

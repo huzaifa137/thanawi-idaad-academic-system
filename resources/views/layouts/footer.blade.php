@@ -6,7 +6,7 @@
 				Copyright ©
 				<script>
 					document.write(new Date().getFullYear());
-				</script> <a href="#">Smart Schools</a>. All rights reserved.
+				</script> <a href="#">Idaad & Thanawi Exam System</a>. All rights reserved.
 			</div>
 		</div>
 	</div>

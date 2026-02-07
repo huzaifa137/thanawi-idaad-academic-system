@@ -71,6 +71,12 @@ use App\Helpers\PermissionHelper;
             </a>
         </li>
 
+        <li class="slide">
+            <a class="side-menu__item" href="{{ route('all.specific.students') }}">
+                <i class="fas fa-balance-scale-right fa-2x mr-3"></i>
+                Grading
+            </a>
+        </li>
 
         <style>
             .sub-menu {
@@ -147,7 +153,7 @@ use App\Helpers\PermissionHelper;
                     </div>
                     <div class="border-bottom pb-3 pt-3 mb-3">
                         <h5 class="font-weight-bold">Phone numbers</h5>
-                        <p class="mb-1">(+256) 702 082 209</p>
+                            <p class="mb-1">(+256) 702 082 209</p>
                     </div>
                 </div>
                 <div class="ml-auto">

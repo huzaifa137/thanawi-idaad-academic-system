@@ -266,10 +266,13 @@ class Helper extends Controller
 
     public static function active_year()
     {
-        return $activeYear = AcademicYear::orderBy('id', 'desc')
-            ->where('is_active', 1)
+        $activeYear = AcademicYear::where('is_active', 1)
+            ->orderBy('id', 'desc')
             ->value('name');
+
+        return $activeYear ?? 'No Active year Set';
     }
+
 
 
     public static function db_item_from_column($db_table, $item_id, $item_column)

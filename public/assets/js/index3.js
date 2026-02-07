@@ -152,7 +152,7 @@
 		  }
 		},
 		series: chartdata3,
-		color:[ '#4454c3', '#f72d66']
+		color:[ '#0D4B1F', '#f72d66']
 	};
 	var chart5 = document.getElementById('echart1');
 	var barChart5 = echarts.init(chart5);
@@ -174,12 +174,12 @@
 					data: [68, 55, 45],
 					backgroundColor: [
 						"#2dce89",
-						"#4454c3",
+						"#0D4B1F",
 						"#f72d66"
 					],
 					borderColor: [
 						"#2dce89",
-						"#4454c3",
+						"#0D4B1F",
 						"#f72d66"
 					]
 				}]

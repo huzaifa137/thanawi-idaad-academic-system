@@ -384,7 +384,7 @@ class UserRightsAndPreviledges extends Controller
             'email' => $teacher->email,
             'username' => $teacher->username,
             'resetUrl' => $resetUrl,
-            'title' => 'SMART SCHOOLS SET PASSWORD',
+            'title' => 'Idaad & Thanawi Exam System SET PASSWORD',
         ];
 
         Mail::send('emails.set_password', $data, function ($message) use ($data) {

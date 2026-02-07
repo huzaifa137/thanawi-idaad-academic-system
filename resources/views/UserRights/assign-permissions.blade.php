@@ -139,7 +139,7 @@ use App\Http\Controllers\Helper;
                                             <div class="card-body p-0">
                                                 @if ($permissions->isNotEmpty())
                                                     <div class="table-responsive">
-                                                        <table class="table table-hover table-bordered align-middle mb-0">
+                                                        <table class="table  table-bordered align-middle mb-0">
                                                             <thead class="table-light">
                                                                 <tr>
                                                                     <th class="text-center">

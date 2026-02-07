@@ -9,13 +9,36 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ClassandSubjectController;
 use App\Http\Controllers\UserRightsAndPreviledges;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\GradingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/set-admin-session', function () {
     session(['LoggedAdmin' => 1]);
 
-    return dd('Admin Session has been set !!!');
+    return redirect('/'); // or where
 });
+
+Route::get('/set-student-session', function () {
+
+    session(['LoggedStudent' => 1]);
+
+    return redirect('/');
+});
+
+Route::get('/set-school', function () {
+
+    session(['LoggedSchool' => 2]);
+
+    return redirect('/');
+});
+
+Route::get('/logout', function () {
+    if (session()->has('LoggedAdmin')) {
+        session()->flush();
+    }
+
+    return redirect('/');
+})->name('logout');
 
 Route::controller(UserController::class)->group(function () {
 
@@ -27,6 +50,7 @@ Route::controller(UserController::class)->group(function () {
         Route::get('/student-logout', 'studentLogout')->name('student-logout');
 
         Route::group(['middleware' => ['AdminAuth']], function () {
+
             Route::get('/forgot-password', 'forgotPassword')->name('forgot-password');
             Route::get('/login', 'login')->name('users.login');
             Route::get('/', 'login')->name('admin.dashboard');
@@ -278,6 +302,9 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
         Route::get('/all-students', 'allStudents')->name('students.all.students');
         Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
 
+        Route::get('/export/{schoolId}/{type}', 'exportStudents')
+            ->name('students.export');
+
         Route::get('/students/{student}/edit', 'edit')->name('students.edit');
 
         Route::get('/Information/{id}', 'showStudentInformation');
@@ -331,6 +358,28 @@ Route::controller(ExamController::class)->group(function () {
         Route::post('/store-created-exam', 'storeCreatedExam');
         Route::post('/exams/upload-results', 'uploadResults')->name('exams.upload.results');
         Route::post('/exams/compute-results', 'computeResults')->name('exams.compute.results');
+
+    });
+});
+
+
+Route::controller(GradingController::class)->group(function () {
+
+    Route::group(['middleware' => ['StudentAuth']], function () {
+
+        // Route::get('/specific-school-students', 'schoolStudents')->name('all.specific.students');
+        // Route::get('/manage-exams', 'manageExams')->name('manage.exams');
+        // Route::get('/edit-exams', 'editExams')->name('edit.exams');
+        // Route::get('/upload-exams', 'uploadExams')->name('upload.exams');
+        // Route::get('/exams/{exam}/class/{class}/download', 'downloadClassList')->name('exams.download.classlist');
+        // Route::get('/generate-exams-results', 'calculateExamResults')->name('generate.exams.results');
+        // Route::get('/exams/{exam}/{class}/ranking', 'downloadRankedResults')->name('exams.download.ranked');
+        // Route::get('/exams/download/reportcard/{exam}/{class}', 'downloadReportCard')->name('exams.download.reportcard');
+
+
+        // Route::post('/store-created-exam', 'storeCreatedExam');
+        // Route::post('/exams/upload-results', 'uploadResults')->name('exams.upload.results');
+        // Route::post('/exams/compute-results', 'computeResults')->name('exams.compute.results');
 
     });
 });

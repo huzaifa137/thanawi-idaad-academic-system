@@ -34,6 +34,11 @@ class Student extends Model
     'medical_history',
     'comments',
     'added_by',
-];
+  ];
+
+  public function school()
+  {
+    return $this->belongsTo(School::class);
+  }
 
 }

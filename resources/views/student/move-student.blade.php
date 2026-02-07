@@ -68,7 +68,7 @@ use App\Http\Controllers\Helper;
 
                             <!-- Placeholder styled table -->
                             <div id="student-list-container" class="mb-4">
-                                <table class="table table-bordered table-hover">
+                                <table class="table table-bordered ">
                                     <thead class="thead-light">
                                         <tr>
                                             <th class="text-center align-middle" style="width: 50px;">
@@ -160,7 +160,7 @@ use App\Http\Controllers\Helper;
             if (students.length > 0) {
                 let tableHtml = `
             <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover align-middle">
+                <table class="table table-striped table-bordered  align-middle">
                     <thead class="table-light">
                         <tr>
                             <th class="text-center align-middle" style="width: 50px;">

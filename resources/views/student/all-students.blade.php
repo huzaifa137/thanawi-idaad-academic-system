@@ -15,61 +15,117 @@ use App\Http\Controllers\Helper;
             </div>
         </div>
 
-<div class="row">
-    <div class="col-lg-12">
-        <!-- Results -->
-        <div class="card mt-4" id="resultsCard">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">All Students</h5>
-            </div>
-            <div class="card-body bg-white" id="searchResults">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Results -->
+                <div class="card mt-4" id="resultsCard">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">All Students</h5>
+                        @php
+                            $activeYear = Helper::active_year();
+                        @endphp
+                        <h5 class="mb-0">
+                            Active Year :
+                            <span @if($activeYear == 'No Active year Set') style="color: red;" @endif>
+                                {{ $activeYear }}
+                            </span>
+                        </h5>
+                    </div>
 
-                @if ($groupedStudents->isEmpty())
-                    <p>No students found.</p>
-                @else
-                    @foreach ($groupedStudents as $senior => $streams)
-                        <div class="senior-group">
+                    <div class="card-body bg-white" id="searchResults">
 
-                            <h4 class="text-primary">Class : <span class="text-dark fw-bold">{{  Helper::item_md_name($senior) }}</span></h4>
-                            @foreach ($streams as $stream => $students)
-                                <div class="stream-group">
-                                    <!-- Stream Group Title -->
-                                    <h5 class="text-secondary">Stream: {{ Helper::item_md_name($stream) }}</h5>
+                        @if ($groupedStudents->isEmpty())
+                            <div class="alert alert-info">
+                                No students found.
+                            </div>
+                        @else
 
-                                    <!-- Stream Table -->
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Name</th>
-                                                <th>Admission Number</th>
-                                                <th>Gender</th>
-                                                <th>Phone</th>
-                                                <th>UCE Score</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($students as $key => $student)
+                            @foreach ($groupedStudents as $schoolName => $students)
+
+                                <div class="mb-5 border rounded p-4 shadow-sm">
+
+                                    <!-- School Header -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h4 class="fw-bold text-primary mb-0">
+                                            {{ $schoolName }}
+                                        </h4>
+
+                                        <div class="button-group">
+                                            <a href="{{ route('students.export', ['schoolId' => $students->first()->school_id, 'type' => 'thanawi']) }}"
+                                                class="btn text-white export-btn" style="background-color: #287C44;">
+                                                <i class="fas fa-file-export me-2"></i> Export Thanawi Exams
+                                            </a>
+
+                                            <a href="{{ route('students.export', ['schoolId' => $students->first()->school_id, 'type' => 'idaad']) }}"
+                                                class="btn text-white export-btn" style="background-color: #287C44;">
+                                                <i class="fas fa-file-export me-2"></i> Export Idaad Exams
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Students Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered align-middle">
+                                            <thead class="table-light">
                                                 <tr>
-                                                    <td>{{ $key + 1 }}</td> <!-- Row number -->
-                                                    <td>{{ $student->firstname }} {{ $student->lastname }}</td>
-                                                    <td>{{ $student->admission_number }}</td>
-                                                    <td>{{ $student->gender }}</td>
-                                                    <td>{{ $student->primary_contact }}</td>
-                                                    <td>{{ $student->uce_score }}</td>
+                                                    <th>#</th>
+                                                    <th>Name</th>
+                                                    <th>Admission Number</th>
+                                                    <th>Class</th>
+                                                    <th>Stream</th>
+                                                    <th>Gender</th>
+                                                    <th>Phone</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($students as $key => $student)
+                                                    <tr>
+                                                        <td>{{ $key + 1 }}</td>
+                                                        <td>{{ $student->firstname }} {{ $student->lastname }}</td>
+                                                        <td>{{ $student->admission_number }}</td>
+                                                        <td>{{ $student->senior }}</td>
+                                                        <td>{{ $student->stream }}</td>
+                                                        <td>{{ $student->gender }}</td>
+                                                        <td>{{ $student->primary_contact }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <script>
+                                        document.querySelectorAll('.export-btn').forEach(button => {
+                                            button.addEventListener('click', function (e) {
+
+                                                let activeYear = "{{ Helper::active_year() }}";
+
+                                                if (activeYear === "No Active year Set") {
+                                                    e.preventDefault();
+
+                                                    Swal.fire({
+                                                        icon: 'warning',
+                                                        title: 'No Active Academic Year',
+                                                        text: 'Please set an active academic year before exporting.',
+                                                        confirmButtonColor: '#287C44',
+                                                        confirmButtonText: 'Set Active Year'
+                                                    });
+                                                }
+
+                                            });
+                                        });
+                                    </script>
+
                                 </div>
+
                             @endforeach
-                        </div>
-                    @endforeach
-                @endif
+
+                        @endif
+
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
 
 

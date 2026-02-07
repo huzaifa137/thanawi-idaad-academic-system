@@ -18,11 +18,11 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
     <div class="side-app">
 
         <div class="card shadow-sm border-0">
-            <div class="card-header  text-white d-flex justify-content-between align-items-center" style="background-color: #253F2D;">
+            <div class="card-header  text-white d-flex justify-content-between align-items-center"
+                style="background-color: #253F2D;">
                 <h5 class="mb-0">All Schools</h5>
                 <a href="{{ route('school.create-school') }}" class="btn btn-sm" style="background-color: #287C44;">
-                    <span
-                        class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center me-1"
+                    <span class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center me-1"
                         style="width: 20px; height: 20px;">
                         <i class="fas fa-plus" style="font-size: 12px;"></i>
                     </span>
@@ -89,8 +89,8 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                                 <i class="fas fa-calendar-alt"></i>
                                             </a> --}}
 
-                                            {{-- <a href="{{ route('individual.school.teachers', $school->id) }}" class="btn btn-sm"
-                                                title="Teachers"
+                                            {{-- <a href="{{ route('individual.school.teachers', $school->id) }}"
+                                                class="btn btn-sm" title="Teachers"
                                                 style="margin-right:6px; color:#fd7e14; border:1px solid #fd7e14; background-color:transparent;">
                                                 <i class="fas fa-chalkboard-teacher"></i>
                                             </a> --}}
@@ -109,7 +109,8 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-danger btn-delete disabled"
+                                            <a href="javascript:void(0);"
+                                                class="btn btn-sm btn-outline-danger btn-delete disabled"
                                                 data-id="{{ $school->id }}" title="Delete">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
@@ -144,7 +145,7 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                         <input type="hidden" id="schoolStatusId">
                                         <div class="form-group">
                                             <label for="newSchoolStatus">Select New Status</label>
-                                            <select id="newSchoolStatus" class="form-control">
+                                            <select id="newSchoolStatus" class="form-control select2">
                                                 <option value="1">Pending Activation</option>
                                                 <option value="10">Active</option>
                                                 <option value="0">Banned</option>
@@ -154,8 +155,15 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-success">Change Status</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fa-solid fa-rotate me-1"></i>
+                                            Change Status
+                                        </button>
+
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                            <i class="fa-solid fa-xmark me-1"></i>
+                                            Cancel
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -171,7 +179,7 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
     </div>
 
     <style>
-        .table-hover tbody tr:hover {
+        . tbody tr:hover {
             background-color: #f8f9fa !important;
         }
 

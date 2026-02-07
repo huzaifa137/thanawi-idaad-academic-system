@@ -28,7 +28,7 @@ use App\Http\Controllers\Helper;
 
                     <div class="col-12">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover">
+                            <table class="table table-bordered ">
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>

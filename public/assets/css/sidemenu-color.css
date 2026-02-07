@@ -361,7 +361,7 @@
     width: 250px;
     max-height: 100%;
     z-index: 1000;
-    background: #4454c3 !important;
+    background: #0D4B1F !important;
     border-right: 1px solid rgba(255, 255, 255, 0.07);
     box-shadow: 0px 10px 10px 20px rgba(176, 184, 214, 0.09), 10px 10px 15px -5px #b0b8d6;
     -webkit-transition: left 0.2s ease, width 0.2s ease;
@@ -948,7 +948,7 @@
 
     .sidebar-mini.sidenav-toggled.sidenav-toggled1 .app-sidebar .slide.is-expanded .slide-menu {
         max-height: 100%;
-        background: #4454c3;
+        background: #0D4B1F;
     }
 
     .sidebar-mini.sidenav-toggled.sidenav-toggled1 .app-sidebar .slide.is-expanded .angle {
@@ -1387,7 +1387,7 @@
     position: fixed;
     bottom: 0;
     border-top: 1px solid rgba(255, 255, 255, 0.07);
-    background: #4454c3;
+    background: #0D4B1F;
     z-index: 11;
     width: 250px;
     padding: 8px 13px;
@@ -1470,7 +1470,7 @@
 }
 
 .color-sidebar .app-sidebar a.text-primary {
-    color: #4454c3 !important;
+    color: #0D4B1F !important;
 }
 
 .color-sidebar .app-sidebar .dropdown-menu {
@@ -1489,7 +1489,7 @@
 }
 
 .color-sidebar .app-sidebar .dropdown-menu a:hover {
-    color: #4454c3;
+    color: #0D4B1F;
 }
 
 .color-sidebar .app-sidebar .dropdown-menu-arrow.dropdown-menu-right:before,

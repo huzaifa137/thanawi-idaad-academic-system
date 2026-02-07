@@ -7,11 +7,14 @@ use App\Models\Classroom;
 use App\Models\Stream;
 use App\Models\Student;
 use DB;
+use App\Models\MasterData;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use App\Exports\StudentsExamExport;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 use Mail;
+use App\Imports\StudentExamImport;
+use App\Models\Exam;
 
 class StudentController extends Controller
 {
@@ -97,7 +100,7 @@ class StudentController extends Controller
             $useremail = $registeredUser->email;
 
             $data = [
-                'subject' => 'Smart Schools REGISTRATION OTP',
+                'subject' => 'Idaad & Thanawi Exam System REGISTRATION OTP',
                 'body' => 'Enter the Sent OTP to confirm registration : ',
                 'generatedOTP' => $generatedOTP,
                 'username' => $username,
@@ -300,16 +303,100 @@ class StudentController extends Controller
 
     public function allStudents()
     {
-        $students = Student::where('school_id', session('LoggedSchool'))
+        $students = Student::with('school')
+            ->orderBy('school_id')
             ->orderBy('senior')
             ->orderBy('stream')
             ->get();
 
-        $groupedStudents = $students->groupBy('senior')->map(function ($seniorGroup) {
-            return $seniorGroup->groupBy('stream');
+        $groupedStudents = $students->groupBy(function ($student) {
+            return $student->school->name;
         });
-        
-        return view('student.all-students', compact('groupedStudents'));
+
+        $thanawiPapers = MasterData::where(
+            'md_master_code_id',
+            config('constants.options.ThanawiPapers')
+        )->get();
+
+        $idaadPapers = MasterData::where(
+            'md_master_code_id',
+            config('constants.options.IdaadPapers')
+        )->get();
+
+        return view('student.all-students', compact(
+            'groupedStudents',
+            'thanawiPapers',
+            'idaadPapers'
+        ));
+    }
+
+    public function exportStudents($schoolId, $type)
+    {
+        $activeYear = Helper::active_year();
+
+        if ($activeYear == 'No Active year Set') {
+            return back()->with('error', 'No Active Academic Year Set.');
+        }
+
+        $school = \App\Models\School::findOrFail($schoolId);
+
+        $students = Student::where('school_id', $schoolId)->get();
+
+        if ($type === 'thanawi') {
+            $subjects = MasterData::where(
+                'md_master_code_id',
+                config('constants.options.ThanawiPapers')
+            )->get();
+        } else {
+            $subjects = MasterData::where(
+                'md_master_code_id',
+                config('constants.options.IdaadPapers')
+            )->get();
+        }
+
+        $cleanSchoolName = str_replace(' ', '_', $school->name);
+        $cleanYear = str_replace(' ', '_', $activeYear);
+
+        $fileName = $type . '_exams_' . $cleanYear . '_' . $cleanSchoolName . '.xlsx';
+
+        return Excel::download(
+            new StudentsExamExport($students, $subjects, $activeYear),
+            $fileName
+        );
+    }
+
+    public function uploadExamResults(Request $request)
+    {
+        $request->validate([
+            'school_id' => 'required|exists:schools,id',
+            'type' => 'required|in:thanawi,idaad',
+            'file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        $activeYear = Helper::active_year();
+        if ($activeYear == 'No Active year Set') {
+            return back()->with('error', 'No Active Academic Year Set.');
+        }
+
+        $subjects = $request->type === 'thanawi'
+            ? MasterData::where('md_master_code_id', config('constants.options.ThanawiPapers'))->get()
+            : MasterData::where('md_master_code_id', config('constants.options.IdaadPapers'))->get();
+
+        if ($subjects->isEmpty()) {
+            return back()->with('error', 'No subjects found for this exam type.');
+        }
+
+        // Create Exam record
+        $exam = Exam::create([
+            'school_id' => $request->school_id,
+            'exam_type' => $request->type,
+            'academic_year' => $activeYear
+        ]);
+
+        // Import Excel
+        Excel::import(new StudentExamImport($exam, $subjects), $request->file('file'));
+
+        return back()->with('success', 'Exam results uploaded successfully.');
     }
 
     public function searchStudent()

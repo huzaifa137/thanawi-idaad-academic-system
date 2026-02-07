@@ -52,7 +52,7 @@ use App\Http\Controllers\Helper;
 
                                 <div class="card-body p-0">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-hover mb-0">
+                                        <table class="table table-bordered  mb-0">
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>Exam</th>
