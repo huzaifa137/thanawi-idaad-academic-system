@@ -37,29 +37,6 @@
                 </div>
             </div>
 
-            <div class="mt-3 ml-3 col-6">
-                <div class="dropdown">
-                    <button class="btn btn-outline-primary dropdown-toggle font-weight-bold w-100" type="button"
-                        id="schoolDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ $selectedSchool ? $selectedSchool->name : 'Select School' }}
-                    </button>
-                    <div class="dropdown-menu w-100 p-2" aria-labelledby="schoolDropdownButton"
-                        style="max-height: 300px; overflow-y: auto;">
-                        <input type="text" class="form-control mb-2" id="schoolSearch" placeholder="Search school...">
-                        <div id="schoolList">
-                            @forelse ($schools as $school)
-                                <a class="dropdown-item school-item" href="#" data-id="{{ $school->id }}"
-                                    data-name="{{ $school->name }}">
-                                    {{ $school->name }}
-                                </a>
-                            @empty
-                                <a class="dropdown-item" href="#">No schools found.</a>
-                            @endforelse
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="d-flex order-lg-2 ml-auto">
                 <div class="display-name">
                     <span style="line-height:40px;">
@@ -116,75 +93,6 @@
                                 });
                             });
                         </script>
-
-                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                const searchInput = document.getElementById('schoolSearch');
-                                const schoolItems = document.querySelectorAll('.school-item');
-                                const dropdownBtn = document.getElementById('schoolDropdownButton');
-
-                                // Live filtering
-                                searchInput.addEventListener('keyup', function () {
-                                    const searchValue = this.value.toLowerCase();
-                                    schoolItems.forEach(item => {
-                                        const schoolName = item.textContent.toLowerCase();
-                                        item.style.display = schoolName.includes(searchValue) ? '' : 'none';
-                                    });
-                                });
-
-                                // School select and SweetAlert
-                                schoolItems.forEach(item => {
-                                    item.addEventListener('click', function (e) {
-                                        e.preventDefault();
-                                        const schoolId = this.dataset.id;
-                                        const schoolName = this.dataset.name;
-
-                                        Swal.fire({
-                                            title: "Switch School?",
-                                            text: `Are you sure you want to switch to "${schoolName}"?`,
-                                            icon: "warning",
-                                            showCancelButton: true,
-                                            confirmButtonText: "Yes, switch",
-                                            cancelButtonText: "Cancel"
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                // Send to backend via AJAX
-                                                fetch("{{ route('school.select') }}", {
-                                                    method: 'POST',
-                                                    headers: {
-                                                        'Content-Type': 'application/json',
-                                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                                    },
-                                                    body: JSON.stringify({ school_id: schoolId })
-                                                })
-                                                    .then(response => response.json())
-                                                    .then(data => {
-                                                        if (data.status) {
-                                                            Swal.fire({
-                                                                title: "School Changed!",
-                                                                text: data.message,
-                                                                icon: "success",
-                                                                timer: 1500,
-                                                                showConfirmButton: false
-                                                            }).then(() => {
-                                                                location.reload(); // reload to reflect session change
-                                                            });
-                                                        } else {
-                                                            Swal.fire("Error", data.message, "error");
-                                                        }
-                                                    })
-                                                    .catch(() => {
-                                                        Swal.fire("Error", "Something went wrong!", "error");
-                                                    });
-                                            }
-                                        });
-                                    });
-                                });
-                            });
-                        </script>
-
-
                     </div>
                 </div>
             </div>

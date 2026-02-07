@@ -9,23 +9,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ClassandSubjectController;
 use App\Http\Controllers\UserRightsAndPreviledges;
 use App\Http\Controllers\ExamController;
-use Illuminate\Support\Facades\Session;
-use App\Http\Controllers\Helper;
 use Illuminate\Support\Facades\Route;
-use App\Models\ClassStreamAssignment;
-
-
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
- */
 
 Route::get('/set-admin-session', function () {
     session(['LoggedAdmin' => 1]);
@@ -53,6 +37,7 @@ Route::controller(UserController::class)->group(function () {
             Route::get('user-account-information/{id}', [UserController::class, 'userAccountInformation'])
                 ->name('users.account-information');
             Route::get('/home-page', 'homePage')->name('home.page');
+            Route::get('/public-portal', 'publicPortal')->name('public.portal');
             Route::get('/register', 'register')->name('users.register');
             Route::get('/edit-user-information', 'editUserInformation');
             Route::get('/edit-specific-user/{userid}', 'editSpecificUser')->name('users.edit-specific-user');
@@ -197,8 +182,6 @@ Route::controller(SchoolController::class)->group(function () {
 
     Route::delete('/academic-years/{id}', 'destroyTerm')->name('academic-years.destroy');
     Route::post('/store-term-dates', 'storeTermDate')->name('term-dates.store');
-    Route::post('/select-school', 'selectSchool')->name('school.select');
-
 });
 
 Route::controller(TeacherController::class)->group(function () {
@@ -233,14 +216,6 @@ Route::controller(ClassandSubjectController::class)->group(function () {
     Route::post('/assign-class-teacher', 'assignClassTeacher')->name('class.assignClassTeacher');
 
     Route::delete('/streams/{stream}', 'deleteStream')->name('streams.delete');
-
-
-    // Route to display the edit form for a specific assignment
-    // Route::get('/assign-subjects/{assignmentId}/edit', [ClassandSubjectController::class, 'edit'])->name('assign.subjects.edit');
-
-    // // Route to handle the update submission for a specific assignment
-    // Route::put('/assign-subjects/{assignmentId}', [ClassandSubjectController::class, 'update'])->name('assign.subjects.update');
-
 
     Route::post('/assign-class-subject-teacher-one', 'assignSubjectTeacher1')->name('class.assignSubjectTeacher1');
     Route::post('/remove-class-subject-teacher-one', 'removeSubjectTeacher1')->name('class.removeSubjectTeacher1');

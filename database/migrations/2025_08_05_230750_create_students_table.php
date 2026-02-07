@@ -10,12 +10,13 @@ return new class extends Migration {
             $table->id();
 
             // Required fields
-            $table->string('firstname');       
-            $table->string('lastname');         
-            $table->string('senior');         
-            $table->string('stream');          
+            $table->string('firstname');
+            $table->string('lastname');
+            $table->string('senior');
+            $table->string('stream');
+            $table->string('registration_number')->unique();
             $table->enum('gender', ['Male', 'Female', 'Other']);
-            $table->bigInteger('school_id');          
+            $table->bigInteger('school_id');
 
             // Optional but important fields
             $table->string('admission_number')->unique()->nullable();

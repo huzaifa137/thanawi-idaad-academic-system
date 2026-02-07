@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\password_reset_table;
 use App\Models\User;
 use DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -356,111 +357,216 @@ class UserController extends Controller
     public function checkUser(Request $request)
     {
 
-        $request->validate([
-            'email' => [
-                'required',
-                'email',
-                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+    // dd($request->all());
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'username' => 'required|string',
+                'password' => 'required|string',
+                'role' => 'required|in:student,teacher,admin',
             ],
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/\d/',
-                'regex:/[\W_]/',
-            ],
+            [
+                'username.required' => match ($request->role) {
+                    'student' => 'Registration number is required.',
+                    default => 'Username or email is required.',
+                },
+                'password.required' => 'Password is required.',
+                'role.required' => 'Login role is required.',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $loginValue = $request->username;
+        $role = $request->role;
+        $isEmail = filter_var($loginValue, FILTER_VALIDATE_EMAIL);
+
+        if ($role === 'student' && $isEmail) {
+            return response()->json([
+                'errors' => [
+                    'username' => ['Students must log in using their registration number.']
+                ]
+            ], 422);
+        }
+
+        $user = User::where(function ($query) use ($isEmail, $loginValue) {
+            $isEmail
+                ? $query->where('email', $loginValue)
+                : $query->where('username', $loginValue);
+        })->first();
+
+        if (!$user) {
+            return response()->json([
+                'errors' => [
+                    'username' => ['Account not found. Please check your credentials.']
+                ]
+            ], 422);
+        }
+
+        if ($user->user_role !== $role) {
+            return response()->json([
+                'errors' => [
+                    'username' => [
+                        "This account belongs to a {$user->user_role}. Please use the correct login section."
+                    ]
+                ]
+            ], 422);
+        }
+
+        if (!$user->is_active) {
+            return response()->json([
+                'errors' => [
+                    'username' => ['This account is currently disabled.']
+                ]
+            ], 422);
+        }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'errors' => [
+                    'password' => ['Invalid credentials. Please check your login details.']
+                ]
+            ], 422);
+        }
+
+        $user->update([
+            'last_login_at' => now(),
         ]);
 
-        $userInfo = User::where('email', '=', $request->email)->first();
+        $request->session()->regenerate();
 
-        if (!$userInfo) {
-            return response()->json([
-                'status' => false,
-                'message' => 'We dont recognise the above email or password',
-            ]);
-        } else {
-            if (Hash::check($request->password, $userInfo->password)) {
+        // match ($user->user_role) {
+        //     'student' => $request->session()->put('LoggedStudent', $user->id),
+        //     'teacher' => $request->session()->put('LoggedTeacher', $user->id),
+        //     'admin' => $request->session()->put('LoggedAdmin', $user->id),
+        // };
 
-                $user = DB::table('users')->where('email', $request->email)->first();
+        // Default Login LoggedStudent
+        $request->session()->put('LoggedUserRole', $user->user_role);
 
-                $statusMessages = [
-                    0 => 'Your account has been banned.',
-                    8 => 'Your account is locked. ',
-                    9 => 'Your account is suspended. .',
-                ];
 
-                if ($user->account_status != 10) {
-                    $message = $statusMessages[$user->account_status] ?? 'Your account is not active.';
+        // if ($request->boolean('remember')) {
 
-                    return response()->json([
-                        'status' => false,
-                        'message' => $message,
-                    ]);
-                }
+        //     $request->session()->put('RememberDevice', true);
+        //     config(['session.expire_on_close' => false]);
+        // } else {
+        //     config(['session.expire_on_close' => true]);
+        // }
 
-                $url1 = '/student/dashboard';
-                $chooseSchool = route('select.current.school');
+        $request->session()->put('LoggedStudent', $user->id);
 
-                if ($user->user_role == 5) {
+        $url1 = '/student/dashboard';
 
-                    $userExistsInSchool = DB::table('teachers')
-                        ->where('email', $request->email)
-                        ->count();
-
-                    if ($userExistsInSchool > 1) {
-
-                        session(['login_email' => $request->email]);
-                        return response()->json([
-                            'status' => true,
-                            'message' => 'Login successful',
-                            'redirect_url' => $chooseSchool,
-                        ]);
-                    }
-
-                    # Logged Teacher and School Information
-                    $school_id = DB::table('teachers')->where('id', $user->username)->value('school_id');
-
-                    $request->session()->put('LoggedStudent', $user->id);
-                    $request->session()->put('LoggedSchool', $school_id);
-
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'Login successful',
-                        'redirect_url' => $url1,
-                    ]);
-                } elseif ($user->user_role == 0) {
-                    # Other Users
-
-                    $request->session()->put('LoggedStudent', $user->id);
-
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'Login successful',
-                        'redirect_url' => $url1,
-                    ]);
-                } elseif ($user->user_role == 1) {
-                    # Other Users
-
-                    $request->session()->put('LoggedAdmin', $user->id);
-
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'Login successful',
-                        'redirect_url' => $url1,
-                    ]);
-                }
-
-            } else {
-
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Invalid password or Email being entered',
-                ]);
-            }
-        }
+        return response()->json([
+            'status' => true,
+            'message' => 'Login successful',
+            'redirect' => $url1,
+        ]);
     }
+
+
+    // public function checkUser(Request $request)
+    // {
+
+    //     $request->validate([
+    //         'username' => 'required|string',
+    //         'password' => 'required|string',
+    //         'role' => 'required|in:student,teacher,admin',
+    //     ]);
+
+    //     $userInfo = User::where('email', '=', $request->email)->first();
+
+    //     if (!$userInfo) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => 'We dont recognise the above email or password',
+    //         ]);
+    //     } else {
+    //         if (Hash::check($request->password, $userInfo->password)) {
+
+    //             $user = DB::table('users')->where('email', $request->email)->first();
+
+    //             $statusMessages = [
+    //                 0 => 'Your account has been banned.',
+    //                 8 => 'Your account is locked. ',
+    //                 9 => 'Your account is suspended. .',
+    //             ];
+
+    //             if ($user->account_status != 10) {
+    //                 $message = $statusMessages[$user->account_status] ?? 'Your account is not active.';
+
+    //                 return response()->json([
+    //                     'status' => false,
+    //                     'message' => $message,
+    //                 ]);
+    //             }
+
+    //             $url1 = '/student/dashboard';
+    //             $chooseSchool = route('select.current.school');
+
+    //             if ($user->user_role == 5) {
+
+    //                 $userExistsInSchool = DB::table('teachers')
+    //                     ->where('email', $request->email)
+    //                     ->count();
+
+    //                 if ($userExistsInSchool > 1) {
+
+    //                     session(['login_email' => $request->email]);
+    //                     return response()->json([
+    //                         'status' => true,
+    //                         'message' => 'Login successful',
+    //                         'redirect_url' => $chooseSchool,
+    //                     ]);
+    //                 }
+
+    //                 # Logged Teacher and School Information
+    //                 $school_id = DB::table('teachers')->where('id', $user->username)->value('school_id');
+
+    //                 $request->session()->put('LoggedStudent', $user->id);
+    //                 $request->session()->put('LoggedSchool', $school_id);
+
+    //                 return response()->json([
+    //                     'status' => true,
+    //                     'message' => 'Login successful',
+    //                     'redirect_url' => $url1,
+    //                 ]);
+    //             } elseif ($user->user_role == 0) {
+    //                 # Other Users
+
+    //                 $request->session()->put('LoggedStudent', $user->id);
+
+    //                 return response()->json([
+    //                     'status' => true,
+    //                     'message' => 'Login successful',
+    //                     'redirect_url' => $url1,
+    //                 ]);
+    //             } elseif ($user->user_role == 1) {
+    //                 # Other Users
+
+    //                 $request->session()->put('LoggedAdmin', $user->id);
+
+    //                 return response()->json([
+    //                     'status' => true,
+    //                     'message' => 'Login successful',
+    //                     'redirect_url' => $url1,
+    //                 ]);
+    //             }
+
+    //         } else {
+
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'message' => 'Invalid password or Email being entered',
+    //             ]);
+    //         }
+    //     }
+    // }
 
 
     public function authUserSelectedSchool(Request $request)
@@ -562,6 +668,11 @@ class UserController extends Controller
         $allCourses = [];
 
         return view('home-page', compact(['allCourses']));
+    }
+
+    public function publicPortal()
+    {
+        return view('public-portal');
     }
 
     public function editUserInformation()

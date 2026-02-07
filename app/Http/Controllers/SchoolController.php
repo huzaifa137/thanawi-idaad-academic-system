@@ -10,6 +10,7 @@ use App\Models\SchoolProfile;
 use App\Models\TermDate;
 use App\Models\UpdateTracker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Session;
 
@@ -38,8 +39,26 @@ class SchoolController extends Controller
 
     public function createSchool()
     {
-        return view('School.create-school');
+        $year = date('Y');
+
+        $lastSchool = School::whereYear('created_at', $year)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($lastSchool) {
+            $lastNumber = (int) substr($lastSchool->registration_code, -4);
+            $newNumber = $lastNumber + 1;
+        } else {
+            $newNumber = 1;
+        }
+
+        $formattedNumber = str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+
+        $registrationCode = "SCH-{$year}-{$formattedNumber}";
+
+        return view('School.create-school', compact('registrationCode'));
     }
+
 
     public function allSchools()
     {
@@ -63,7 +82,7 @@ class SchoolController extends Controller
             ->pluck('id');
 
         foreach ($teacherIds as $teacherId) {
-         
+
             $username = (string) $teacherId;
 
             $user = DB::table('users')->where('username', $username)->first();
@@ -93,7 +112,6 @@ class SchoolController extends Controller
 
     public function createNewSchool(Request $request)
     {
-
         $validated = $request->validate([
             'school_type' => 'required|string|max:255',
             'email' => 'required|email',
@@ -103,17 +121,43 @@ class SchoolController extends Controller
             'boarding_status' => 'required|string|max:100',
             'name' => 'required|string|max:255',
             'school_product' => 'required',
-            'registration_code' => 'required|string|max:50',
             'phone' => 'required|string|max:20',
             'population' => 'required|string',
         ]);
 
+        $registrationCode = $this->generateSchoolCode();
+
+        $validated['registration_code'] = $registrationCode;
         $validated['added_by'] = Session('LoggedStudent');
         $validated['date_added'] = now();
 
         School::create($validated);
 
-        return response()->json(['success' => true, 'message' => 'School created successfully.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'School created successfully.',
+            'registration_code' => $registrationCode
+        ]);
+    }
+
+    private function generateSchoolCode()
+    {
+        $year = date('Y');
+
+        $lastSchool = School::whereYear('created_at', $year)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($lastSchool) {
+            $lastNumber = (int) substr($lastSchool->registration_code, -4);
+            $newNumber = $lastNumber + 1;
+        } else {
+            $newNumber = 1;
+        }
+
+        $formattedNumber = str_pad($newNumber, 4, '0', STR_PAD_LEFT);
+
+        return "SCH-{$year}-{$formattedNumber}";
     }
 
     public function editSchool($id)
@@ -362,7 +406,7 @@ class SchoolController extends Controller
     public function storeTermDate(Request $request)
     {
         dd($request->all());
-        
+
         $validated = $request->validate([
             'academic_year_id' => 'required|exists:academic_years,id',
             'term' => 'required|string|max:255',
@@ -397,25 +441,5 @@ class SchoolController extends Controller
         $academicTerm->delete();
 
         return response()->json(['message' => 'Term deleted successfully.']);
-    }
-
-    public function selectSchool(Request $request)
-    {
-        $schoolId = $request->input('school_id');
-        $school = School::find($schoolId);
-
-        if (!$school) {
-            return response()->json([
-                'status' => false,
-                'message' => 'School not found.'
-            ]);
-        }
-
-        $request->session()->put('LoggedSchool', $schoolId);
-
-        return response()->json([
-            'status' => true,
-            'message' => "School switched to {$school->name}"
-        ]);
     }
 }
