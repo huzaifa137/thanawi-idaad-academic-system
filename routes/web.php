@@ -322,5 +322,15 @@ Route::controller(GradingController::class)->group(function () {
 
     Route::group(['middleware' => ['StudentAuth']], function () {
 
+        Route::post('/store-created-examination', 'storeCreatedExamination');
+        Route::get('/import-marks', 'importMarks')->name('import.marks');
+        Route::get('/create-examination', 'createExamination')->name('create.examination');
+
+        Route::get('/exam-years', 'getExamYears');
+        Route::get('/exams-by-year/{year}', 'getExamsByYear');
+        Route::get('/active-exams', 'getActiveExams');
+
+        Route::post('/toggle-exam-active', 'toggleExamActive')->name('toggle.exam.active');
+
     });
 });

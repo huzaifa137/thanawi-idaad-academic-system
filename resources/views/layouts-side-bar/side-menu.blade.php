@@ -58,7 +58,7 @@ use App\Helpers\PermissionHelper;
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ route('all.specific.students') }}">
+            <a class="side-menu__item" href="{{ route('create.examination') }}">
                 <i class="fas fa-balance-scale-right fa-2x mr-3"></i>
                 Grading
             </a>

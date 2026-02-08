@@ -39,7 +39,6 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                 <th>School Name</th>
                                 <th>School Code</th>
                                 <th>School Type</th>
-                                <th>School Population</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -63,7 +62,6 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                     <td class="fw-bold">{{ $school->name }}</td>
                                     <td class="fw-bold">{{ $school->registration_code }}</td>
                                     <td class="fw-bold">{{ Helper::recordMdname($school->school_type) }}</td>
-                                    <td class="fw-bold">{{ Helper::recordMdname($school->population) }}</td>
                                     <td>
                                         @php
                                             $status = $statusConfig[$school->school_status]

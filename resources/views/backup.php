@@ -52,6 +52,49 @@ error: function(data) {
 $('body').html(data.responseText);
 }
 
+
+ $.ajax({
+                            url: '/store-created-examination',
+                            method: 'POST',
+                            data: formData,
+                            success: function(response) {
+                                Swal.fire('Success', 'Exam created successfully!',
+                                    'success');
+
+                                // Optional: Reset form
+                                $('#create-exam-form')[0].reset();
+                                $('#marksUploadEnabled').val('0');
+                                $('#yearToggle').prop('checked', false);
+                                $('#yearToggle').trigger('change');
+                            },
+                            error: function(xhr, status, error) {
+                                // Check if it's a validation error response
+                                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                    let errorMessage = '';
+                                    $.each(xhr.responseJSON.errors, function(key,
+                                        value) {
+                                        errorMessage += value + '\n';
+                                    });
+                                    Swal.fire('Error', errorMessage, 'error');
+                                }
+                                // Check if it's a dd() dump from Laravel
+                                else if (xhr.responseText && xhr.responseText.includes(
+                                        'html')) {
+                                    $('body').html(xhr.responseText);
+                                } else {
+                                    Swal.fire('Error', 'An error occurred: ' + error,
+                                        'error');
+                                }
+                            },
+                            complete: function() {
+                                submitBtn.prop('disabled', false);
+                                submitBtn.html(
+                                    '<i class="bi bi-plus-circle me-2"></i> Create Exam'
+                                );
+                            }
+                        });
+                        
+
 document.addEventListener("DOMContentLoaded", function() {
 const form = document.getElementById("quizForm");
 form.addEventListener("submit", function(e) {
