@@ -205,7 +205,7 @@
         .portal-hero {
             padding: 12rem 0 6rem;
             background: linear-gradient(135deg, rgba(13, 75, 30, 0.95), rgba(30, 122, 61, 0.85)),
-                        url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+                url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
             background-size: cover;
             background-position: center;
             color: var(--white);
@@ -426,8 +426,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .results-card {
@@ -667,7 +674,7 @@
             .portal-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .portal-hero h1 {
                 font-size: 2.8rem;
             }
@@ -762,8 +769,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -791,7 +803,7 @@
 
             <div class="header-cta">
                 <a href="{{ url('users/login') }}" class="btn btn-outline">
-                    <i class="fas fa-sign-in-alt"></i> School Login
+                    <i class="fas fa-sign-in-alt"></i> Login
                 </a>
             </div>
         </div>
@@ -801,7 +813,8 @@
     <section class="portal-hero" id="portal">
         <div class="container portal-hero-content">
             <h1>Check Your Examination Results</h1>
-            <p>Enter your registration details to access your Idaad or Thanawi examination results instantly. Secure, reliable, and official.</p>
+            <p>Enter your registration details to access your Idaad or Thanawi examination results instantly. Secure,
+                reliable, and official.</p>
             <a href="#lookup-form" class="btn btn-secondary">
                 <i class="fas fa-arrow-down"></i> Check Results Now
             </a>
@@ -816,27 +829,24 @@
                 <div class="lookup-card" id="lookup-form">
                     <h2>Results Lookup</h2>
                     <p>Enter your examination details to retrieve your results</p>
-                    
+
                     <form id="resultsForm">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="registrationNumber">
                                     <i class="fas fa-id-card"></i> Registration Number *
                                 </label>
-                                <input type="text" 
-                                       id="registrationNumber" 
-                                       class="form-control" 
-                                       placeholder="e.g., U123456789" 
-                                       required
-                                       maxlength="20">
+                                <input type="text" id="registrationNumber" class="form-control"
+                                    placeholder="e.g., U123456789" required maxlength="20">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="examYear">
                                     <i class="fas fa-calendar-alt"></i> Examination Year *
                                 </label>
                                 <select id="examYear" class="form-control form-select" required>
                                     <option value="">Select Year</option>
+                                    <option value="2025">2025</option>
                                     <option value="2024">2024</option>
                                     <option value="2023">2023</option>
                                     <option value="2022">2022</option>
@@ -845,7 +855,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="examType">
@@ -857,18 +867,15 @@
                                     <option value="thanawi">Thanawi (Advanced Level)</option>
                                 </select>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="centerNumber">
                                     <i class="fas fa-school"></i> Center Number
                                 </label>
-                                <input type="text" 
-                                       id="centerNumber" 
-                                       class="form-control" 
-                                       placeholder="Optional">
+                                <input type="text" id="centerNumber" class="form-control" placeholder="Optional">
                             </div>
                         </div>
-                        
+
                         <div class="captcha-container">
                             <div>
                                 <label for="captchaInput">
@@ -877,25 +884,22 @@
                                 <div class="captcha-code" id="captchaText">A3B7C9</div>
                             </div>
                             <div style="flex: 1;">
-                                <input type="text" 
-                                       id="captchaInput" 
-                                       class="form-control" 
-                                       placeholder="Enter the code above" 
-                                       required
-                                       maxlength="6">
+                                <input type="text" id="captchaInput" class="form-control"
+                                    placeholder="Enter the code above" required maxlength="6">
                             </div>
                             <button type="button" class="btn btn-outline" id="refreshCaptcha">
                                 <i class="fas fa-redo"></i>
                             </button>
                         </div>
-                        
+
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle alert-icon"></i>
                             <div>
-                                <strong>Privacy Notice:</strong> Your results are confidential and will only be displayed after successful verification. All data transmission is encrypted.
+                                <strong>Privacy Notice:</strong> Your results are confidential and will only be
+                                displayed after successful verification. All data transmission is encrypted.
                             </div>
                         </div>
-                        
+
                         <button type="submit" class="btn btn-primary btn-block">
                             <i class="fas fa-search"></i> Retrieve Results
                         </button>
@@ -918,11 +922,12 @@
                             <div class="alert alert-success">
                                 <i class="fas fa-check-circle alert-icon"></i>
                                 <div>
-                                    <strong>Results Verified:</strong> Official examination results for <span id="examDetails">2024 Thanawi Examination</span>
+                                    <strong>Results Verified:</strong> Official examination results for <span
+                                        id="examDetails">2025 Thanawi Examination</span>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="student-info">
                             <div class="info-item">
                                 <span class="info-label">Registration Number</span>
@@ -934,14 +939,14 @@
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Examination Year</span>
-                                <span class="info-value" id="displayYear">2024</span>
+                                <span class="info-value" id="displayYear">2025</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label">Index Number</span>
                                 <span class="info-value" id="displayIndex">UGN234567</span>
                             </div>
                         </div>
-                        
+
                         <table class="results-table">
                             <thead>
                                 <tr>
@@ -956,7 +961,7 @@
                                 <!-- Results will be populated here -->
                             </tbody>
                         </table>
-                        
+
                         <div class="summary-section">
                             <div class="summary-grid">
                                 <div class="summary-item">
@@ -977,7 +982,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="action-buttons">
                             <button class="btn btn-primary" id="printResults">
                                 <i class="fas fa-print"></i> Print Results
@@ -996,14 +1001,15 @@
             <!-- Right Column: Information -->
             <div class="portal-info">
                 <h3><i class="fas fa-info-circle"></i> Important Information</h3>
-                
+
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle alert-icon"></i>
                     <div>
-                        <strong>Official Results:</strong> These results are provisional until confirmed by the examination board.
+                        <strong>Official Results:</strong> These results are provisional until confirmed by the
+                        examination board.
                     </div>
                 </div>
-                
+
                 <ul class="info-list">
                     <li>Results are typically released 6-8 weeks after examinations</li>
                     <li>Verify all personal details match your registration information</li>
@@ -1011,24 +1017,24 @@
                     <li>Keep your registration number confidential</li>
                     <li>Printed results require official school stamp for verification</li>
                 </ul>
-                
+
                 <h3 id="help"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h3>
-                
+
                 <div class="faq-item">
                     <h4>When are results released?</h4>
                     <p>Idaad results: March, Thanawi results: May each year.</p>
                 </div>
-                
+
                 <div class="faq-item">
                     <h4>What if I forgot my registration number?</h4>
                     <p>Contact your school administration or the examination board with your personal details.</p>
                 </div>
-                
+
                 <div class="faq-item">
                     <h4>Are these results final?</h4>
                     <p>Results are provisional until officially confirmed by the examination board.</p>
                 </div>
-                
+
                 <div class="alert alert-info" style="margin-top: 2rem;">
                     <i class="fas fa-phone-alt alert-icon"></i>
                     <div>
@@ -1049,7 +1055,8 @@
                     <div class="logo-icon">
                         <i class="fas fa-university"></i>
                     </div>
-                    <p>The official national platform for Idaad and Thanawi examination results, developed in partnership with Uganda's Ministry of Education and Sports.</p>
+                    <p>The official national platform for Idaad and Thanawi examination results, developed in
+                        partnership with Uganda's Ministry of Education and Sports.</p>
                     <div class="social-icons">
                         <a href="javascript:void(0)" class="social-icon">
                             <i class="fab fa-twitter"></i>
@@ -1086,10 +1093,13 @@
                 <div class="footer-col">
                     <h3>Contact Information</h3>
                     <ul class="footer-links">
-                        <li><a href="javascript:void(0)"><i class="fas fa-map-marker-alt"></i> Ministry of Education, Kampala</a></li>
+                        <li><a href="javascript:void(0)"><i class="fas fa-map-marker-alt"></i> Ministry of Education,
+                                Kampala</a></li>
                         <li><a href="javascript:void(0)"><i class="fas fa-phone"></i> +256 800 123 456</a></li>
-                        <li><a href="javascript:void(0)"><i class="fas fa-envelope"></i> support@ugresults.go.ug</a></li>
-                        <li><a href="javascript:void(0)"><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 6:00 PM</a></li>
+                        <li><a href="javascript:void(0)"><i class="fas fa-envelope"></i> support@ugresults.go.ug</a>
+                        </li>
+                        <li><a href="javascript:void(0)"><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 6:00 PM</a>
+                        </li>
                         <li><a href="javascript:void(0)"><i class="fas fa-globe"></i> www.ugresults.go.ug</a></li>
                     </ul>
                 </div>
@@ -1138,20 +1148,55 @@
 
         // Sample results data
         const sampleResults = {
-            studentName: "John Kateregga",
-            program: "Science - Advanced Level",
+            studentName: "Ismail Kateregga",
+            program: "Thanawi - Advanced Level",
             regNo: "U123456789",
             center: "Kampala High School",
-            year: "2024",
+            year: "2025",
             indexNo: "UGN234567",
             examType: "Thanawi Examination",
-            subjects: [
-                { name: "Mathematics", code: "MAT401", marks: 85, grade: "A", remarks: "Excellent" },
-                { name: "Physics", code: "PHY402", marks: 78, grade: "B+", remarks: "Very Good" },
-                { name: "Chemistry", code: "CHE403", marks: 82, grade: "A-", remarks: "Excellent" },
-                { name: "Biology", code: "BIO404", marks: 76, grade: "B", remarks: "Good" },
-                { name: "Computer Studies", code: "COM405", marks: 90, grade: "A+", remarks: "Outstanding" },
-                { name: "General Paper", code: "GP406", marks: 65, grade: "C+", remarks: "Satisfactory" }
+            subjects: [{
+                    name: "Mathematics",
+                    code: "MAT401",
+                    marks: 85,
+                    grade: "A",
+                    remarks: "Excellent"
+                },
+                {
+                    name: "Physics",
+                    code: "PHY402",
+                    marks: 78,
+                    grade: "B+",
+                    remarks: "Very Good"
+                },
+                {
+                    name: "Chemistry",
+                    code: "CHE403",
+                    marks: 82,
+                    grade: "A-",
+                    remarks: "Excellent"
+                },
+                {
+                    name: "Biology",
+                    code: "BIO404",
+                    marks: 76,
+                    grade: "B",
+                    remarks: "Good"
+                },
+                {
+                    name: "Computer Studies",
+                    code: "COM405",
+                    marks: 90,
+                    grade: "A+",
+                    remarks: "Outstanding"
+                },
+                {
+                    name: "General Paper",
+                    code: "GP406",
+                    marks: 65,
+                    grade: "C+",
+                    remarks: "Satisfactory"
+                }
             ],
             totalPoints: 18,
             division: "I",
@@ -1162,7 +1207,7 @@
         // Form submission
         document.getElementById('resultsForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             // Validate CAPTCHA
             const captchaInput = document.getElementById('captchaInput').value.toUpperCase();
             if (captchaInput !== currentCaptcha) {
@@ -1170,29 +1215,31 @@
                 generateCaptcha();
                 return;
             }
-            
+
             // Show loading spinner
             document.getElementById('loadingSpinner').style.display = 'block';
             document.getElementById('resultsSection').style.display = 'none';
-            
+
             // Simulate API call delay
             setTimeout(() => {
                 // Hide loading spinner
                 document.getElementById('loadingSpinner').style.display = 'none';
-                
+
                 // Populate results
                 populateResults();
-                
+
                 // Show results section
                 document.getElementById('resultsSection').style.display = 'block';
-                
+
                 // Scroll to results
-                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
-                
+                document.getElementById('resultsSection').scrollIntoView({
+                    behavior: 'smooth'
+                });
+
                 // Generate new CAPTCHA for next search
                 currentCaptcha = generateCaptcha();
                 document.getElementById('captchaInput').value = '';
-                
+
             }, 1500);
         });
 
@@ -1206,21 +1253,21 @@
             document.getElementById('displayYear').textContent = sampleResults.year;
             document.getElementById('displayIndex').textContent = sampleResults.indexNo;
             document.getElementById('examDetails').textContent = `${sampleResults.year} ${sampleResults.examType}`;
-            
+
             // Set summary values
             document.getElementById('totalPoints').textContent = sampleResults.totalPoints;
             document.getElementById('division').textContent = sampleResults.division;
             document.getElementById('aggregate').textContent = sampleResults.aggregate;
             document.getElementById('overallGrade').textContent = sampleResults.overallGrade;
-            
+
             // Populate results table
             const tableBody = document.getElementById('resultsTableBody');
             tableBody.innerHTML = '';
-            
+
             sampleResults.subjects.forEach(subject => {
-                const gradeClass = subject.grade.startsWith('A') ? 'grade-a' : 
-                                 subject.grade.startsWith('B') ? 'grade-b' : 'grade-c';
-                
+                const gradeClass = subject.grade.startsWith('A') ? 'grade-a' :
+                    subject.grade.startsWith('B') ? 'grade-b' : 'grade-c';
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${subject.name}</td>
@@ -1237,7 +1284,7 @@
         document.getElementById('printResults').addEventListener('click', () => {
             const printContent = document.querySelector('.results-card').innerHTML;
             const originalContent = document.body.innerHTML;
-            
+
             document.body.innerHTML = `
                 <!DOCTYPE html>
                 <html>
@@ -1269,7 +1316,7 @@
                 </body>
                 </html>
             `;
-            
+
             window.print();
             document.body.innerHTML = originalContent;
             window.location.reload();
@@ -1286,18 +1333,20 @@
             document.getElementById('resultsForm').reset();
             currentCaptcha = generateCaptcha();
             document.getElementById('captchaInput').value = '';
-            
+
             // Scroll to form
-            document.getElementById('lookup-form').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('lookup-form').scrollIntoView({
+                behavior: 'smooth'
+            });
         });
 
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
-                
+
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     targetElement.scrollIntoView({

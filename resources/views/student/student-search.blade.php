@@ -29,9 +29,9 @@ use App\Http\Controllers\Helper;
                                 <select id="search_criteria" class="form-control">
                                     <option value="" selected disabled>Select...</option>
                                     <option value="admission_number">Admission Number</option>
-                                    <option value="name">Name & Class</option>
+                                    {{-- <option value="name">Name & Class</option> --}}
                                     <option value="phone">Phone Number</option>
-                                    <option value="student_id">Student ID</option>
+                                    {{-- <option value="student_id">Student ID</option> --}}
                                 </select>
                             </div>
 

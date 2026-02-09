@@ -23,9 +23,8 @@ $controller = new Controller();
                 <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0 text-white">Update User</h4>
-                        <a href="{{ route('add-users')}}" class="btn btn-info">
-                            <i class="fas fa-chalkboard-teacher"></i> All Users
-                        </a>
+                        <a href="{{ route('add-users')}}" class="btn text-white" style="background-color: #287C44;">
+                            <i class="fas fa-edit"></i> Edit User</a>
                     </div>
                     <div class="card-body bg-light">
 
@@ -40,29 +39,29 @@ $controller = new Controller();
                                             placeholder="Enter username" value="{{ old('username', $teacher->username) }}">
                                     </div>
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label class="form-label" for="firstname">Firstname</label>
                                         <input type="text" id="firstname" name="firstname" class="form-control"
                                             placeholder="Enter firstname"
-                                            value="{{ old('firstname', $teacher->firstname) }}">
-                                    </div>
+                                            value="{{ old('firstname', @$teacher->firstname) }}">
+                                    </div> --}}
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label class="form-label" for="phonenumber">Phone Number</label>
                                         <input type="tel" id="phonenumber" name="phonenumber" class="form-control"
                                             placeholder="Enter phone number"
-                                            value="{{ old('phonenumber', $teacher->phonenumber) }}">
-                                    </div>
+                                            value="{{ old('phonenumber', @$teacher->phonenumber) }}">
+                                    </div> --}}
                                 </div>
 
                                 <div class="col-lg-6 col-md-12">
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label class="form-label" for="gender">Gender</label>
                                         <select id="gender" name="gender" class="form-control">
-                                            <option value="male" {{ old('gender', $teacher->gender) === 'male' ? 'selected' : '' }}>Male</option>
-                                            <option value="female" {{ old('gender', $teacher->gender) === 'female' ? 'selected' : '' }}>Female</option>
+                                            <option value="male" {{ old('gender', @$teacher->gender) === 'male' ? 'selected' : '' }}>Male</option>
+                                            <option value="female" {{ old('gender', @$teacher->gender) === 'female' ? 'selected' : '' }}>Female</option>
                                         </select>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="form-group">
                                         <label class="form-label" for="email">Email</label>
@@ -71,7 +70,7 @@ $controller = new Controller();
                                     </div>
                                 </div>
 
-                                <div class="col-lg-12 col-md-12">
+                                {{-- <div class="col-lg-12 col-md-12">
                                     <div class="form-group mt-3">
                                         <label class="form-label">Attached Roles</label>
                                         <div class="row">
@@ -90,10 +89,10 @@ $controller = new Controller();
                                             @endforeach
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
-                            <div class="mt-4 text-left">
+                            <div class="text-left">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-paper-plane"></i> Update
                                 </button>
@@ -123,7 +122,7 @@ $controller = new Controller();
 
                 $form.find('.form-control, select').removeClass('is-invalid');
 
-                const requiredFields = ['username', 'firstname', 'phonenumber', 'email'];
+                const requiredFields = ['username', 'email'];
 
                 requiredFields.forEach(function (field) {
                     let input = $form.find(`[name="${field}"]`);

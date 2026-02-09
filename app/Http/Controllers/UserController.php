@@ -13,28 +13,6 @@ use Session;
 
 class UserController extends Controller
 {
-    public static $page = "USERS";
-
-    public static function links()
-    {
-        return $links = [
-            [
-                "link_name" => "Register new user",
-                "link_address" => "users/users-register",
-                "link_icon" => "fa-calendar",
-                "link_page" => self::$page,
-                "link_right" => "V",
-            ],
-            [
-                "link_name" => "View users information",
-                "link_address" => "users/users-information",
-                "link_icon" => "fa-search",
-                "link_page" => self::$page,
-                "link_right" => "V",
-            ],
-        ];
-    }
-
     public function createNewPassword($id)
     {
         $generated_id = url('password/reset/' . $id);

@@ -331,6 +331,8 @@ Route::controller(GradingController::class)->group(function () {
         Route::get('/active-exams', 'getActiveExams');
 
         Route::post('/toggle-exam-active', 'toggleExamActive')->name('toggle.exam.active');
+        Route::post('/import/thanawi-results', 'importThanawiResults')->name('import.thanawi');
+        Route::post('/import/idaad-results', 'importIdaadResults')->name('import.idaad');
 
     });
 });

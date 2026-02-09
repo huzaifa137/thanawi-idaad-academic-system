@@ -398,10 +398,6 @@ class UserRightsAndPreviledges extends Controller
     {
         $validated = $request->validate([
             'username' => 'required|string|max:255',
-            'firstname' => 'required|string|max:255',
-            'othername' => 'nullable|string|max:255',
-            'phonenumber' => 'required|string|max:20',
-            'gender' => 'nullable|in:male,female',
             'email' => 'required|email',
             'user_id' => 'required|exists:users,id',
         ]);

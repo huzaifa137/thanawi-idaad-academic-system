@@ -50,12 +50,12 @@ use App\Helpers\PermissionHelper;
             </a>
         </li> --}}
 
-        <li class="slide">
+        {{-- <li class="slide">
             <a class="side-menu__item" href="{{ route('all.specific.students') }}">
                 <i class="fa fa-scroll fa-2x mr-3"></i>
                 Exams
             </a>
-        </li>
+        </li> --}}
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('create.examination') }}">

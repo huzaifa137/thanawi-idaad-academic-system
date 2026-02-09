@@ -90,7 +90,7 @@ use App\Http\Controllers\Helper;
             <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
                 <div class="card bg-primary">
                     <div class="card-header">
-                        @include('layouts.exam-buttons')
+                        @include('layouts.grading-buttons')
                     </div>
                 </div>
             </div>

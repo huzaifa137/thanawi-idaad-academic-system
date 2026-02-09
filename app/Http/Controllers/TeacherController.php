@@ -99,7 +99,7 @@ class TeacherController extends Controller
                 $message->to($data['email'], $data['email'])->subject($data['title']);
             });
         }
-        
+
         return response()->json(['message' => 'Teacher added successfully']);
     }
 
@@ -126,35 +126,11 @@ class TeacherController extends Controller
         $userModel = User::find($id);
         $userRoles = $userModel ? $userModel->roles->pluck('id')->toArray() : [];
 
-        if ($user->user_role == 5) {
+        $teacher = DB::table('users')
+            ->where('id', $id)
+            ->first();
 
-            if (Session::has('LoggedSchool') && Session::get('LoggedSchool') !== null) {
-
-                $teacher = DB::table('teachers')
-                    ->where('id', $user->username)
-                    ->first();
-
-                $school_id = Session('LoggedSchool');
-
-                if ($teacher) {
-                    return view('Teacher.update-teacher-profile', compact('teacher', 'school_id'));
-                } else {
-                    return redirect()->route('student.dashboard')->with('error', 'No Profile Information Found');
-                }
-
-            } else {
-
-                return redirect()->route('student.dashboard')->with('error', 'No School has been selected');
-            }
-
-        } elseif ($user->user_role == 0) {
-
-            $teacher = DB::table('users')
-                ->where('id', $id)
-                ->first();
-
-            return view('Users.update-user-info', compact('teacher', 'roles', 'userRoles'));
-        }
+        return view('Users.update-user-info', compact('teacher', 'roles', 'userRoles'));
     }
 
     public function storeUpdatedTeacherProfile(Request $request, Teacher $teacher)

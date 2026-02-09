@@ -27,8 +27,8 @@
                         </svg>
                     </a>
                     <a class="close-toggle" href="#">
-                        <svg class="header-icon mt-1" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
-                            width="24">
+                        <svg class="header-icon mt-1" xmlns="http://www.w3.org/2000/svg" height="24"
+                            viewBox="0 0 24 24" width="24">
                             <path d="M0 0h24v24H0V0z" fill="none" />
                             <path
                                 d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
@@ -40,10 +40,10 @@
             <div class="d-flex order-lg-2 ml-auto">
                 <div class="display-name">
                     <span style="line-height:40px;">
-                        Name :
-                        <span class="text-primary font-weight-bold">
-                            {{ Helper::logged_admin_user(Session('LoggedStudent')) ?: Helper::logged_admin_user(Session('LoggedStudent')) }}
-                        </span>
+                            Role :
+                            <span class="text-primary font-weight-bold">
+                                {{ Helper::logged_admin_user() }}
+                            </span>
                     </span>
                 </div>
                 <div class="dropdown profile-dropdown">
@@ -77,7 +77,7 @@
 
                         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                         <script>
-                            document.getElementById('logoutLink').addEventListener('click', function (event) {
+                            document.getElementById('logoutLink').addEventListener('click', function(event) {
                                 event.preventDefault();
 
                                 Swal.fire({

@@ -142,7 +142,6 @@ use App\Http\Controllers\Helper;
                                     </div>
                                 </div>
                             </div>
-
                         @endforeach
 
 

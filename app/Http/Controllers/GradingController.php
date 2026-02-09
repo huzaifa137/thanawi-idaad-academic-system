@@ -5,27 +5,53 @@ namespace App\Http\Controllers;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentExamImport;
 use App\Models\AnnualExamination;
-use App\Models\CreatedExam;
 use App\Models\Exam;
 use App\Models\MasterData;
 use Illuminate\Http\Request;
 use App\Models\AcademicYear;
 use App\Models\TermDate;
+use App\Models\Student;
 
 class GradingController extends Controller
 {
     public function importMarks()
     {
-        $activeYear = Helper::active_year();
+        $students = Student::with('school')
+            ->fromSub(function ($query) {
+                $query->from('students')
+                    ->select('*')
+                    ->selectRaw(
+                        'ROW_NUMBER() OVER (
+                    PARTITION BY school_id
+                    ORDER BY id
+                ) as row_num'
+                    );
+            }, 'students')
+            ->where('row_num', '<=', 1)
+            ->orderBy('school_id')
+            ->orderBy('id')
+            ->get();
 
-        $exams = CreatedExam::where('ce_exam_year', $activeYear)
-            ->where('ce_exam_status', 0)
-            ->orderBy('ce_term')
-            ->orderBy('ce_date_created', 'desc')
-            ->get()
-            ->groupBy('ce_term');
+        $groupedStudents = $students->groupBy(function ($student) {
+            return $student->school->name;
+        });
 
-        return view('Grading.import-marks', compact('exams', 'activeYear'));
+        $thanawiPapers = MasterData::where(
+            'md_master_code_id',
+            config('constants.options.ThanawiPapers')
+        )->get();
+
+        $idaadPapers = MasterData::where(
+            'md_master_code_id',
+            config('constants.options.IdaadPapers')
+        )->get();
+
+
+        return view('Grading.import-marks', compact(
+            'groupedStudents',
+            'thanawiPapers',
+            'idaadPapers'
+        ));
     }
 
     public function createExamination()
@@ -200,4 +226,13 @@ class GradingController extends Controller
         return response()->json($activeExams);
     }
 
+    public function importIdaadResults(Request $request)
+    {
+        dd($request->all());
+    }
+
+    public function importThanawiResults(Request $request)
+    {
+        dd($request->all());
+    }
 }

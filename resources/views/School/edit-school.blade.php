@@ -20,7 +20,7 @@ $controller = new Controller();
                 <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0 text-white">Edit School Information</h4>
-                        <a href="{{ route('school.allSchools') }}" class="btn btn-info">
+                        <a href="{{ route('school.allSchools') }}" class="btn text-white" style="background-color: #287C44;">
                             <i class="fas fa-school me-2"></i> All Schools
                         </a>
                     </div>

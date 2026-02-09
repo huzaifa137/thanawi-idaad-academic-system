@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use DB;
 use Session;
+use App\Models\User;
+use App\Models\Student;
 use App\Models\AcademicYear;
 
 class Helper extends Controller
@@ -12,30 +14,19 @@ class Helper extends Controller
         return $user = Session::get('LoggedAdmin');
     }
 
-    public static function logged_admin_user($user = "")
+    public static function logged_admin_user()
     {
-        $user = (int) $user;
-
-        $admin = DB::table('users')
-            ->where('id', $user)
-            ->first();
-
-        if (Session('LoggedStudent')) {
-
-            if (@$admin->user_role == 5) {
-
-                $teacher = DB::table('teachers')
-                    ->where('id', @$admin->username)
-                    ->first();
-
-                return $teacher ? trim(@$teacher->surname) : null;
-
-            } elseif (@$admin->user_role == 0) {
-
-                return $admin ? trim(@$admin->username) : null;
-
-            }
+        if (Session::has('LoggedAdmin')) {
+            return User::where('id', Session::get('LoggedAdmin'))
+                ->value('name');
         }
+
+        if (Session::has('LoggedStudent')) {
+            return User::where('id', Session::get('LoggedStudent'))
+                ->value('name');
+        }
+
+        return 'Guest';
     }
 
     public static function student_username($user = "")
@@ -273,7 +264,10 @@ class Helper extends Controller
         return $activeYear ?? 'No Active year Set';
     }
 
-
+    public static function schoolStudentsCount($school_id)
+    {
+        return Student::where('school_id', $school_id)->count();
+    }
 
     public static function db_item_from_column($db_table, $item_id, $item_column)
     {

@@ -304,8 +304,19 @@ class StudentController extends Controller
     public function allStudents()
     {
         $students = Student::with('school')
+            ->fromSub(function ($query) {
+                $query->from('students')
+                    ->select('*')
+                    ->selectRaw(
+                        'ROW_NUMBER() OVER (
+                    PARTITION BY school_id
+                    ORDER BY senior DESC, stream
+                ) as row_num'
+                    );
+            }, 'students')
+            ->where('row_num', '<=', 3)
             ->orderBy('school_id')
-            ->orderBy('senior')
+            ->orderBy('senior', 'desc')
             ->orderBy('stream')
             ->get();
 
