@@ -47,6 +47,7 @@
 </div>
 @endif
 
+class="btn text-white" style="background-color: #287C44;"
 
 error: function(data) {
 $('body').html(data.responseText);

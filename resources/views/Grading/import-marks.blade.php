@@ -391,23 +391,25 @@ use App\Http\Controllers\Helper;
 
                             <div class="modal-header bg-primary text-white">
                                 <h5 class="modal-title d-flex align-items-center" id="importThanawiModalLabel">
-                                    <i class="fas fa-file-import me-2"></i>
+                                    <i class="fas fa-file-import" style="margin-right: 5px;"></i>
                                     <span>Import Thanawi Exam Results</span>
                                 </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
 
                             <div class="modal-body p-4">
                                 <div class="alert alert-info border-0 bg-light-info d-flex align-items-center mb-4"
                                     role="alert">
-                                    <i class="fas fa-info-circle me-3 fs-4 text-info"></i>
+                                    <i class="fas fa-info-circle mr-2 text-info" style="font-size: 1.25rem;"></i>
                                     <div>
-                                        <small class="text-uppercase fw-bold d-block">Instructions</small>
+                                        <small class="text-uppercase font-weight-bold d-block">Instructions</small>
                                         Upload Excel file containing Thanawi exam results. Ensure the file follows the
                                         required format.
                                     </div>
                                 </div>
+
 
                                 <div class="mb-4">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -493,23 +495,25 @@ use App\Http\Controllers\Helper;
 
                             <div class="modal-header bg-info text-white">
                                 <h5 class="modal-title d-flex align-items-center" id="importIdaadModalLabel">
-                                    <i class="fas fa-file-import me-2"></i>
+                                    <i class="fas fa-file-import me-2" style="margin-right:5px;"></i>
                                     <span>Import Idaad Exam Results</span>
                                 </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
 
                             <div class="modal-body p-4">
                                 <div class="alert alert-info border-0 bg-light-info d-flex align-items-center mb-4"
                                     role="alert">
-                                    <i class="fas fa-info-circle me-3 fs-4 text-info"></i>
+                                    <i class="fas fa-info-circle mr-2 text-info" style="font-size: 1.25rem;"></i>
                                     <div>
-                                        <small class="text-uppercase fw-bold d-block">Instructions</small>
+                                        <small class="text-uppercase font-weight-bold d-block">Instructions</small>
                                         Upload Excel file containing Idaad exam results. Ensure the file follows the
                                         required format.
                                     </div>
                                 </div>
+
 
                                 <div class="mb-4">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -590,6 +594,7 @@ use App\Http\Controllers\Helper;
                         </form>
                     </div>
                 </div>
+
 
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {

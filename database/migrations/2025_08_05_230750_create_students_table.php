@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('lastname');
             $table->string('senior');
             $table->string('stream');
-            $table->string('registration_number')->unique();
+            $table->string('registration_number')->nullable()->unique();
             $table->enum('gender', ['Male', 'Female', 'Other']);
             $table->bigInteger('school_id');
 

@@ -37,6 +37,7 @@ return [
         'ThanawiPapers' => 20,
         'IdaadPapers' => 21,
         'ExaminationName' => 22,
+
     ],
 ];
 

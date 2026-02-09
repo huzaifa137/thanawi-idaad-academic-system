@@ -53,12 +53,12 @@ use App\Http\Controllers\Helper;
                                         <div class="button-group">
                                             <a href="{{ route('students.export', ['schoolId' => $students->first()->school_id, 'type' => 'thanawi']) }}"
                                                 class="btn text-white export-btn" style="background-color: #287C44;">
-                                                <i class="fas fa-file-export me-2"></i> Export Thanawi Exams
+                                                <i class="fas fa-file-export me-2"></i> Export Thanawi Class
                                             </a>
 
                                             <a href="{{ route('students.export', ['schoolId' => $students->first()->school_id, 'type' => 'idaad']) }}"
                                                 class="btn text-white export-btn" style="background-color: #287C44;">
-                                                <i class="fas fa-file-export me-2"></i> Export Idaad Exams
+                                                <i class="fas fa-file-export me-2"></i> Export Idaad Class
                                             </a>
                                         </div>
                                     </div>

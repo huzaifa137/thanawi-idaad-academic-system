@@ -57,26 +57,15 @@ class GradingController extends Controller
     public function createExamination()
     {
         // Admin
-        $school_id = session('LoggedSchool');
-
-        if (!$school_id) {
-            return redirect()->route('student.dashboard')
-                ->with('error', 'Please select a school to proceed.');
-        }
-
         $activeYear = AcademicYear::orderBy('id', 'desc')
             ->where('is_active', 1)
             ->value('name');
-
-        $termDates = TermDate::where('school_id', $school_id)
-            ->orderBy('term', 'asc')
-            ->get();
 
         $schools = MasterData::where('md_master_code_id', config('constants.options.SCHOOL_TERMS'))->get();
 
         return view(
             'Grading.create-examination',
-            compact('activeYear', 'termDates')
+            compact('activeYear')
         );
     }
 

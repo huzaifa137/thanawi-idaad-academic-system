@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\Helper; 
+use App\Http\Controllers\Helper;
 ?>
 @extends('layouts-side-bar.master')
 @section('content')
@@ -120,13 +120,16 @@ use App\Http\Controllers\Helper;
                                                 <div class="form-group">
                                                     <label>Class</label>
 
-                                                    <select name="senior" id="edit_senior" class="form-control" disabled>
+                                                    <select class="form-control select2" id="edit_senior"
+                                                        name="edit_senior">
+                                                        <option value="">-- Select --</option>
                                                         @foreach ($classRecord as $class)
-                                                            <option value="{{ $class->class_name }}">
-                                                                {{ Helper::recordMdname($class->class_name) }}
+                                                            <option value="{{ $class->md_id }}">
+                                                                {{ $class->md_name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
+
                                                 </div>
 
                                                 <div class="form-group">
@@ -207,8 +210,8 @@ use App\Http\Controllers\Helper;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('#createStudentForm').on('submit', function (e) {
+        $(document).ready(function() {
+            $('#createStudentForm').on('submit', function(e) {
                 e.preventDefault();
 
                 let $form = $(this);
@@ -260,17 +263,17 @@ use App\Http\Controllers\Helper;
                 $submitBtn.prop('disabled', true).html('Saving... <i class="fas fa-spinner fa-spin"></i>');
 
                 $.ajax({
-                    url: '{{ route("students.store") }}',
+                    url: '{{ route('students.store') }}',
                     method: 'POST',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    success: function (response) {
+                    success: function(response) {
                         Swal.fire('Success!', response.message, 'success');
                         $form[0].reset();
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         if (xhr.status === 422) {
                             let errors = xhr.responseJSON.errors;
                             for (let field in errors) {
@@ -288,14 +291,15 @@ use App\Http\Controllers\Helper;
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Server Error',
-                                text: xhr.responseJSON?.message || 'An unexpected error occurred.'
+                                text: xhr.responseJSON?.message ||
+                                    'An unexpected error occurred.'
                             });
                         }
                     },
                     // error: function (data) {
                     //     $('body').html(data.responseText);
                     // },
-                    complete: function () {
+                    complete: function() {
                         $submitBtn.prop('disabled', false).html(originalHtml);
                     }
                 });
@@ -303,15 +307,15 @@ use App\Http\Controllers\Helper;
         });
 
 
-        $(document).ready(function () {
-           
-            $('.btn-edit-student').on('click', function () {
+        $(document).ready(function() {
+
+            $('.btn-edit-student').on('click', function() {
                 const studentId = $(this).data('id');
 
                 $.ajax({
                     url: "{{ url('/students/Information') }}/" + studentId,
                     method: 'GET',
-                    success: function (student) {
+                    success: function(student) {
                         $('#edit_student_id').val(student.id);
                         $('#edit_firstname').val(student.firstname);
                         $('#edit_lastname').val(student.lastname);
@@ -328,7 +332,7 @@ use App\Http\Controllers\Helper;
 
                         $('#editStudentModal').modal('show');
                     },
-                    error: function (data) {
+                    error: function(data) {
                         $('body').html(data.responseText);
                     }
                 });
@@ -336,66 +340,91 @@ use App\Http\Controllers\Helper;
 
 
             // Submit update
-            $('#updateStudentForm').on('submit', function (e) {
+            $('#updateStudentForm').on('submit', function(e) {
                 e.preventDefault();
 
                 const studentId = $('#edit_student_id').val();
                 const formData = $(this).serialize();
 
-                $.ajax({
-                    url: "{{ url('/students/update') }}/" + studentId,
-                    type: 'POST',
-                    data: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'X-HTTP-Method-Override': 'PUT'
-                    },
-                    success: function (response) {
-                        Swal.fire('Success', response.message || 'Student updated successfully', 'success');
-                        $('#editStudentModal').modal('hide');
-                        location.reload(); 
-                    },
-                    error: function (xhr) {
-                        let errorText = 'Something went wrong';
-                        if (xhr.status === 422 && xhr.responseJSON.errors) {
-                            errorText = Object.values(xhr.responseJSON.errors).join('<br>');
-                        }
+                Swal.fire({
+                    title: 'Confirm Update',
+                    text: 'Are you sure you want to update this student?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, update',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true
+                }).then((result) => {
 
-                        Swal.fire({
-                            title: 'Error',
-                            html: errorText,
-                            icon: 'error',
-                            didOpen: () => {
-                                const swalEl = Swal.getPopup();
-                                swalEl.style.zIndex = parseInt($('.modal').css('z-index')) + 10;
+                    if (!result.isConfirmed) return;
+
+                    $.ajax({
+                        url: "{{ url('/students/update') }}/" + studentId,
+                        type: 'POST',
+                        data: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-HTTP-Method-Override': 'PUT'
+                        },
+                        success: function(response) {
+
+                            Swal.fire({
+                                title: 'Success',
+                                text: response.message ||
+                                    'Student updated successfully',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                $('#editStudentModal').modal('hide');
+                                location.reload();
+                            });
+
+                        },
+                        error: function(xhr) {
+                            let errorText = 'Something went wrong';
+
+                            if (xhr.status === 422 && xhr.responseJSON.errors) {
+                                errorText = Object.values(xhr.responseJSON.errors).join(
+                                    '<br>');
                             }
-                        });
-                    }
-                    // error: function (data) {
-                    //     $('body').html(data.responseText);
-                    // }
+
+                            Swal.fire({
+                                title: 'Error',
+                                html: errorText,
+                                icon: 'error',
+                                didOpen: () => {
+                                    const swalEl = Swal.getPopup();
+                                    swalEl.style.zIndex =
+                                        parseInt($('.modal').css(
+                                        'z-index')) + 10;
+                                }
+                            });
+                        }
+                    });
+
                 });
             });
+
         });
     </script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             var table = $('#schoolsTable').DataTable({
-                responsive: false, 
+                responsive: false,
                 pageLength: 10,
                 order: [
                     [0, 'asc']
                 ],
-                dom: 'frtip', 
+                dom: 'frtip',
                 columnDefs: [{
-                    orderable: false,
-                    targets: [1, 4, 5] 
-                },
-                {
-                    className: 'text-center',
-                    targets: '_all'
-                }
+                        orderable: false,
+                        targets: [1, 4, 5]
+                    },
+                    {
+                        className: 'text-center',
+                        targets: '_all'
+                    }
                 ],
                 language: {
                     search: "_INPUT_",
@@ -403,12 +432,10 @@ use App\Http\Controllers\Helper;
                 }
             });
         });
-
     </script>
 @endsection
 
 @section('js')
-
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
@@ -423,7 +450,5 @@ use App\Http\Controllers\Helper;
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
-    <script>
-
-    </script>
+    <script></script>
 @endsection

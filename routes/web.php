@@ -269,29 +269,31 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
     Route::controller(StudentController::class)->prefix('students')->group(function () {
 
-        Route::get('students-dashboard', 'studentPortal')->name('all.students.dashboard');
-        Route::get('update-profile', action: 'updateProfiles')->name('students.update.profile');
-        // Route::get('update-photo', 'updatePhoto')->name('students.update.photo');
-        // Route::post('upload-fees', 'uploadFees')->name('students.upload.fees');
-        Route::get('/search', 'searchStudent')->name('students.individual.search');
-        Route::get('/all-students', 'allStudents')->name('students.all.students');
-        Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
+        Route::group(['middleware' => ['StudentAuth']], function () {
 
-        Route::get('/export/{schoolId}/{type}', 'exportStudents')
-            ->name('students.export');
+            Route::get('students-dashboard', 'studentPortal')->name('all.students.dashboard');
+            Route::get('update-profile', action: 'updateProfiles')->name('students.update.profile');
+            // Route::get('update-photo', 'updatePhoto')->name('students.update.photo');
+            // Route::post('upload-fees', 'uploadFees')->name('students.upload.fees');
+            Route::get('/search', 'searchStudent')->name('students.individual.search');
+            Route::get('/all-students', 'allStudents')->name('students.all.students');
+            Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
 
-        Route::get('/students/{student}/edit', 'edit')->name('students.edit');
+            Route::get('/export/{schoolId}/{type}', 'exportStudents')
+                ->name('students.export');
 
-        Route::get('/Information/{id}', 'showStudentInformation');
-        Route::put('/update/{id}', 'updateStudentInformation');
-        Route::post('/students/store', 'storeStudent')->name('students.store');
+            Route::get('/students/{student}/edit', 'edit')->name('students.edit');
 
-        Route::get('/transfer-form', 'moveStudentForm')->name('students.transfer');
+            Route::get('/Information/{id}', 'showStudentInformation');
+            Route::put('/update/{id}', 'updateStudentInformation');
+            Route::post('/students/store', 'storeStudent')->name('students.store');
 
-        Route::get('/streams/by-class', 'getStreamsByClass')->name('streams.by.class');
-        Route::get('/students/search', 'searchStudentsByClassStream')->name('students.search');
-        Route::post('/students/move', 'moveStudent')->name('students.move');
+            Route::get('/transfer-form', 'moveStudentForm')->name('students.transfer');
 
+            Route::get('/streams/by-class', 'getStreamsByClass')->name('streams.by.class');
+            Route::get('/students/search', 'searchStudentsByClassStream')->name('students.search');
+            Route::post('/students/move', 'moveStudent')->name('students.move');
+        });
     });
 });
 

@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\Helper; 
+use App\Http\Controllers\Helper;
 ?>
 @extends('layouts-side-bar.master')
 @section('content')
@@ -20,13 +20,12 @@ use App\Http\Controllers\Helper;
                 <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0 text-white">Add Student</h4>
-                        <a href="#" class="btn btn-info">
-                            <i class="fas fa-users"></i> All Students
+                        <a href="{{ url('students/all-students') }}" class="btn text-white" style="background-color: #287C44;">
+                            <i class="fas fa-users text-white"></i> All Students
                         </a>
                     </div>
                     <div class="card-body bg-light">
                         <form id="createStudentForm">
-                            <input type="hidden" name="school_id" value="{{ $school_id }}">
 
                             <div class="row">
                                 <!-- Left column -->
@@ -47,22 +46,18 @@ use App\Http\Controllers\Helper;
                                         <select class="form-control select2" id="senior" name="senior">
                                             <option value="">-- Select --</option>
                                             @foreach ($classRecord as $class)
-                                                <option value="{{ $class->class_name }}">
-                                                    {{ Helper::recordMdname($class->class_name) }}</option>
+                                                <option value="{{ $class->md_name }}">
+                                                    {{ $class->md_name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Stream <span style="color: red;">(*)</span></label>
-
-                                        <select class="form-control select2" id="stream" name="stream">
-                                            <option value="">-- Select --</option>
-                                            @foreach ($StreamRecord as $stream)
-                                                <option value="{{ $stream->stream_id }}">
-                                                    {{ Helper::recordMdname($stream->stream_id) }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" class="form-control" id="stream" name="stream"
+                                            placeholder="Enter stream" value="{{ old('stream') }}">
                                     </div>
+
                                     <div class="form-group">
                                         <label>Gender <span style="color: red;">(*)</span> </label>
                                         <select name="gender" class="form-control">
@@ -118,9 +113,19 @@ use App\Http\Controllers\Helper;
                                             placeholder="Enter UCE score">
                                     </div>
                                     <div class="form-group">
-                                        <label>Previous School</label>
-                                        <input type="text" name="previous_school" class="form-control">
+                                        <label>School <span style="color: red;">(*)</span></label>
+                                        <select name="school_id" id="school_id" class="form-control select2">
+                                            <option value="">-- Select School --</option>
+
+                                            @foreach ($schools as $school)
+                                                <option value="{{ $school->id }}"
+                                                    {{ $school->id == $school_id ? 'selected' : '' }}>
+                                                    {{ $school->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
+
                                     <div class="form-group">
                                         <label>Primary School Name</label>
                                         <input type="text" name="primary_school_name" class="form-control">
@@ -162,7 +167,7 @@ use App\Http\Controllers\Helper;
                             </div>
 
                             <div class="mt-4 text-left">
-                                <button type="submit" class="btn btn-success">
+                                <button type="submit" class="btn text-white" style="background-color: #287C44;">
                                     <i class="fas fa-paper-plane"></i> Submit
                                 </button>
                             </div>
@@ -183,8 +188,8 @@ use App\Http\Controllers\Helper;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('#createStudentForm').on('submit', function (e) {
+        $(document).ready(function() {
+            $('#createStudentForm').on('submit', function(e) {
                 e.preventDefault();
 
                 let $form = $(this);
@@ -195,7 +200,7 @@ use App\Http\Controllers\Helper;
                 $form.find('.invalid-feedback').remove();
 
                 // Basic required fields
-                let requiredFields = ['firstname', 'lastname', 'senior', 'stream', 'gender'];
+                let requiredFields = ['firstname', 'lastname', 'gender', 'school_id', 'senior', 'stream'];
 
                 requiredFields.forEach(field => {
                     let input = $form.find(`[name="${field}"]`);
@@ -236,42 +241,43 @@ use App\Http\Controllers\Helper;
                 $submitBtn.prop('disabled', true).html('Saving... <i class="fas fa-spinner fa-spin"></i>');
 
                 $.ajax({
-                    url: '{{ route("students.store") }}',
+                    url: '{{ route('students.store') }}',
                     method: 'POST',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    success: function (response) {
+                    success: function(response) {
                         Swal.fire('Success!', response.message, 'success');
                         $form[0].reset();
                     },
-                    error: function (xhr) {
-                        if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
-                            for (let field in errors) {
-                                let input = $form.find(`[name="${field}"]`);
-                                input.addClass('is-invalid');
-                                input.after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
-                            }
+                    // error: function(xhr) {
+                    //     if (xhr.status === 422) {
+                    //         let errors = xhr.responseJSON.errors;
+                    //         for (let field in errors) {
+                    //             let input = $form.find(`[name="${field}"]`);
+                    //             input.addClass('is-invalid');
+                    //             input.after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
+                    //         }
 
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Validation Error',
-                                text: 'Please fix the highlighted errors.'
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Server Error',
-                                text: xhr.responseJSON?.message || 'An unexpected error occurred.'
-                            });
-                        }
-                    },
-                    // error: function (data) {
-                    //     $('body').html(data.responseText);
+                    //         Swal.fire({
+                    //             icon: 'error',
+                    //             title: 'Validation Error',
+                    //             text: 'Please fix the highlighted errors.'
+                    //         });
+                    //     } else {
+                    //         Swal.fire({
+                    //             icon: 'error',
+                    //             title: 'Server Error',
+                    //             text: xhr.responseJSON?.message ||
+                    //                 'An unexpected error occurred.'
+                    //         });
+                    //     }
                     // },
-                    complete: function () {
+                    error: function(data) {
+                        $('body').html(data.responseText);
+                    },
+                    complete: function() {
                         $submitBtn.prop('disabled', false).html(originalHtml);
                     }
                 });
@@ -281,7 +287,6 @@ use App\Http\Controllers\Helper;
 @endsection
 
 @section('js')
-
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
@@ -296,7 +301,5 @@ use App\Http\Controllers\Helper;
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
-    <script>
-
-    </script>
+    <script></script>
 @endsection

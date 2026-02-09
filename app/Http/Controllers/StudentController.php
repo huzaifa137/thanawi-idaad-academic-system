@@ -13,6 +13,7 @@ use App\Exports\StudentsExamExport;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Mail;
+use App\Models\School;
 use App\Imports\StudentExamImport;
 use App\Models\Exam;
 
@@ -255,21 +256,31 @@ class StudentController extends Controller
     {
         $school_id = Session('LoggedSchool');
 
-        $classRecord = Classroom::where('school_id', Session('LoggedSchool'))->get();
-        $StreamRecord = Stream::where('school_id', Session('LoggedSchool'))->get();
+        $classRecord = Helper::MasterRecordMerge(
+            config('constants.options.O_LEVEL'),
+            config('constants.options.A_LEVEL')
+        );
 
-        return view('student.student-portal', compact('school_id', 'classRecord', 'StreamRecord'));
+        $StreamRecord = Stream::where('school_id', $school_id)->get();
+
+        $schools = School::select('id', 'name')->get();
+
+        return view(
+            'student.student-portal',
+            compact('school_id', 'classRecord', 'StreamRecord', 'schools')
+        );
     }
 
     public function storeStudent(Request $request)
     {
 
+
         $validated = $request->validate([
             // Required fields
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'senior' => 'required|max:255',
-            'stream' => 'required|max:255',
+            'senior' => 'nullable|max:255',
+            'stream' => 'nullable|max:255',
             'gender' => 'required|in:Male,Female,Other',
             'school_id' => 'required|integer|exists:schools,id',
 
@@ -412,47 +423,70 @@ class StudentController extends Controller
 
     public function searchStudent()
     {
-        $classRecord = Classroom::where('school_id', session('LoggedSchool'))->get();
+        $classRecord = Helper::MasterRecordMerge(
+            config('constants.options.O_LEVEL'),
+            config('constants.options.A_LEVEL')
+        );
 
         return view('student.student-search', compact(['classRecord']));
     }
 
-    public function searchAjax(Request $request)
-    {
-        $criteria = $request->input('criteria');
+public function searchAjax(Request $request)
+{
+    $criteria = $request->input('criteria');
 
-        switch ($criteria) {
-            case 'admission_number':
-                $students = Student::where('admission_number', $request->admission_number)->get();
-                break;
-            case 'name':
-                $students = Student::where('firstname', 'like', '%' . $request->firstname . '%')
-                    ->where('lastname', 'like', '%' . $request->lastname . '%')
-                    ->where('senior', $request->senior)
-                    ->get();
-                break;
-            case 'phone':
-                $students = Student::where('primary_contact', $request->phone)
-                    ->orWhere('other_contact', $request->phone)
-                    ->get();
-                break;
-            case 'student_id':
-                $students = Student::where('id', $request->student_id)->get();
-                break;
-            default:
-                return response()->json(['message' => 'Invalid criteria'], 400);
-        }
+    switch ($criteria) {
+        case 'admission_number':
+            $students = Student::where('admission_number', $request->admission_number)->get();
+            break;
 
-        $html = view('student.partials.results', compact('students'))->render();
+        case 'name':
+            $students = Student::where('firstname', 'like', '%' . $request->firstname . '%')
+                ->where('lastname', 'like', '%' . $request->lastname . '%')
+                ->where('senior', $request->senior)
+                ->get();
+            break;
 
-        return response()->json(['html' => $html]);
+        case 'phone':
+            $students = Student::where('primary_contact', $request->phone)
+                ->orWhere('other_contact', $request->phone)
+                ->get();
+            break;
+
+        case 'student_id':
+            $students = Student::where('id', $request->student_id)->get();
+            break;
+
+        default:
+            return response()->json(['message' => 'Invalid criteria'], 400);
     }
+
+    // 🔹 These were missing
+    $classRecord = Helper::MasterRecordMerge(
+        config('constants.options.O_LEVEL'),
+        config('constants.options.A_LEVEL')
+    );
+
+    $StreamRecord = Stream::all();
+
+    $html = view(
+        'student.partials.results',
+        compact('students', 'classRecord', 'StreamRecord')
+    )->render();
+
+    return response()->json(['html' => $html]);
+}
+
 
     public function updateProfiles()
     {
         $students = Student::orderBy('created_at', 'desc')->get();
 
-        $classRecord = Classroom::where('school_id', Session('LoggedSchool'))->get();
+        $classRecord = Helper::MasterRecordMerge(
+            config('constants.options.O_LEVEL'),
+            config('constants.options.A_LEVEL')
+        );
+
         $StreamRecord = Stream::where('school_id', Session('LoggedSchool'))->get();
 
         return view('student.student-information', compact(['students', 'classRecord', 'StreamRecord']));

@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\Helper; 
+use App\Http\Controllers\Helper;
 ?>
 @extends('layouts-side-bar.master')
 @section('content')
@@ -71,7 +71,7 @@ use App\Http\Controllers\Helper;
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             const searchInputs = {
                 admission_number: `
                             <div class="form-group">
@@ -80,27 +80,27 @@ use App\Http\Controllers\Helper;
                             </div>
                         `,
                 name: `
-        <div class="form-group">
-            <label for="firstname">First Name</label>
-            <input type="text" name="firstname" class="form-control" placeholder="Enter first name">
-        </div>
-        <div class="form-group">
-            <label for="lastname">Last Name</label>
-            <input type="text" name="lastname" class="form-control" placeholder="Enter last name">
-        </div>
-        <div class="form-group">
-            <label for="senior">Class</label>
-            <select class="form-control select2" name="senior">
-                <option value="">-- Select --</option>
-                @foreach ($classRecord as $class)
-                    <option value="{{ $class->class_name }}">
-                        {{ Helper::recordMdname($class->class_name) }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    `,
+                            <div class="form-group">
+                                <label for="firstname">First Name</label>
+                                <input type="text" name="firstname" class="form-control" placeholder="Enter first name">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastname">Last Name</label>
+                                <input type="text" name="lastname" class="form-control" placeholder="Enter last name">
+                            </div>
+                            <div class="form-group">
+                                <label for="senior">Class</label>
+                                <select class="form-control select2" name="senior">
+    <option value="">-- Select --</option>
+    @foreach ($classRecord as $class)
+        <option value="{{ $class->md_id }}">
+            {{ $class->md_name }}
+        </option>
+    @endforeach
+</select>
 
+                            </div>
+                        `,
                 phone: `
                             <div class="form-group">
                                 <label for="phone">Phone Number</label>
@@ -115,14 +115,14 @@ use App\Http\Controllers\Helper;
                         `
             };
 
-            $('#search_criteria').on('change', function () {
+            $('#search_criteria').on('change', function() {
                 const selected = $(this).val();
                 $('#search_inputs').html(searchInputs[selected] || '');
                 $('#searchBtn').removeClass('d-none');
                 $('#resultsCard').addClass('d-none');
             });
 
-            $('#studentSearchForm').on('submit', function (e) {
+            $('#studentSearchForm').on('submit', function(e) {
                 e.preventDefault();
 
                 const criteria = $('#search_criteria').val();
@@ -133,24 +133,26 @@ use App\Http\Controllers\Helper;
                     return;
                 }
 
-                $('#searchBtn').prop('disabled', true).html('Searching... <i class="fas fa-spinner fa-spin"></i>');
+                $('#searchBtn').prop('disabled', true).html(
+                    'Searching... <i class="fas fa-spinner fa-spin"></i>');
 
                 $.ajax({
-                    url: '{{ route("students.search.ajax") }}',
+                    url: '{{ route('students.search.ajax') }}',
                     method: 'GET',
                     data: formData + '&criteria=' + criteria,
-                    success: function (response) {
+                    success: function(response) {
                         $('#resultsCard').removeClass('d-none');
                         $('#searchResults').html(response.html);
                     },
                     // error: function (xhr) {
                     //     Swal.fire('Error', xhr.responseJSON?.message || 'Something went wrong.', 'error');
                     // },
-                    error: function (data) {
+                    error: function(data) {
                         $('body').html(data.responseText);
                     },
-                    complete: function () {
-                        $('#searchBtn').prop('disabled', false).html('<i class="fas fa-search"></i> Search');
+                    complete: function() {
+                        $('#searchBtn').prop('disabled', false).html(
+                            '<i class="fas fa-search"></i> Search');
                     }
                 });
             });
@@ -159,7 +161,6 @@ use App\Http\Controllers\Helper;
 @endsection
 
 @section('js')
-
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
@@ -174,7 +175,5 @@ use App\Http\Controllers\Helper;
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
-    <script>
-
-    </script>
+    <script></script>
 @endsection
