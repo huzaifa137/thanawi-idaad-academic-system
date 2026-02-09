@@ -763,7 +763,14 @@ $controller = new Controller();
 
             <!-- Stats Overview -->
             <div class="stats-overview">
-                <div class="stat-card gradient-1 animate-card" style="animation-delay: 0.2s">
+                <div class="stat-card gradient-1 animate-card"
+                    style="
+                            animation-delay: 0.2s;
+                            transition: all 0.3s ease;
+                            transform: translateY(0);
+                        "
+                    onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.15)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                     <div class="stat-content">
                         <div class="stat-icon">
                             <i class="fas fa-file-alt"></i>
@@ -779,7 +786,14 @@ $controller = new Controller();
                     </div>
                 </div>
 
-                <div class="stat-card gradient-2 animate-card" style="animation-delay: 0.3s">
+                <div class="stat-card gradient-2 animate-card"
+                    style="
+        animation-delay: 0.3s;
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    "
+                    onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.15)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                     <div class="stat-content">
                         <div class="stat-icon">
                             <i class="fas fa-award"></i>
@@ -795,7 +809,14 @@ $controller = new Controller();
                     </div>
                 </div>
 
-                <div class="stat-card gradient-3 animate-card" style="animation-delay: 0.4s">
+                <div class="stat-card gradient-3 animate-card"
+                    style="
+        animation-delay: 0.4s;
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    "
+                    onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.15)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                     <div class="stat-content">
                         <div class="stat-icon">
                             <i class="fas fa-chart-bar"></i>
@@ -811,7 +832,14 @@ $controller = new Controller();
                     </div>
                 </div>
 
-                <div class="stat-card gradient-4 animate-card" style="animation-delay: 0.5s">
+                <div class="stat-card gradient-4 animate-card"
+                    style="
+        animation-delay: 0.5s;
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    "
+                    onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.15)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                     <div class="stat-content">
                         <div class="stat-icon">
                             <i class="fas fa-check-circle"></i>
@@ -926,7 +954,8 @@ $controller = new Controller();
                             <tr>
                                 <td>
                                     <strong>Pre-Mock Exams</strong>
-                                    <div class="text-muted" style="font-size: 0.9rem; color: var(--gray);">Idaad Final Year
+                                    <div class="text-muted" style="font-size: 0.9rem; color: var(--gray);">Idaad Final
+                                        Year
                                     </div>
                                 </td>
                                 <td>2021</td>
@@ -951,7 +980,14 @@ $controller = new Controller();
 
             <!-- Performance Summary -->
             <div class="performance-grid">
-                <div class="performance-card animate-card" style="animation-delay: 0.7s">
+                <div class="performance-card animate-card"
+                    style="
+                            animation-delay: 0.7s;
+                            transition: all 0.3s ease;
+                            transform: translateY(0);
+                        "
+                    onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.15)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                     <div class="performance-header">
                         <h4><i class="fas fa-chart-pie"></i> Grade Distribution</h4>
                         <span class="text-muted">Current Year</span>
@@ -983,7 +1019,14 @@ $controller = new Controller();
                     </div>
                 </div>
 
-                <div class="performance-card animate-card" style="animation-delay: 0.8s">
+                <div class="performance-card animate-card"
+                    style="
+        animation-delay: 0.8s;
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    "
+                    onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.15)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                     <div class="performance-header">
                         <h4><i class="fas fa-chart-line"></i> Performance Trend</h4>
                         <span class="text-muted">Last 3 Years</span>
@@ -1018,7 +1061,8 @@ $controller = new Controller();
 
             <!-- Quick Actions -->
             <div class="quick-actions-grid">
-                <a href="#" class="action-card animate-card" style="animation-delay: 0.9s" onclick="showAllResults()">
+                <a href="#" class="action-card animate-card" style="animation-delay: 0.9s"
+                    onclick="showAllResults()">
                     <div class="action-icon">
                         <i class="fas fa-list-alt"></i>
                     </div>
@@ -1028,9 +1072,10 @@ $controller = new Controller();
                     </div>
                 </a>
 
-                <a href="#" class="action-card animate-card" style="animation-delay: 1s" onclick="requestTranscript()">
+                <a href="#" class="action-card animate-card" style="animation-delay: 1s"
+                    onclick="requestTranscript()">
                     <div class="action-icon">
-                        <i class="fas fa-file-certificate"></i>
+                        <i class="fas fa-award"></i>
                     </div>
                     <div class="action-info">
                         <h4>Request Transcript</h4>
@@ -1038,7 +1083,8 @@ $controller = new Controller();
                     </div>
                 </a>
 
-                <a href="#" class="action-card animate-card" style="animation-delay: 1.1s" onclick="viewStatistics()">
+                <a href="#" class="action-card animate-card" style="animation-delay: 1.1s"
+                    onclick="viewStatistics()">
                     <div class="action-icon">
                         <i class="fas fa-chart-bar"></i>
                     </div>
@@ -1048,7 +1094,8 @@ $controller = new Controller();
                     </div>
                 </a>
 
-                <a href="#" class="action-card animate-card" style="animation-delay: 1.2s" onclick="contactSupport()">
+                <a href="#" class="action-card animate-card" style="animation-delay: 1.2s"
+                    onclick="contactSupport()">
                     <div class="action-icon">
                         <i class="fas fa-headset"></i>
                     </div>
@@ -1169,7 +1216,9 @@ $controller = new Controller();
                     cancelButtonText: 'Cancel',
                     preConfirm: () => {
                         const method = document.getElementById('deliveryMethod').value;
-                        return { deliveryMethod: method };
+                        return {
+                            deliveryMethod: method
+                        };
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -1244,12 +1293,14 @@ $controller = new Controller();
             });
 
             // Observe all cards for animation
-            document.querySelectorAll('.welcome-header, .stat-card, .results-section, .performance-card, .action-card, .notifications-section').forEach(card => {
-                observer.observe(card);
-            });
+            document.querySelectorAll(
+                    '.welcome-header, .stat-card, .results-section, .performance-card, .action-card, .notifications-section')
+                .forEach(card => {
+                    observer.observe(card);
+                });
 
             // Update current year in info if needed
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 const currentYear = new Date().getFullYear();
                 document.querySelectorAll('.current-year').forEach(el => {
                     el.textContent = currentYear;
@@ -1270,7 +1321,6 @@ $controller = new Controller();
     </div>
 @endsection
 @section('js')
-
     <!-- c3.js Charts js-->
     <script src="{{ URL::asset('assets/plugins/charts-c3/d3.v5.min.js') }}"></script>
     <script src="{{ URL::asset('assets/plugins/charts-c3/c3-chart.js') }}"></script>
