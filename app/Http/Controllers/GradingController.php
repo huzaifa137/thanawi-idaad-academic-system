@@ -9,8 +9,8 @@ use App\Models\Exam;
 use App\Models\MasterData;
 use Illuminate\Http\Request;
 use App\Models\AcademicYear;
-use App\Models\TermDate;
 use App\Models\Student;
+use Illuminate\Support\Facades\DB;
 
 class GradingController extends Controller
 {
@@ -171,41 +171,6 @@ class GradingController extends Controller
         return response()->json($exams);
     }
 
-
-    public function uploadExamResults(Request $request)
-    {
-        $request->validate([
-            'school_id' => 'required|exists:schools,id',
-            'type' => 'required|in:thanawi,idaad',
-            'file' => 'required|file|mimes:xlsx,xls'
-        ]);
-
-        $activeYear = Helper::active_year();
-        if ($activeYear == 'No Active year Set') {
-            return back()->with('error', 'No Active Academic Year Set.');
-        }
-
-        $subjects = $request->type === 'thanawi'
-            ? MasterData::where('md_master_code_id', config('constants.options.ThanawiPapers'))->get()
-            : MasterData::where('md_master_code_id', config('constants.options.IdaadPapers'))->get();
-
-        if ($subjects->isEmpty()) {
-            return back()->with('error', 'No subjects found for this exam type.');
-        }
-
-        // Create Exam record
-        $exam = Exam::create([
-            'school_id' => $request->school_id,
-            'exam_type' => $request->type,
-            'academic_year' => $activeYear
-        ]);
-
-        // Import Excel
-        Excel::import(new StudentExamImport($exam, $subjects), $request->file('file'));
-
-        return back()->with('success', 'Exam results uploaded successfully.');
-    }
-
     public function getActiveExams()
     {
         $activeExams = AnnualExamination::where('is_active', true)
@@ -217,11 +182,82 @@ class GradingController extends Controller
 
     public function importIdaadResults(Request $request)
     {
-        dd($request->all());
+        return $this->handleExamImport($request, 'idaad');
     }
 
     public function importThanawiResults(Request $request)
     {
-        dd($request->all());
+        return $this->handleExamImport($request, 'thanawi');
     }
+
+    private function handleExamImport(Request $request, $examType)
+    {
+        $request->validate([
+            'school_id' => 'required|exists:schools,id',
+            'file' => 'required|file|mimes:xlsx,xls',
+        ]);
+
+        $activeYear = Helper::active_year();
+        if ($activeYear == 'No Active year Set') {
+            return back()->with('error', 'No Active Academic Year Set.');
+        }
+
+        $uploadingYear = $examType === 'thanawi'
+            ? Helper::activeUploadingThanawiYear()
+            : Helper::activeUploadingIdaadYear();
+
+        if ($uploadingYear === 'Upload Year Not Set') {
+            return back()->with('error', ucfirst($examType) . ' upload is not currently active.');
+        }
+
+        if ($uploadingYear !== $activeYear) {
+            return back()->with(
+                'error',
+                ucfirst($examType) . " upload is active for {$uploadingYear}, but academic year is {$activeYear}."
+            );
+        }
+
+        $subjects = $examType === 'thanawi'
+            ? MasterData::where('md_master_code_id', config('constants.options.ThanawiPapers'))->get()
+            : MasterData::where('md_master_code_id', config('constants.options.IdaadPapers'))->get();
+
+        if ($subjects->isEmpty()) {
+            return back()->with('error', 'No subjects found for this exam type.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            // 🔎 Check existing exam
+            $existingExam = Exam::where('school_id', $request->school_id)
+                ->where('exam_type', $examType)
+                ->where('academic_year', $activeYear)
+                ->first();
+
+            if ($existingExam) {
+                $existingExam->delete();
+            }
+
+            // ✅ Create fresh exam
+            $exam = Exam::create([
+                'school_id' => $request->school_id,
+                'exam_type' => $examType,
+                'academic_year' => $activeYear
+            ]);
+
+            Excel::import(new StudentExamImport($exam, $subjects), $request->file('file'));
+
+            DB::commit();
+
+            return back()->with('success', ucfirst($examType) . ' results uploaded successfully.');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
 }

@@ -193,18 +193,93 @@ use App\Http\Controllers\Helper;
             <div class="col-lg-12">
                 <!-- Results -->
                 <div class="card mt-4" id="resultsCard">
-                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">All Students</h5>
+                    <div
+                        class="card-header bg-primary-gradient text-white d-flex justify-content-between align-items-center p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-wrapper bg-white-20 rounded-circle p-3 me-3">
+                                <i class="fas fa-users fa-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="fw-bold mb-1 ml-1">Year Summary</h3>
+                            </div>
+                        </div>
+
                         @php
                             $activeYear = Helper::active_year();
+                            $idaadYear = Helper::activeUploadingIdaadYear();
+                            $thanawiYear = Helper::activeUploadingThanawiYear();
                         @endphp
-                        <h5 class="mb-0">
-                            Active Year :
-                            <span @if ($activeYear == 'No Active year Set') style="color: red;" @endif>
-                                {{ $activeYear }}
-                            </span>
-                        </h5>
+
+                        <div class="d-flex gap-4 align-items-stretch">
+                            <div
+                                class="year-status-card bg-white-10 p-3 rounded-3 d-flex flex-column justify-content-center text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <span class="status-indicator bg-success" style="margin-right: 5px;"></span>
+                                    <h6 class="mb-0 text-white-90">Active Year</h6>
+                                </div>
+                                <h4 class="fw-bold mb-0 @if($activeYear == 'No Active year Set') text-danger @endif">
+                                    {{ $activeYear }}
+                                </h4>
+                            </div>
+
+                            <div
+                                class="year-status-card bg-white-10 p-3 rounded-3 d-flex flex-column justify-content-center text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <span class="status-indicator bg-success me-2" style="margin-right: 5px;"></span>
+                                    <h6 class="mb-0 text-white-90">Thanawi Uploading</h6>
+                                </div>
+                                <h4
+                                    class="fw-bold mb-0 @if($thanawiYear == 'Upload Year Not Set') text-danger @endif">
+                                    {{ $thanawiYear }}
+                                </h4>
+                            </div>
+
+                            <div
+                                class="year-status-card bg-white-10 p-3 rounded-3 d-flex flex-column justify-content-center text-center">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <span class="status-indicator bg-success me-2" style="margin-right: 5px;"></span>
+                                    <h6 class="mb-0 text-white-90">Idaad Uploading</h6>
+                                </div>
+                                <h4
+                                    class="fw-bold mb-0 @if($idaadYear == 'Upload Year Not Set') text-danger @endif">
+                                    {{ $idaadYear }}
+                                </h4>
+                            </div>
+                        </div>
                     </div>
+
+                    <style>
+                        .bg-primary-gradient {
+                            background: linear-gradient(135deg, #0D4B1F 0%, #0D4B1F 100%);
+                        }
+
+                        .bg-white-10 {
+                            background: rgba(255, 255, 255, 0.1);
+                        }
+
+                        .bg-white-20 {
+                            background: rgba(255, 255, 255, 0.2);
+                        }
+
+                        .text-white-70 {
+                            color: rgba(255, 255, 255, 0.7);
+                        }
+
+                        .text-white-90 {
+                            color: rgba(255, 255, 255, 0.9);
+                        }
+
+                        .status-indicator {
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 50%;
+                            display: inline-block;
+                        }
+
+                        .year-status-card {
+                            min-width: 160px;
+                        }
+                    </style>
 
                     <div class="card-body bg-white" id="searchResults">
                         @if ($groupedStudents->isEmpty())
@@ -250,23 +325,8 @@ use App\Http\Controllers\Helper;
                                                     <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
-                                                    <h6 class="dropdown-header">Import Actions</h6>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#importThanawiModal"
-                                                        data-school-id="{{ $students->first()->school_id }}"
-                                                        data-school-name="{{ $schoolName }}">
-                                                        <i class="fas fa-file-import text-primary me-2"></i>
-                                                        Import Thanawi Exams
-                                                    </a>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#importIdaadModal"
-                                                        data-school-id="{{ $students->first()->school_id }}"
-                                                        data-school-name="{{ $schoolName }}">
-                                                        <i class="fas fa-file-import text-primary me-2"></i>
-                                                        Import Idaad Exams
-                                                    </a>
-                                                    <div class="dropdown-divider"></div>
                                                     <h6 class="dropdown-header">Export Actions</h6>
+                                                    <div class="dropdown-divider"></div>
                                                     <a class="dropdown-item export-btn"
                                                         href="{{ route('students.export', ['schoolId' => $students->first()->school_id, 'type' => 'thanawi']) }}">
                                                         <i class="fas fa-file-export text-success me-2"></i>
@@ -307,15 +367,89 @@ use App\Http\Controllers\Helper;
                                                         </div>
                                                         <div class="exam-actions mt-4">
                                                             <div class="row g-2">
+
+                                                                @php
+                                                                    $thanawiUploadYear = Helper::activeUploadingThanawiYear();
+                                                                    $idaadUploadYear = Helper::activeUploadingIdaadYear();
+                                                                @endphp
+
                                                                 <div class="col-6">
-                                                                    <button class="btn btn-primary w-100"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#importThanawiModal"
-                                                                        data-school-id="{{ $students->first()->school_id }}"
-                                                                        data-school-name="{{ $schoolName }}">
-                                                                        <i class="fas fa-upload me-2"></i> Import
-                                                                    </button>
+                                                                    @if ($thanawiUploadYear === 'Upload Year Not Set')
+                                                                        <button class="btn btn-secondary w-100 upload-blocked-btn"
+                                                                            data-type="thanawi">
+                                                                            <i class="fas fa-lock me-2"></i>
+                                                                            Upload Closed
+                                                                        </button>
+
+                                                                    @elseif (Helper::uploadedSchoolExam($students->first()->school_id, 'thanawi'))
+                                                                        <button class="btn btn-warning w-100 upload-confirm-btn-thanawi"
+                                                                            data-school-id="{{ $students->first()->school_id }}"
+                                                                            data-school-name="{{ $schoolName }}"
+                                                                            data-file-category="thanawi">
+                                                                            <i class="fas fa-check-circle me-2"></i>
+                                                                            Uploaded
+                                                                        </button>
+
+                                                                    @else
+                                                                        <button class="btn btn-primary w-100 open-upload-modal"
+                                                                            data-bs-toggle="modal" data-bs-target="#importThanawiModal"
+                                                                            data-school-id="{{ $students->first()->school_id }}"
+                                                                            data-school-name="{{ $schoolName }}"
+                                                                            data-file-category="thanawi">
+                                                                            <i class="fas fa-upload me-2"></i> Import
+                                                                        </button>
+                                                                    @endif
                                                                 </div>
+
+                                                                <script>
+                                                                    document.addEventListener('DOMContentLoaded', function () {
+                                                                        document.addEventListener('click', function (e) {
+                                                                            if (e.target.closest('.upload-confirm-btn-thanawi')) {
+                                                                                const button = e.target.closest('.upload-confirm-btn-thanawi');
+                                                                                const schoolId = button.getAttribute('data-school-id');
+                                                                                const schoolName = button.getAttribute('data-school-name');
+                                                                                const fileCategory = button.getAttribute('data-file-category');
+
+                                                                                Swal.fire({
+                                                                                    title: 'Marks Already Uploaded',
+                                                                                    html: `Marks for <strong>${schoolName}</strong> have already been uploaded.<br>Do you want to upload new marks and replace the existing ones?`,
+                                                                                    icon: 'warning',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonColor: '#3085d6',
+                                                                                    cancelButtonColor: '#d33',
+                                                                                    confirmButtonText: 'Yes, Replace',
+                                                                                    cancelButtonText: 'Cancel'
+                                                                                }).then((result) => {
+                                                                                    if (result.isConfirmed) {
+                                                                                        const modalElement = document.getElementById('importThanawiModal');
+
+                                                                                        if (modalElement) {
+                                                                                            // Set the values in the modal inputs
+                                                                                            document.getElementById('thanawi_school_id').value = schoolId;
+                                                                                            document.getElementById('thanawi_file_category').value = fileCategory;
+                                                                                            document.getElementById('thanawi_school_name_display').value = schoolName;
+
+                                                                                            // Automatically check the overwrite checkbox since this is an overwrite action
+                                                                                            document.getElementById('thanawi-overwrite').checked = true;
+
+                                                                                            const importModal = new bootstrap.Modal(modalElement);
+                                                                                            importModal.show();
+
+                                                                                            const event = new CustomEvent('overwrite-confirmed-thanawi', {
+                                                                                                detail: {
+                                                                                                    schoolId: schoolId,
+                                                                                                    schoolName: schoolName,
+                                                                                                    fileCategory: fileCategory
+                                                                                                }
+                                                                                            });
+                                                                                            modalElement.dispatchEvent(event);
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        });
+                                                                    });
+                                                                </script>
                                                                 <div class="col-6">
                                                                     <a href="{{ route('students.export', ['schoolId' => $students->first()->school_id, 'type' => 'thanawi']) }}"
                                                                         class="btn btn-success w-100 export-btn">
@@ -352,14 +486,79 @@ use App\Http\Controllers\Helper;
                                                         <div class="exam-actions mt-4">
                                                             <div class="row g-2">
                                                                 <div class="col-6">
-                                                                    <button class="btn btn-primary w-100"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#importIdaadModal"
-                                                                        data-school-id="{{ $students->first()->school_id }}"
-                                                                        data-school-name="{{ $schoolName }}">
-                                                                        <i class="fas fa-upload me-2"></i> Import
-                                                                    </button>
+                                                                      @if ($idaadUploadYear === 'Upload Year Not Set')
+                                                                        <button class="btn btn-secondary w-100 upload-blocked-btn"
+                                                                            data-type="idaad">
+                                                                            <i class="fas fa-lock me-2"></i>
+                                                                            Upload Closed
+                                                                        </button>
+                                                                    @elseif (Helper::uploadedSchoolExam($students->first()->school_id, 'idaad'))
+                                                                        <button class="btn btn-warning w-100 upload-confirm-btn"
+                                                                            data-school-id="{{ $students->first()->school_id }}"
+                                                                            data-school-name="{{ $schoolName }}"
+                                                                            data-file-category="idaad">
+                                                                            <i class="fas fa-check-circle me-2"></i>
+                                                                            Uploaded
+                                                                        </button>
+                                                                    @else
+                                                                        <button class="btn btn-primary w-100 import-trigger-btn"
+                                                                            data-bs-toggle="modal" data-bs-target="#importIdaadModal"
+                                                                            data-school-id="{{ $students->first()->school_id }}"
+                                                                            data-school-name="{{ $schoolName }}"
+                                                                            data-file-category="idaad">
+                                                                            <i class="fas fa-upload me-2"></i> Import
+                                                                        </button>
+                                                                    @endif
                                                                 </div>
+                                                                <script>
+                                                                    document.addEventListener('DOMContentLoaded', function () {
+                                                                        document.addEventListener('click', function (e) {
+                                                                            if (e.target.closest('.upload-confirm-btn')) {
+                                                                                const button = e.target.closest('.upload-confirm-btn');
+                                                                                const schoolId = button.getAttribute('data-school-id');
+                                                                                const schoolName = button.getAttribute('data-school-name');
+                                                                                const fileCategory = button.getAttribute('data-file-category');
+
+                                                                                Swal.fire({
+                                                                                    title: 'Marks Already Uploaded',
+                                                                                    html: `Marks for <strong>${schoolName}</strong> have already been uploaded.<br>Do you want to upload new marks and replace the existing ones?`,
+                                                                                    icon: 'warning',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonColor: '#3085d6',
+                                                                                    cancelButtonColor: '#d33',
+                                                                                    confirmButtonText: 'Yes, Replace',
+                                                                                    cancelButtonText: 'Cancel'
+                                                                                }).then((result) => {
+                                                                                    if (result.isConfirmed) {
+                                                                                        const modalElement = document.getElementById('importIdaadModal');
+
+                                                                                        if (modalElement) {
+                                                                                            // Set the values in the modal inputs
+                                                                                            document.getElementById('idaad_school_id').value = schoolId;
+                                                                                            document.getElementById('idaad_file_category').value = fileCategory;
+                                                                                            document.getElementById('idaad_school_name_display').value = schoolName;
+
+                                                                                            // Automatically check the overwrite checkbox since this is an overwrite action
+                                                                                            document.getElementById('idaad-overwrite').checked = true;
+
+                                                                                            const importModal = new bootstrap.Modal(modalElement);
+                                                                                            importModal.show();
+
+                                                                                            const event = new CustomEvent('overwrite-confirmed', {
+                                                                                                detail: {
+                                                                                                    schoolId: schoolId,
+                                                                                                    schoolName: schoolName,
+                                                                                                    fileCategory: fileCategory
+                                                                                                }
+                                                                                            });
+                                                                                            modalElement.dispatchEvent(event);
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        });
+                                                                    });
+                                                                </script>
                                                                 <div class="col-6">
                                                                     <a href="{{ route('students.export', ['schoolId' => $students->first()->school_id, 'type' => 'idaad']) }}"
                                                                         class="btn btn-success w-100 export-btn">
@@ -388,6 +587,7 @@ use App\Http\Controllers\Helper;
                             class="modal-content border-0 shadow-lg" id="importThanawiForm">
                             @csrf
                             <input type="hidden" name="school_id" id="thanawi_school_id">
+                            <input type="hidden" name="file_category" id="thanawi_file_category">
 
                             <div class="modal-header bg-primary text-white">
                                 <h5 class="modal-title d-flex align-items-center" id="importThanawiModalLabel">
@@ -421,7 +621,7 @@ use App\Http\Controllers\Helper;
                                     </div>
 
                                     <div class="position-relative rounded-4 bg-light border border-2 border-dashed border-primary 
-                                d-flex align-items-center justify-content-center"
+                                                                                            d-flex align-items-center justify-content-center"
                                         style="height: 180px; transition: all 0.3s ease;">
                                         <input type="file" name="file" id="thanawi-file-input"
                                             class="position-absolute top-0 start-0 w-100 h-100 opacity-0"
@@ -429,7 +629,7 @@ use App\Http\Controllers\Helper;
 
                                         <div class="text-center p-3">
                                             <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center 
-                                        justify-content-center mb-3 shadow-sm"
+                                                                                                    justify-content-center mb-3 shadow-sm"
                                                 style="width: 54px; height: 54px;">
                                                 <i class="fas fa-file-excel fs-3"></i>
                                             </div>
@@ -449,8 +649,7 @@ use App\Http\Controllers\Helper;
 
                                 <div class="form-group mb-4">
                                     <label class="form-label fw-bold">Academic Year</label>
-                                    <input type="text" class="form-control" value="{{ Helper::active_year() }}"
-                                        readonly>
+                                    <input type="text" class="form-control" value="{{ Helper::active_year() }}" readonly>
                                     <small class="text-muted">Results will be imported for the active academic year</small>
                                 </div>
 
@@ -461,13 +660,13 @@ use App\Http\Controllers\Helper;
                                 </div>
 
                                 <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" id="thanawi-overwrite"
-                                        name="overwrite">
+                                    <input class="form-check-input" type="checkbox" id="thanawi-overwrite" name="overwrite"
+                                        disabled checked>
                                     <label class="form-check-label" for="thanawi-overwrite">
                                         Overwrite existing results for this exam
                                     </label>
                                     <small class="text-muted d-block mt-1">If checked, existing results will be
-                                        replaced</small>
+                                        replaced for this year</small>
                                 </div>
                             </div>
 
@@ -475,8 +674,7 @@ use App\Http\Controllers\Helper;
                                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                     <i class="fas fa-times me-1"></i> Cancel
                                 </button>
-                                <button type="submit" class="btn btn-primary px-4 shadow-sm"
-                                    id="confirmThanawiUploadBtn">
+                                <button type="submit" class="btn btn-primary px-4 shadow-sm" id="confirmThanawiUploadBtn">
                                     <i class="fas fa-upload me-1"></i> Upload & Process
                                 </button>
                             </div>
@@ -492,6 +690,7 @@ use App\Http\Controllers\Helper;
                             class="modal-content border-0 shadow-lg" id="importIdaadForm">
                             @csrf
                             <input type="hidden" name="school_id" id="idaad_school_id">
+                            <input type="hidden" name="file_category" id="idaad_file_category">
 
                             <div class="modal-header bg-info text-white">
                                 <h5 class="modal-title d-flex align-items-center" id="importIdaadModalLabel">
@@ -525,7 +724,7 @@ use App\Http\Controllers\Helper;
                                     </div>
 
                                     <div class="position-relative rounded-4 bg-light border border-2 border-dashed border-info 
-                                d-flex align-items-center justify-content-center"
+                                                                                            d-flex align-items-center justify-content-center"
                                         style="height: 180px; transition: all 0.3s ease;">
                                         <input type="file" name="file" id="idaad-file-input"
                                             class="position-absolute top-0 start-0 w-100 h-100 opacity-0"
@@ -533,7 +732,7 @@ use App\Http\Controllers\Helper;
 
                                         <div class="text-center p-3">
                                             <div class="bg-info text-white rounded-circle d-inline-flex align-items-center 
-                                        justify-content-center mb-3 shadow-sm"
+                                                                                                    justify-content-center mb-3 shadow-sm"
                                                 style="width: 54px; height: 54px;">
                                                 <i class="fas fa-file-excel fs-3"></i>
                                             </div>
@@ -553,8 +752,7 @@ use App\Http\Controllers\Helper;
 
                                 <div class="form-group mb-4">
                                     <label class="form-label fw-bold">Academic Year</label>
-                                    <input type="text" class="form-control" value="{{ Helper::active_year() }}"
-                                        readonly>
+                                    <input type="text" class="form-control" value="{{ Helper::active_year() }}" readonly>
                                     <small class="text-muted">Results will be imported for the active academic year</small>
                                 </div>
 
@@ -566,19 +764,19 @@ use App\Http\Controllers\Helper;
 
                                 <div class="form-group mb-4">
                                     <label class="form-label fw-bold">School Name</label>
-                                    <input type="text" class="form-control" value="{{ Helper::active_year() }}"
-                                        readonly>
+                                    <input type="text" class="form-control" value="{{ Helper::active_year() }}" readonly>
                                     <small class="text-muted">Results will be imported for the active academic year</small>
                                 </div>
 
                                 <div class="form-check form-switch mb-3">
-                                    <input class="form-check-input" type="checkbox" id="idaad-overwrite"
-                                        name="overwrite">
+                                    <input class="form-check-input" type="checkbox" id="idaad-overwrite" name="overwrite"
+                                        disabled checked>
+
                                     <label class="form-check-label" for="idaad-overwrite">
                                         Overwrite existing results for this exam
                                     </label>
                                     <small class="text-muted d-block mt-1">If checked, existing results will be
-                                        replaced</small>
+                                        replaced for this year</small>
                                 </div>
                             </div>
 
@@ -595,14 +793,38 @@ use App\Http\Controllers\Helper;
                     </div>
                 </div>
 
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        @if(session('success'))
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: '{{ session('success') }}',
+                                confirmButtonColor: '#287C44',
+                                confirmButtonText: 'OK'
+                            });
+                        @endif
+
+                        @if(session('error'))
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: '{{ session('error') }}',
+                                confirmButtonColor: '#dc3545',
+                                confirmButtonText: 'OK'
+                            });
+                        @endif
+                                                        });
+                </script>
 
                 <script>
-                    document.addEventListener('DOMContentLoaded', function() {
+                    document.addEventListener('DOMContentLoaded', function () {
 
                         document.querySelectorAll('[data-bs-target="#importThanawiModal"]').forEach(button => {
-                            button.addEventListener('click', function() {
+                            button.addEventListener('click', function () {
                                 const schoolId = this.getAttribute('data-school-id');
                                 const schoolName = this.getAttribute('data-school-name');
+                                const fileCategory = this.getAttribute('data-file-category');
 
                                 console.log('Thanawi Import - School:', schoolName, 'ID:', schoolId);
 
@@ -613,13 +835,19 @@ use App\Http\Controllers\Helper;
                                 if (schoolName) {
                                     document.getElementById('thanawi_school_name_display').value = schoolName;
                                 }
+
+                                if (fileCategory) {
+                                    document.getElementById('thanawi_file_category').value = fileCategory; // Set file category
+                                }
                             });
                         });
 
                         document.querySelectorAll('[data-bs-target="#importIdaadModal"]').forEach(button => {
-                            button.addEventListener('click', function() {
+                            button.addEventListener('click', function () {
                                 const schoolId = this.getAttribute('data-school-id');
                                 const schoolName = this.getAttribute('data-school-name');
+                                const fileCategory = this.getAttribute('data-file-category');
+
 
                                 console.log('Idaad Import - School:', schoolName, 'ID:', schoolId);
 
@@ -630,10 +858,14 @@ use App\Http\Controllers\Helper;
                                 if (schoolName) {
                                     document.getElementById('idaad_school_name_display').value = schoolName;
                                 }
+
+                                if (fileCategory) {
+                                    document.getElementById('idaad_file_category').value = fileCategory;
+                                }
                             });
                         });
 
-                        document.getElementById('thanawi-file-input').addEventListener('change', function(e) {
+                        document.getElementById('thanawi-file-input').addEventListener('change', function (e) {
                             const name = e.target.files[0]?.name;
                             if (name) {
                                 document.getElementById('thanawi-label').innerText = name;
@@ -642,7 +874,7 @@ use App\Http\Controllers\Helper;
                             }
                         });
 
-                        document.getElementById('idaad-file-input').addEventListener('change', function(e) {
+                        document.getElementById('idaad-file-input').addEventListener('change', function (e) {
                             const name = e.target.files[0]?.name;
                             if (name) {
                                 document.getElementById('idaad-label').innerText = name;
@@ -651,7 +883,7 @@ use App\Http\Controllers\Helper;
                             }
                         });
 
-                        document.getElementById('importThanawiForm').addEventListener('submit', function(e) {
+                        document.getElementById('importThanawiForm').addEventListener('submit', function (e) {
                             const activeYear = "{{ Helper::active_year() }}";
                             if (activeYear === "No Active year Set") {
                                 e.preventDefault();
@@ -715,7 +947,7 @@ use App\Http\Controllers\Helper;
                             });
                         });
 
-                        document.getElementById('importIdaadForm').addEventListener('submit', function(e) {
+                        document.getElementById('importIdaadForm').addEventListener('submit', function (e) {
                             const activeYear = "{{ Helper::active_year() }}";
                             if (activeYear === "No Active year Set") {
                                 e.preventDefault();
@@ -780,23 +1012,25 @@ use App\Http\Controllers\Helper;
                         });
 
                         // Reset form when modal is closed
-                        document.getElementById('importThanawiModal').addEventListener('hidden.bs.modal', function() {
+                        document.getElementById('importThanawiModal').addEventListener('hidden.bs.modal', function () {
                             document.getElementById('importThanawiForm').reset();
                             document.getElementById('thanawi-label').innerText = 'Drop your Excel file here';
                             document.getElementById('thanawi-label').classList.remove('text-primary');
                             document.getElementById('thanawi-sub-label').innerText = 'or click to browse computer';
                             document.getElementById('thanawi_school_name_display').value = '';
+                            document.getElementById('thanawi_file_category').value = '';
                             const btn = document.getElementById('confirmThanawiUploadBtn');
                             btn.disabled = false;
                             btn.innerHTML = '<i class="fas fa-upload me-1"></i> Upload & Process';
                         });
 
-                        document.getElementById('importIdaadModal').addEventListener('hidden.bs.modal', function() {
+                        document.getElementById('importIdaadModal').addEventListener('hidden.bs.modal', function () {
                             document.getElementById('importIdaadForm').reset();
                             document.getElementById('idaad-label').innerText = 'Drop your Excel file here';
                             document.getElementById('idaad-label').classList.remove('text-info');
                             document.getElementById('idaad-sub-label').innerText = 'or click to browse computer';
                             document.getElementById('idaad_school_name_display').value = '';
+                            document.getElementById('idaad_file_category').value = '';
                             const btn = document.getElementById('confirmIdaadUploadBtn');
                             btn.disabled = false;
                             btn.innerHTML = '<i class="fas fa-upload me-1"></i> Upload & Process';
@@ -810,7 +1044,7 @@ use App\Http\Controllers\Helper;
                     function handleFormResponse(formId) {
                         const form = document.getElementById(formId);
 
-                        form.addEventListener('ajax:success', function(event) {
+                        form.addEventListener('ajax:success', function (event) {
                             const [data, status, xhr] = event.detail;
 
                             Swal.fire({
@@ -829,7 +1063,7 @@ use App\Http\Controllers\Helper;
                             });
                         });
 
-                        form.addEventListener('ajax:error', function(event) {
+                        form.addEventListener('ajax:error', function (event) {
                             const [xhr, status, error] = event.detail;
 
                             Swal.fire({
@@ -846,7 +1080,7 @@ use App\Http\Controllers\Helper;
                 <script>
                     // Set school ID when import buttons are clicked
                     document.querySelectorAll('[data-bs-target="#importThanawiModal"]').forEach(button => {
-                        button.addEventListener('click', function() {
+                        button.addEventListener('click', function () {
                             const schoolCard = this.closest('.school-card');
                             const schoolId = schoolCard.querySelector('.export-btn').href.match(/schoolId=([^&]*)/)[1];
                             document.getElementById('thanawi_school_id').value = schoolId;
@@ -854,7 +1088,7 @@ use App\Http\Controllers\Helper;
                     });
 
                     document.querySelectorAll('[data-bs-target="#importIdaadModal"]').forEach(button => {
-                        button.addEventListener('click', function() {
+                        button.addEventListener('click', function () {
                             const schoolCard = this.closest('.school-card');
                             const schoolId = schoolCard.querySelector('.export-btn').href.match(/schoolId=([^&]*)/)[1];
                             document.getElementById('idaad_school_id').value = schoolId;
@@ -862,7 +1096,7 @@ use App\Http\Controllers\Helper;
                     });
 
                     // File input handlers
-                    document.getElementById('thanawi-file-input').addEventListener('change', function(e) {
+                    document.getElementById('thanawi-file-input').addEventListener('change', function (e) {
                         const name = e.target.files[0]?.name;
                         if (name) {
                             document.getElementById('thanawi-label').innerText = name;
@@ -871,7 +1105,7 @@ use App\Http\Controllers\Helper;
                         }
                     });
 
-                    document.getElementById('idaad-file-input').addEventListener('change', function(e) {
+                    document.getElementById('idaad-file-input').addEventListener('change', function (e) {
                         const name = e.target.files[0]?.name;
                         if (name) {
                             document.getElementById('idaad-label').innerText = name;
@@ -881,7 +1115,7 @@ use App\Http\Controllers\Helper;
                     });
 
                     // Form submission handlers
-                    document.getElementById('importThanawiForm').addEventListener('submit', function(e) {
+                    document.getElementById('importThanawiForm').addEventListener('submit', function (e) {
                         e.preventDefault();
 
                         const activeYear = "{{ Helper::active_year() }}";
@@ -915,7 +1149,7 @@ use App\Http\Controllers\Helper;
                         });
                     });
 
-                    document.getElementById('importIdaadForm').addEventListener('submit', function(e) {
+                    document.getElementById('importIdaadForm').addEventListener('submit', function (e) {
                         e.preventDefault();
 
                         const activeYear = "{{ Helper::active_year() }}";
@@ -950,7 +1184,7 @@ use App\Http\Controllers\Helper;
                     });
 
                     // Reset form when modal is closed
-                    document.getElementById('importThanawiModal').addEventListener('hidden.bs.modal', function() {
+                    document.getElementById('importThanawiModal').addEventListener('hidden.bs.modal', function () {
                         document.getElementById('importThanawiForm').reset();
                         document.getElementById('thanawi-label').innerText = 'Drop your Excel file here';
                         document.getElementById('thanawi-label').classList.remove('text-primary');
@@ -960,7 +1194,7 @@ use App\Http\Controllers\Helper;
                             '<i class="fas fa-upload me-1"></i> Upload & Process';
                     });
 
-                    document.getElementById('importIdaadModal').addEventListener('hidden.bs.modal', function() {
+                    document.getElementById('importIdaadModal').addEventListener('hidden.bs.modal', function () {
                         document.getElementById('importIdaadForm').reset();
                         document.getElementById('idaad-label').innerText = 'Drop your Excel file here';
                         document.getElementById('idaad-label').classList.remove('text-info');
@@ -968,6 +1202,28 @@ use App\Http\Controllers\Helper;
                         document.getElementById('confirmIdaadUploadBtn').disabled = false;
                         document.getElementById('confirmIdaadUploadBtn').innerHTML =
                             '<i class="fas fa-upload me-1"></i> Upload & Process';
+                    });
+                </script>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+
+                        document.querySelectorAll('.upload-blocked-btn').forEach(button => {
+                            button.addEventListener('click', function () {
+
+                                let type = this.dataset.type;
+
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Upload Not Active',
+                                    text: type.charAt(0).toUpperCase() + type.slice(1) +
+                                        ' upload is not currently active.',
+                                    confirmButtonColor: '#287C44'
+                                });
+
+                            });
+                        });
+
                     });
                 </script>
             </div>

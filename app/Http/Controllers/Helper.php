@@ -255,15 +255,6 @@ class Helper extends Controller
         return $records;
     }
 
-    public static function active_year()
-    {
-        $activeYear = AcademicYear::where('is_active', 1)
-            ->orderBy('id', 'desc')
-            ->value('name');
-
-        return $activeYear ?? 'No Active year Set';
-    }
-
     public static function schoolStudentsCount($school_id)
     {
         return Student::where('school_id', $school_id)->count();
@@ -288,60 +279,59 @@ class Helper extends Controller
             ->value('full_name');
     }
 
-    public static function gradeFromAverage($average)
-    {
-
-        // English and Arabic 
-
-        // if ($average >= 80 && $average <= 100) {
-        //     return 'Mumtaz/ممتاز';
-        // } elseif ($average >= 70 && $average < 80) {
-        //     return 'Jayid Jiddan/جيد جدًا';
-        // } elseif ($average >= 60 && $average < 70) {
-        //     return 'Jayid/جيد';
-        // } elseif ($average >= 50 && $average < 60) {
-        //     return 'Maqbul/مقبول';
-        // } else {
-        //     return 'Rasib/راسب';
-        // }
-
-        // English Alone
-
-        // if ($average >= 80 && $average <= 100) {
-        //     return 'Mumtaz';
-        // } elseif ($average >= 70 && $average < 80) {
-        //     return 'Jayid Jiddan';
-        // } elseif ($average >= 60 && $average < 70) {
-        //     return 'Jayid';
-        // } elseif ($average >= 50 && $average < 60) {
-        //     return 'Maqbul';
-        // } else {
-        //     return 'Rasib';
-        // }
-
-        // Arabic Alone
-
-        if ($average >= 80 && $average <= 100) {
-            return 'ممتاز';
-        } elseif ($average >= 70 && $average < 80) {
-            return 'جيد جدًا';
-        } elseif ($average >= 60 && $average < 70) {
-            return 'جيد';
-        } elseif ($average >= 50 && $average < 60) {
-            return 'مقبول';
-        } else {
-            return 'راسب';
-        }
-    }
-
-
     public static function current_logged_school($school_id)
     {
-        $schoolName = DB::table('schools')
-            ->where('id', operator: $school_id)
+        if (is_object($school_id) && isset($school_id->school_id)) {
+            $school_id = $school_id->school_id;
+        }
+
+        if (is_array($school_id) && isset($school_id['school_id'])) {
+            $school_id = $school_id['school_id'];
+        }
+
+        return DB::table('schools')
+            ->where('id', $school_id)
+            ->value('name') ?? 'Unknown School';
+    }
+
+    public static function uploadedSchoolExam($school_id, $exam_type)
+    {
+        return DB::table('exams')
+            ->where('school_id', $school_id)
+            ->where('academic_year', Helper::active_year())
+            ->where('exam_type', $exam_type)
+            ->exists();
+    }
+
+    public static function active_year()
+    {
+        $activeYear = AcademicYear::where('is_active', 1)
+            ->orderBy('id', 'desc')
             ->value('name');
 
-        return $schoolName;
+        return $activeYear ?? 'No Active year Set';
+    }
+
+    public static function activeUploadingIdaadYear()
+    {
+        $activeUploadingYear = DB::table('annual_examinations')
+            ->where('examination_name', 'Idaad')
+            ->where('is_active', true)
+            ->value('year');
+
+        return $activeUploadingYear ?? 'Upload Year Not Set';
+
+    }
+
+    public static function activeUploadingThanawiYear()
+    {
+        $activeUploadingYear = DB::table('annual_examinations')
+            ->where('examination_name', 'Thanawi')
+            ->where('is_active', true)
+            ->value('year');
+
+        return $activeUploadingYear ?? 'Upload Year Not Set';
+
     }
 
 }
