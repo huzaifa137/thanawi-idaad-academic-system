@@ -12,4 +12,11 @@
         </a>
     </div>
 
+    <div class="col-12 col-sm-4 mb-2">
+        <a href="{{ route('grading.dashboard') }}" class="btn btn-white text-dark w-100">
+            <i class="fas fa-graduation-cap me-2"></i>
+            Grading
+        </a>
+    </div>
+
 </div>

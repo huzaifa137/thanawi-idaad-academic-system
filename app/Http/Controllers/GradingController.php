@@ -6,10 +6,12 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\StudentExamImport;
 use App\Models\AnnualExamination;
 use App\Models\Exam;
+use App\Models\School;
 use App\Models\MasterData;
 use Illuminate\Http\Request;
 use App\Models\AcademicYear;
 use App\Models\Student;
+use App\Services\GradingService;
 use Illuminate\Support\Facades\DB;
 
 class GradingController extends Controller
@@ -260,4 +262,89 @@ class GradingController extends Controller
         }
     }
 
+    public function showExamResults($examId, GradingService $gradingService)
+    {
+
+        $results = $gradingService->calculateExamResults($examId);
+
+        $results = $results->map(function ($result) {
+
+            $student = $result->student;
+
+            $result->student_name = $student->firstname . ' ' . $student->lastname;
+            $result->admission_number = $student->admission_number;
+            $result->gender = $student->gender;
+            $result->stream = $student->stream;
+            $result->school_name = $student->school->name ?? 'N/A';
+
+            return $result;
+        });
+
+        return view('Grading.grade-summary', compact('results'));
+    }
+
+    public function gradingDashboard(Request $request, GradingService $gradingService)
+    {
+        // Filters
+        $examType = $request->exam_type;
+        $academicYear = $request->academic_year;
+        $schoolId = $request->school_id;
+
+        $query = Exam::query();
+
+        if ($examType) {
+            $query->where('exam_type', $examType);
+        }
+
+        if ($academicYear) {
+            $query->where('academic_year', $academicYear);
+        }
+
+        if ($schoolId) {
+            $query->where('school_id', $schoolId);
+        }
+
+        $exams = $query->get();
+
+        $results = collect();
+
+        foreach ($exams as $exam) {
+            $examResults = $gradingService->calculateExamResults($exam->id);
+            $results = $results->merge($examResults);
+        }
+
+        // National ranking across merged results
+        $results = $results->sortByDesc('total_marks')->values();
+
+        $rank = 1;
+        $previousMarks = null;
+
+        foreach ($results as $index => $student) {
+
+            if ($previousMarks !== null && $student->total_marks < $previousMarks) {
+                $rank = $index + 1;
+            }
+
+            $results[$index]->national_rank = $rank;
+
+            $previousMarks = $student->total_marks;
+        }
+
+
+        // Subject statistics
+        $subjectStats = null;
+        if ($examType && $academicYear) {
+            $subjectStats = $gradingService->subjectStatistics($examType, $academicYear);
+        }
+
+        $schools = School::all();
+        $years = Exam::select('academic_year')->distinct()->pluck('academic_year');
+
+        return view('Grading.dashboard', compact(
+            'results',
+            'schools',
+            'years',
+            'subjectStats'
+        ));
+    }
 }

@@ -15,4 +15,21 @@ class StudentExamResult extends Model
         'subject_id',
         'marks',
     ];
+
+    // StudentExamResult.php
+    public function student()
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(\App\Models\MasterData::class, 'subject_id', 'md_id');
+    }
+
+    public function exam()
+    {
+        return $this->belongsTo(\App\Models\Exam::class);
+    }
+
 }

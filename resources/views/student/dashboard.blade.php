@@ -777,21 +777,17 @@ $controller = new Controller();
                         </div>
                         <div class="stat-info">
                             <div class="stat-title">Examinations Taken</div>
-                            <div class="stat-value">08</div>
-                            <div class="stat-trend">
-                                <i class="fas fa-arrow-up trend-up"></i>
-                                <span>2 more than last year</span>
-                            </div>
+                            <div class="stat-value">{{ $overallExamsTaken ?? 'No ' }}</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="stat-card gradient-2 animate-card"
-                    style="
-        animation-delay: 0.3s;
-        transition: all 0.3s ease;
-        transform: translateY(0);
-    "
+                                        style="
+                            animation-delay: 0.3s;
+                            transition: all 0.3s ease;
+                            transform: translateY(0);
+                        "
                     onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.15)'"
                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                     <div class="stat-content">
@@ -800,11 +796,7 @@ $controller = new Controller();
                         </div>
                         <div class="stat-info">
                             <div class="stat-title">Average Grade</div>
-                            <div class="stat-value">A-</div>
-                            <div class="stat-trend">
-                                <i class="fas fa-arrow-up trend-up"></i>
-                                <span>Improved by 15%</span>
-                            </div>
+                            <div class="stat-value">{{ $overallAverageGrade }}</div>
                         </div>
                     </div>
                 </div>
@@ -823,11 +815,8 @@ $controller = new Controller();
                         </div>
                         <div class="stat-info">
                             <div class="stat-title">Total Aggregate</div>
-                            <div class="stat-value">14</div>
-                            <div class="stat-trend">
-                                <i class="fas fa-arrow-up trend-up"></i>
-                                <span>Division I</span>
-                            </div>
+                            <div class="stat-value">{{ $overallAggregate }}</div>
+                           
                         </div>
                     </div>
                 </div>
@@ -846,11 +835,8 @@ $controller = new Controller();
                         </div>
                         <div class="stat-info">
                             <div class="stat-title">Subjects Passed</div>
-                            <div class="stat-value">100%</div>
-                            <div class="stat-trend">
-                                <i class="fas fa-check trend-up"></i>
-                                <span>All subjects cleared</span>
-                            </div>
+                            <div class="stat-value">{{ $overallPassPercentage }}%</div>
+
                         </div>
                     </div>
                 </div>
@@ -874,108 +860,52 @@ $controller = new Controller();
                 </div>
 
                 <div class="results-table-container">
-                    <table class="results-table">
-                        <thead>
-                            <tr>
-                                <th>Examination</th>
-                                <th>Year</th>
-                                <th>Type</th>
-                                <th>Subjects</th>
-                                <th>Aggregate</th>
-                                <th>Division</th>
-                                <th>Overall Grade</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <strong>Thanawi Final Exams</strong>
-                                    <div class="text-muted" style="font-size: 0.9rem; color: var(--gray);">Advanced Level
-                                    </div>
-                                </td>
-                                <td>2024</td>
-                                <td><span class="grade-badge grade-a">Final</span></td>
-                                <td>6 Subjects</td>
-                                <td><strong>12</strong></td>
-                                <td><span class="grade-badge grade-a">I</span></td>
-                                <td><span class="grade-badge grade-a">A</span></td>
-                                <td class="action-cell">
-                                    <button class="action-btn" onclick="viewDetails('thanawi2024')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn" onclick="downloadResults('thanawi2024')">
-                                        <i class="fas fa-download"></i> PDF
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <strong>Idaad Final Exams</strong>
-                                    <div class="text-muted" style="font-size: 0.9rem; color: var(--gray);">Ordinary Level
-                                    </div>
-                                </td>
-                                <td>2022</td>
-                                <td><span class="grade-badge grade-b">Final</span></td>
-                                <td>8 Subjects</td>
-                                <td><strong>18</strong></td>
-                                <td><span class="grade-badge grade-b">II</span></td>
-                                <td><span class="grade-badge grade-b">B+</span></td>
-                                <td class="action-cell">
-                                    <button class="action-btn" onclick="viewDetails('idaad2022')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn" onclick="downloadResults('idaad2022')">
-                                        <i class="fas fa-download"></i> PDF
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <strong>Mid-Term Assessment</strong>
-                                    <div class="text-muted" style="font-size: 0.9rem; color: var(--gray);">Thanawi Year 1
-                                    </div>
-                                </td>
-                                <td>2023</td>
-                                <td><span class="grade-badge grade-a">Assessment</span></td>
-                                <td>5 Subjects</td>
-                                <td><strong>10</strong></td>
-                                <td><span class="grade-badge grade-a">I</span></td>
-                                <td><span class="grade-badge grade-a">A-</span></td>
-                                <td class="action-cell">
-                                    <button class="action-btn" onclick="viewDetails('midterm2023')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn" onclick="downloadResults('midterm2023')">
-                                        <i class="fas fa-download"></i> PDF
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <strong>Pre-Mock Exams</strong>
-                                    <div class="text-muted" style="font-size: 0.9rem; color: var(--gray);">Idaad Final
-                                        Year
-                                    </div>
-                                </td>
-                                <td>2021</td>
-                                <td><span class="grade-badge grade-c">Mock</span></td>
-                                <td>8 Subjects</td>
-                                <td><strong>24</strong></td>
-                                <td><span class="grade-badge grade-c">III</span></td>
-                                <td><span class="grade-badge grade-c">C+</span></td>
-                                <td class="action-cell">
-                                    <button class="action-btn" onclick="viewDetails('premock2021')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn" onclick="downloadResults('premock2021')">
-                                        <i class="fas fa-download"></i> PDF
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+    <table class="results-table">
+        <thead>
+            <tr>
+                <th>Examination</th>
+                <th>Year</th>
+                <th>Type</th>
+                <th>Subjects</th>
+                <th>Aggregate</th>
+                <th>Division</th>
+                <th>Overall Grade</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($exams as $exam)
+                <tr>
+                    <td>
+                        <strong>{{ $exam->exam_name }}</strong>
+                        <div class="text-muted" style="font-size: 0.9rem;">
+                            {{ $exam->exam_type }} Level
+                        </div>
+                    </td>
+                    <td>{{ $exam->academic_year }}</td>
+                    <td><span class="grade-badge grade-{{ strtolower($exam->grade) }}">{{ $exam->exam_type }}</span></td>
+                    <td>{{ $exam->total_subjects }} Subjects</td>
+                    <td><strong>{{ $exam->aggregate }}</strong></td>
+                    <td><span class="grade-badge grade-{{ strtolower($exam->grade) }}">{{ $exam->division }}</span></td>
+                    <td><span class="grade-badge grade-{{ strtolower($exam->grade) }}">{{ $exam->grade }}</span></td>
+                    <td class="action-cell">
+                        <button class="action-btn" onclick="viewDetails({{ $exam->exam_id }})">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="action-btn" onclick="downloadResults({{ $exam->exam_id }})">
+                            <i class="fas fa-download"></i> PDF
+                        </button>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="8" class="text-center">No exam results found.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
             </div>
 
             <!-- Performance Summary -->

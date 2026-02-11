@@ -273,8 +273,6 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
             Route::get('students-dashboard', 'studentPortal')->name('all.students.dashboard');
             Route::get('update-profile', action: 'updateProfiles')->name('students.update.profile');
-            // Route::get('update-photo', 'updatePhoto')->name('students.update.photo');
-            // Route::post('upload-fees', 'uploadFees')->name('students.upload.fees');
             Route::get('/search', 'searchStudent')->name('students.individual.search');
             Route::get('/all-students', 'allStudents')->name('students.all.students');
             Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
@@ -331,6 +329,13 @@ Route::controller(GradingController::class)->group(function () {
         Route::get('/exam-years', 'getExamYears');
         Route::get('/exams-by-year/{year}', 'getExamsByYear');
         Route::get('/active-exams', 'getActiveExams');
+
+        Route::get('/import-marks', 'importMarks')->name('import.marks');
+        Route::get('/exam/results/{examId}', 'showExamResults')
+            ->name('exam.results');
+
+        Route::get('/grading/dashboard', 'gradingDashboard')
+            ->name('grading.dashboard');
 
         Route::post('/toggle-exam-active', 'toggleExamActive')->name('toggle.exam.active');
         Route::post('/import/thanawi-results', 'importThanawiResults')->name('import.thanawi');

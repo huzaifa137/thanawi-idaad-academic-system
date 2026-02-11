@@ -16,6 +16,8 @@ use Mail;
 use App\Models\School;
 use App\Imports\StudentExamImport;
 use App\Models\Exam;
+use App\Services\GradingService;
+use App\Models\StudentExamResult;
 
 class StudentController extends Controller
 {
@@ -196,12 +198,75 @@ class StudentController extends Controller
         }
     }
 
-    public function studentDashboard()
+
+    public function studentDashboard(GradingService $gradingService)
     {
         $studentId = session('LoggedStudent');
+
         $student = DB::table('users')->where('id', $studentId)->first();
 
-        return view('student.dashboard', compact('student'));
+        // Get all exams taken by this student
+        $examResults = StudentExamResult::with(['exam', 'subject'])
+            ->where('student_id', $studentId)
+            ->get()
+            ->groupBy('exam_id');
+
+        $exams = $examResults->map(function ($results, $examId) use ($gradingService) {
+
+            $exam = $results->first()->exam;
+
+            $totalMarks = $results->sum('marks');
+            $averageMarks = $results->avg('marks');
+            $grade = $gradingService->calculateGrade($averageMarks);
+
+            $examsTaken = $results->groupBy('exam_id')->count();
+            $averageGrade = $gradingService->calculateGrade($averageMarks);
+
+            $subjectsPassed = $results->where('marks', '>=', 50)->count();
+            $totalSubjects = $results->count();
+
+            $passPercentage = $totalSubjects > 0
+                ? round(($subjectsPassed / $totalSubjects) * 100)
+                : 0;
+
+            // Determine division
+            $division = $averageMarks >= 80 ? 'I' :
+                ($averageMarks >= 70 ? 'II' :
+                    ($averageMarks >= 60 ? 'III' : 'IV'));
+
+            return (object) [
+                'exam_id' => $examId,
+                'exam_name' => $exam->exam_type . ' Exam',
+                'academic_year' => $exam->academic_year,
+                'exam_type' => ucfirst($exam->exam_type),
+                'total_subjects' => $totalSubjects,
+                'aggregate' => $totalMarks,
+                'division' => $division,
+                'grade' => $grade,
+                'examsTaken' => $examsTaken,
+                'averageGrade' => $averageGrade,
+                'passPercentage' => $passPercentage,
+            ];
+        })->values();
+
+        // **Overall stats for the overview cards**
+        $overallExamsTaken = $exams->sum('examsTaken');
+        $overallAggregate = $exams->sum('aggregate');
+        $overallPassPercentage = $exams->avg('passPercentage') ?? 0;
+        // Overall average grade
+        $overallAverageMarks = $exams->avg(function ($exam) {
+            return $exam->aggregate / $exam->total_subjects;
+        });
+        $overallAverageGrade = $gradingService->calculateGrade($overallAverageMarks);
+
+        return view('student.dashboard', compact(
+            'student',
+            'exams',
+            'overallExamsTaken',
+            'overallAggregate',
+            'overallPassPercentage',
+            'overallAverageGrade'
+        ));
     }
 
     public function selectCurrentSchool()
@@ -431,51 +496,51 @@ class StudentController extends Controller
         return view('student.student-search', compact(['classRecord']));
     }
 
-public function searchAjax(Request $request)
-{
-    $criteria = $request->input('criteria');
+    public function searchAjax(Request $request)
+    {
+        $criteria = $request->input('criteria');
 
-    switch ($criteria) {
-        case 'admission_number':
-            $students = Student::where('admission_number', $request->admission_number)->get();
-            break;
+        switch ($criteria) {
+            case 'admission_number':
+                $students = Student::where('admission_number', $request->admission_number)->get();
+                break;
 
-        case 'name':
-            $students = Student::where('firstname', 'like', '%' . $request->firstname . '%')
-                ->where('lastname', 'like', '%' . $request->lastname . '%')
-                ->where('senior', $request->senior)
-                ->get();
-            break;
+            case 'name':
+                $students = Student::where('firstname', 'like', '%' . $request->firstname . '%')
+                    ->where('lastname', 'like', '%' . $request->lastname . '%')
+                    ->where('senior', $request->senior)
+                    ->get();
+                break;
 
-        case 'phone':
-            $students = Student::where('primary_contact', $request->phone)
-                ->orWhere('other_contact', $request->phone)
-                ->get();
-            break;
+            case 'phone':
+                $students = Student::where('primary_contact', $request->phone)
+                    ->orWhere('other_contact', $request->phone)
+                    ->get();
+                break;
 
-        case 'student_id':
-            $students = Student::where('id', $request->student_id)->get();
-            break;
+            case 'student_id':
+                $students = Student::where('id', $request->student_id)->get();
+                break;
 
-        default:
-            return response()->json(['message' => 'Invalid criteria'], 400);
+            default:
+                return response()->json(['message' => 'Invalid criteria'], 400);
+        }
+
+        // 🔹 These were missing
+        $classRecord = Helper::MasterRecordMerge(
+            config('constants.options.O_LEVEL'),
+            config('constants.options.A_LEVEL')
+        );
+
+        $StreamRecord = Stream::all();
+
+        $html = view(
+            'student.partials.results',
+            compact('students', 'classRecord', 'StreamRecord')
+        )->render();
+
+        return response()->json(['html' => $html]);
     }
-
-    // 🔹 These were missing
-    $classRecord = Helper::MasterRecordMerge(
-        config('constants.options.O_LEVEL'),
-        config('constants.options.A_LEVEL')
-    );
-
-    $StreamRecord = Stream::all();
-
-    $html = view(
-        'student.partials.results',
-        compact('students', 'classRecord', 'StreamRecord')
-    )->render();
-
-    return response()->json(['html' => $html]);
-}
 
 
     public function updateProfiles()
