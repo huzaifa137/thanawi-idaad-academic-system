@@ -36,25 +36,25 @@ class StudentResult extends Model
        RELATIONSHIPS
        ========================== */
 
-    public function student()
-    {
-        return $this->belongsTo(Student::class);
-    }
+    // public function student()
+    // {
+    //     return $this->belongsTo(Student::class);
+    // }
 
-    public function subject()
-    {
-        return $this->belongsTo(ClassSubject::class, 'subject_id');
-    }
+    // public function subject()
+    // {
+    //     return $this->belongsTo(ClassSubject::class, 'subject_id');
+    // }
 
-    public function classroom()
-    {
-        return $this->belongsTo(Classroom::class, 'class_id');
-    }
+    // public function classroom()
+    // {
+    //     return $this->belongsTo(Classroom::class, 'class_id');
+    // }
 
-    public function stream()
-    {
-        return $this->belongsTo(Stream::class, 'stream_id');
-    }
+    // public function stream()
+    // {
+    //     return $this->belongsTo(Stream::class, 'stream_id');
+    // }
 
     // public function exam()
     // {

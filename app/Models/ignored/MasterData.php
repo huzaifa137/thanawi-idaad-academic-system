@@ -31,8 +31,8 @@ class MasterData extends Model
     ];
 
 
-    public function dynamicFormValues()
-    {
-        return $this->hasMany(DynamicFormValue::class, 'master_data_id', 'md_id');
-    }
+    // public function dynamicFormValues()
+    // {
+    //     return $this->hasMany(DynamicFormValue::class, 'master_data_id', 'md_id');
+    // }
 }

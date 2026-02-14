@@ -36,10 +36,10 @@ class Student extends Model
     'added_by',
   ];
 
-  public function school()
-  {
-    return $this->belongsTo(School::class);
-  }
+  // public function school()
+  // {
+  //   return $this->belongsTo(School::class);
+  // }
 
 
 }

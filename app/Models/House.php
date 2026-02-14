@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class House extends Model
+{
+    protected $table = 'houses';
+    protected $primaryKey = 'ID';
+
+    public $timestamps = false; // because we use custom timestamp
+
+    protected $fillable = [
+        'House',
+        'House_AR',
+        'Number',
+        'Location',
+        'RegistrationDate',
+        'Head',
+        'ContactPerson',
+    ];
+
+    protected $casts = [
+        'RegistrationDate' => 'datetime',
+        'Head' => 'integer',
+        'ContactPerson' => 'integer',
+    ];
+}

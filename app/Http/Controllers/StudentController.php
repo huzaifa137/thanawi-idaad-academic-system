@@ -199,6 +199,7 @@ class StudentController extends Controller
     }
 
 
+    // Just look into this code, the modals were shifted and the migrations
     public function studentDashboard(GradingService $gradingService)
     {
         $studentId = session('LoggedStudent');

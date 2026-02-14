@@ -23,8 +23,8 @@ class DynamicFormValue extends Model
     ];
 
 
-    public function masterData()
-    {
-        return $this->belongsTo(MasterData::class);
-    }
+    // public function masterData()
+    // {
+    //     return $this->belongsTo(MasterData::class);
+    // }
 }
