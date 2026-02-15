@@ -94,6 +94,62 @@ class ItebController extends Controller
         return view('itemGrading.enterMarks', compact('houses'));
     }
 
+    //Old Implementation before returning of data on any error found 
+
+    // public function saveMarks(Request $request)
+    // {
+
+    //     $request->validate([
+    //         'subject_id' => 'required|exists:master_datas,md_id',
+    //         'marks' => 'required|array',
+    //         'marks.*' => 'required|numeric|min:0|max:100',
+    //     ], [
+    //         'subject_id.required' => 'Please select a subject before submitting.',
+    //         'marks.*.required' => 'All students must have a mark.',
+    //         'marks.*.numeric' => 'Marks must be numbers.',
+    //         'marks.*.min' => 'Marks cannot be less than 0.',
+    //         'marks.*.max' => 'Marks cannot exceed 100.',
+    //     ]);
+
+    //     $subjectId = $request->input('subject_id');
+    //     $marks = $request->input('marks');
+    //     $students = $request->input('students');
+
+    //     // Check if any student is missing marks (double-check)
+    //     $missing = array_diff($students, array_keys($marks));
+    //     if (!empty($missing)) {
+    //         return back()->withErrors([
+    //             'marks' => 'Missing marks for students: ' . implode(', ', $missing)
+    //         ])->withInput();
+    //     }
+
+    //     // Save marks logic
+    //     foreach ($marks as $studentKey => $mark) {
+
+    //         $parts = explode('-', $studentKey);
+
+    //         $year = array_pop($parts);
+
+    //         $school_number = implode('-', array_slice($parts, 0, 2));
+    //         $category = implode('-', array_slice($parts, 2));
+
+    //         Mark::updateOrCreate(
+    //             [
+    //                 'student_id' => $studentKey,
+    //                 'subject_id' => $subjectId,
+    //             ],
+    //             [
+    //                 'mark' => $mark,
+    //                 'year' => $year,
+    //                 'category' => $category,
+    //                 'school_number' => $school_number
+    //             ]
+    //         );
+    //     }
+    //     return redirect()->back()->with('success', 'Marks submitted successfully for ' . count($marks) . ' students!');
+    // }
+
+
     public function saveMarks(Request $request)
     {
 
@@ -113,7 +169,6 @@ class ItebController extends Controller
         $marks = $request->input('marks');
         $students = $request->input('students');
 
-        // Check if any student is missing marks (double-check)
         $missing = array_diff($students, array_keys($marks));
         if (!empty($missing)) {
             return back()->withErrors([
@@ -121,13 +176,9 @@ class ItebController extends Controller
             ])->withInput();
         }
 
-        // Save marks logic
         foreach ($marks as $studentKey => $mark) {
-
             $parts = explode('-', $studentKey);
-
             $year = array_pop($parts);
-
             $school_number = implode('-', array_slice($parts, 0, 2));
             $category = implode('-', array_slice($parts, 2));
 
@@ -144,6 +195,7 @@ class ItebController extends Controller
                 ]
             );
         }
+
         return redirect()->back()->with('success', 'Marks submitted successfully for ' . count($marks) . ' students!');
     }
 
@@ -317,7 +369,6 @@ class ItebController extends Controller
                 'success' => true,
                 'message' => 'Grading results saved successfully!'
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -403,7 +454,7 @@ class ItebController extends Controller
         // Using packages like barryvdh/laravel-dompdf or maatwebsite/excel
     }
 
-    
+
     public function analyticsDashboard(Request $request)
     {
         // Get all available years from marks table
@@ -485,7 +536,7 @@ class ItebController extends Controller
         $schoolStats = [];
         foreach ($results as $result) {
             $schoolNumber = explode('-', $result->student_id)[0];
-            
+
             if (!isset($schoolStats[$schoolNumber])) {
                 $schoolStats[$schoolNumber] = [
                     'school_code' => $schoolNumber,
@@ -501,9 +552,9 @@ class ItebController extends Controller
 
             $schoolStats[$schoolNumber]['total_students']++;
             $schoolStats[$schoolNumber]['total_marks'] += $result->percentage;
-            $schoolStats[$schoolNumber]['grades'][$result->grade] = 
+            $schoolStats[$schoolNumber]['grades'][$result->grade] =
                 ($schoolStats[$schoolNumber]['grades'][$result->grade] ?? 0) + 1;
-            $schoolStats[$schoolNumber]['classifications'][$result->classification] = 
+            $schoolStats[$schoolNumber]['classifications'][$result->classification] =
                 ($schoolStats[$schoolNumber]['classifications'][$result->classification] ?? 0) + 1;
             $schoolStats[$schoolNumber]['students'][] = [
                 'id' => $result->student_id,
@@ -515,10 +566,10 @@ class ItebController extends Controller
 
         // Calculate averages and sort
         foreach ($schoolStats as &$stats) {
-            $stats['average_percentage'] = $stats['total_students'] > 0 
-                ? round($stats['total_marks'] / $stats['total_students'], 2) 
+            $stats['average_percentage'] = $stats['total_students'] > 0
+                ? round($stats['total_marks'] / $stats['total_students'], 2)
                 : 0;
-            
+
             // Calculate pass rate (percentage of students with grade >= C4 or classification not FAIL)
             $passed = 0;
             foreach ($stats['students'] as $student) {
@@ -526,13 +577,13 @@ class ItebController extends Controller
                     $passed++;
                 }
             }
-            $stats['pass_rate'] = $stats['total_students'] > 0 
-                ? round(($passed / $stats['total_students']) * 100, 2) 
+            $stats['pass_rate'] = $stats['total_students'] > 0
+                ? round(($passed / $stats['total_students']) * 100, 2)
                 : 0;
         }
 
         // Sort by average percentage descending
-        usort($schoolStats, function($a, $b) {
+        usort($schoolStats, function ($a, $b) {
             return $b['average_percentage'] <=> $a['average_percentage'];
         });
 
@@ -551,8 +602,8 @@ class ItebController extends Controller
             'summary' => [
                 'total_schools' => count($schoolStats),
                 'total_students' => $results->count(),
-                'average_across_schools' => count($schoolStats) > 0 
-                    ? round(array_sum(array_column($schoolStats, 'average_percentage')) / count($schoolStats), 2) 
+                'average_across_schools' => count($schoolStats) > 0
+                    ? round(array_sum(array_column($schoolStats, 'average_percentage')) / count($schoolStats), 2)
                     : 0,
                 'top_school' => $schoolStats[0]['school_name'] ?? 'N/A',
                 'top_school_score' => $schoolStats[0]['average_percentage'] ?? 0
@@ -590,7 +641,7 @@ class ItebController extends Controller
         $topStudents = $query->orderBy('percentage', 'desc')
             ->limit($limit)
             ->get()
-            ->map(function($item, $index) {
+            ->map(function ($item, $index) {
                 $schoolNumber = explode('-', $item->student_id)[0];
                 return [
                     'rank' => $index + 1,
@@ -611,7 +662,7 @@ class ItebController extends Controller
             ->orderBy('percentage', 'asc')
             ->limit(min(50, $limit))
             ->get()
-            ->map(function($item, $index) {
+            ->map(function ($item, $index) {
                 $schoolNumber = explode('-', $item->student_id)[0];
                 return [
                     'rank' => $index + 1,
@@ -668,7 +719,7 @@ class ItebController extends Controller
 
         // Get subjects for this category
         $subjectIds = $this->getSubjectIdsForCategory($category);
-        
+
         // Get all students for this year/category
         $studentsQuery = ClassAllocation::select('Student_ID')
             ->where('Student_ID', 'LIKE', "%-$category-%")
@@ -690,13 +741,13 @@ class ItebController extends Controller
         $subjectAnalysis = [];
         foreach ($subjectIds as $subjectId) {
             $subjectMarks = $marks->get($subjectId, collect());
-            
+
             if ($subjectMarks->isEmpty()) {
                 continue;
             }
 
             $marksValues = $subjectMarks->pluck('mark')->toArray();
-            
+
             $analysis = [
                 'subject_id' => $subjectId,
                 'subject_name' => $subjectMarks->first()->subject->md_name ?? 'Unknown',
@@ -716,7 +767,7 @@ class ItebController extends Controller
         }
 
         // Sort by average mark descending
-        usort($subjectAnalysis, function($a, $b) {
+        usort($subjectAnalysis, function ($a, $b) {
             return $b['average_mark'] <=> $a['average_mark'];
         });
 
@@ -731,8 +782,8 @@ class ItebController extends Controller
             'worst_subjects' => $worstSubjects,
             'summary' => [
                 'total_subjects' => count($subjectAnalysis),
-                'overall_average' => count($subjectAnalysis) > 0 
-                    ? round(array_sum(array_column($subjectAnalysis, 'average_mark')) / count($subjectAnalysis), 2) 
+                'overall_average' => count($subjectAnalysis) > 0
+                    ? round(array_sum(array_column($subjectAnalysis, 'average_mark')) / count($subjectAnalysis), 2)
                     : 0,
                 'best_subject' => $bestSubjects[0]['subject_name'] ?? 'N/A',
                 'best_subject_score' => $bestSubjects[0]['average_mark'] ?? 0,
@@ -788,8 +839,8 @@ class ItebController extends Controller
         // Calculate trends
         for ($i = 1; $i < count($comparison); $i++) {
             $current = $comparison[$i];
-            $previous = $comparison[$i-1];
-            
+            $previous = $comparison[$i - 1];
+
             $trends[] = [
                 'from_year' => $previous['year'],
                 'to_year' => $current['year'],
@@ -895,7 +946,7 @@ class ItebController extends Controller
     private function getQuickStats()
     {
         $currentYear = date('Y');
-        
+
         return [
             'total_students' => StudentResult::count(),
             'total_schools' => StudentResult::distinct('school_number')->count('school_number'),
@@ -912,14 +963,14 @@ class ItebController extends Controller
     private function getPreviousYearComparison($currentYear, $category, $level, $schools)
     {
         $prevYear = $currentYear - 1;
-        
+
         $prevData = StudentResult::where('year', $prevYear)
             ->where('category', $category)
             ->where('level', $level)
             ->whereIn('school_number', $schools)
             ->get()
             ->groupBy('school_number')
-            ->map(function($items) {
+            ->map(function ($items) {
                 return [
                     'average' => $items->avg('percentage'),
                     'count' => $items->count()
@@ -937,11 +988,11 @@ class ItebController extends Controller
         sort($arr);
         $count = count($arr);
         $middle = floor($count / 2);
-        
+
         if ($count % 2) {
             return $arr[$middle];
         }
-        
+
         return ($arr[$middle - 1] + $arr[$middle]) / 2;
     }
 
@@ -952,11 +1003,11 @@ class ItebController extends Controller
     {
         $avg = array_sum($arr) / count($arr);
         $variance = 0;
-        
+
         foreach ($arr as $value) {
             $variance += pow($value - $avg, 2);
         }
-        
+
         return round(sqrt($variance / count($arr)), 2);
     }
 
@@ -995,9 +1046,9 @@ class ItebController extends Controller
 
         $first = $comparison[0]['average_percentage'];
         $last = $comparison[count($comparison) - 1]['average_percentage'];
-        
+
         $change = $last - $first;
-        
+
         if ($change > 5) return 'Strong improvement';
         if ($change > 2) return 'Slight improvement';
         if ($change > -2) return 'Stable';
@@ -1020,9 +1071,9 @@ class ItebController extends Controller
      */
     private function generateCsvReport($data, $filename)
     {
-        $callback = function() use ($data) {
+        $callback = function () use ($data) {
             $file = fopen('php://output', 'w');
-            
+
             // Add headers based on data structure
             if (isset($data->top_students)) {
                 fputcsv($file, ['Rank', 'Student ID', 'School', 'Percentage', 'Grade', 'Classification']);
@@ -1037,7 +1088,7 @@ class ItebController extends Controller
                     ]);
                 }
             }
-            
+
             fclose($file);
         };
 
