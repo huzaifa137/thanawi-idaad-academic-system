@@ -20,6 +20,56 @@ class ItebController extends Controller
         return view('itemGrading.marks');
     }
 
+    // public function filter(Request $request)
+    // {
+    //     $thanawiPapers = MasterData::where(
+    //         'md_master_code_id',
+    //         config('constants.options.ThanawiPapers')
+    //     )->get();
+
+    //     $idaadPapers = MasterData::where(
+    //         'md_master_code_id',
+    //         config('constants.options.IdaadPapers')
+    //     )->get();
+
+    //     $year = $request->year;
+    //     $category = $request->category;
+    //     $schoolNumber = $request->school_number;
+
+    //     $records = ClassAllocation::where('Student_ID', 'LIKE', "%$schoolNumber%")
+    //         ->where('Student_ID', 'LIKE', "%-$category-%")
+    //         ->where('Student_ID', 'LIKE', "%-$year")
+    //         ->select('Student_ID')
+    //         ->distinct()
+    //         ->get();
+
+    //     $schoolName = Helper::schoolName($schoolNumber);
+
+    //     // Decide which subjectsubjects to use
+    //     $subjects = ($category == 'TH') ? $thanawiPapers : $idaadPapers;
+
+    //     // Get existing marks for the first subject by default (optional)
+    //     $existingMarks = [];
+    //     if ($subjects->isNotEmpty()) {
+    //         $firstSubject = $subjects->first();
+    //         $existingMarks = Mark::whereIn('student_id', $records->pluck('Student_ID'))
+    //             ->where('subject_id', $firstSubject->id)
+    //             ->pluck('mark', 'student_id')
+    //             ->toArray();
+    //     }
+
+    //     return view('itemGrading.results', compact(
+    //         'records',
+    //         'year',
+    //         'category',
+    //         'schoolNumber',
+    //         'schoolName',
+    //         'subjects',
+    //         'existingMarks'
+    //     ));
+    // }
+
+
     public function filter(Request $request)
     {
         $thanawiPapers = MasterData::where(
@@ -45,19 +95,22 @@ class ItebController extends Controller
 
         $schoolName = Helper::schoolName($schoolNumber);
 
-        // Decide which subjectsubjects to use
+        // Decide which subjects to use
         $subjects = ($category == 'TH') ? $thanawiPapers : $idaadPapers;
 
-        // Get existing marks for the first subject by default (optional)
+        // Get existing marks for ALL subjects (not just first one)
         $existingMarks = [];
-        if ($subjects->isNotEmpty()) {
-            $firstSubject = $subjects->first();
-            $existingMarks = Mark::whereIn('student_id', $records->pluck('Student_ID'))
-                ->where('subject_id', $firstSubject->id)
-                ->pluck('mark', 'student_id')
-                ->toArray();
+        if ($subjects->isNotEmpty() && $records->isNotEmpty()) {
+            $allMarks = Mark::whereIn('student_id', $records->pluck('Student_ID'))
+                ->whereIn('subject_id', $subjects->pluck('md_id'))
+                ->get();
+
+            foreach ($allMarks as $mark) {
+                $existingMarks[$mark->subject_id][$mark->student_id] = $mark->mark;
+            }
         }
 
+      
         return view('itemGrading.results', compact(
             'records',
             'year',
@@ -68,7 +121,6 @@ class ItebController extends Controller
             'existingMarks'
         ));
     }
-
 
     public function getMarksForSubject(Request $request)
     {
@@ -87,14 +139,30 @@ class ItebController extends Controller
             'marks' => $existingMarks
         ]);
     }
+
+    public function getSubjectMarks(Request $request)
+    {
+        $request->validate([
+            'subject_id' => 'required|exists:master_datas,md_id',
+            'student_ids' => 'required|array',
+        ]);
+
+        $marks = Mark::whereIn('student_id', $request->student_ids)
+            ->where('subject_id', $request->subject_id)
+            ->pluck('mark', 'student_id');
+
+        return response()->json([
+            'success' => true,
+            'marks' => $marks
+        ]);
+    }
+
     public function enterMarks(Request $request)
     {
         $houses = House::all();
 
         return view('itemGrading.enterMarks', compact('houses'));
     }
-
-    //Old Implementation before returning of data on any error found 
 
     // public function saveMarks(Request $request)
     // {
@@ -115,7 +183,6 @@ class ItebController extends Controller
     //     $marks = $request->input('marks');
     //     $students = $request->input('students');
 
-    //     // Check if any student is missing marks (double-check)
     //     $missing = array_diff($students, array_keys($marks));
     //     if (!empty($missing)) {
     //         return back()->withErrors([
@@ -123,13 +190,9 @@ class ItebController extends Controller
     //         ])->withInput();
     //     }
 
-    //     // Save marks logic
     //     foreach ($marks as $studentKey => $mark) {
-
     //         $parts = explode('-', $studentKey);
-
     //         $year = array_pop($parts);
-
     //         $school_number = implode('-', array_slice($parts, 0, 2));
     //         $category = implode('-', array_slice($parts, 2));
 
@@ -146,13 +209,13 @@ class ItebController extends Controller
     //             ]
     //         );
     //     }
+
     //     return redirect()->back()->with('success', 'Marks submitted successfully for ' . count($marks) . ' students!');
     // }
 
 
     public function saveMarks(Request $request)
     {
-
         $request->validate([
             'subject_id' => 'required|exists:master_datas,md_id',
             'marks' => 'required|array',
@@ -196,7 +259,7 @@ class ItebController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', 'Marks submitted successfully for ' . count($marks) . ' students!');
+        return redirect()->back()->with('success', 'Marks submitted successfully for subject!');
     }
 
     public function gradingSummary(Request $request)

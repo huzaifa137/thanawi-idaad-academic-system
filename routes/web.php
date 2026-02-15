@@ -13,12 +13,10 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/show-sessions', function () {
-
     // Get all session data
     $allSessions = Session::all();
 
     dd($allSessions);
-
 })->name('show.sessions');
 
 Route::get('/set-admin-session', function () {
@@ -28,14 +26,12 @@ Route::get('/set-admin-session', function () {
 });
 
 Route::get('/set-student-session', function () {
-
     session(['LoggedStudent' => 1]);
 
     return redirect('/');
 });
 
 Route::get('/set-school', function () {
-
     session(['LoggedSchool' => 2]);
 
     return redirect('/');
@@ -50,16 +46,13 @@ Route::get('/logout', function () {
 })->name('logout');
 
 Route::controller(UserController::class)->group(function () {
-
     Route::group(['prefix' => '/users'], function () {
-
         Route::get('/user-logout', 'userLogout')->name('user-logout');
         Route::post('/admin-logout', 'adminLogout')->name('admin-logout');
 
         Route::get('/student-logout', 'studentLogout')->name('student-logout');
 
         Route::group(['middleware' => ['AdminAuth']], function () {
-
             Route::get('/forgot-password', 'forgotPassword')->name('forgot-password');
             Route::get('/login', 'login')->name('users.login');
             Route::get('/', 'login')->name('admin.dashboard');
@@ -67,8 +60,7 @@ Route::controller(UserController::class)->group(function () {
             Route::get('/users-profile', 'userProfile')->name('users-profile');
             Route::get('/users-register', 'userRegister');
             Route::get('/users-information', 'userInformation')->name('users.user-information');
-            Route::get('user-account-information/{id}', [UserController::class, 'userAccountInformation'])
-                ->name('users.account-information');
+            Route::get('user-account-information/{id}', [UserController::class, 'userAccountInformation'])->name('users.account-information');
             Route::get('/home-page', 'homePage')->name('home.page');
             Route::get('/public-portal', 'publicPortal')->name('public.portal');
             Route::get('/register', 'register')->name('users.register');
@@ -76,7 +68,6 @@ Route::controller(UserController::class)->group(function () {
             Route::get('/edit-specific-user/{userid}', 'editSpecificUser')->name('users.edit-specific-user');
             Route::get('/terms-and-conditions', 'user_terms_and_conditions')->name('users.terms-and-conditions');
             Route::get('/users/delete-user/{id}', 'deleteUserAccount')->name('users.delete-user');
-
         });
 
         Route::post('auth-user-selected-school', 'authUserSelectedSchool')->name('auth-user-selected-school');
@@ -85,7 +76,6 @@ Route::controller(UserController::class)->group(function () {
         Route::post('save-role', 'saveUserRole')->name('save-role');
         Route::post('store-role-update', 'storeRoleUpdate')->name('store-role-update');
         Route::post('store-updated-information', 'storeUpdatedInformation')->name('store-updated-information');
-
     });
 
     Route::group(['middleware' => ['AdminAuth']], function () {
@@ -104,9 +94,7 @@ Route::controller(UserController::class)->group(function () {
 });
 
 Route::controller(MasterDataController::class)->group(function () {
-
     Route::group(['prefix' => 'master-data'], function () {
-
         Route::get('master-code-to-data', 'masterCodeToData')->name('master-code-to-data');
 
         Route::get('/load-data', 'loadData')->name('load.data');
@@ -125,7 +113,6 @@ Route::controller(MasterDataController::class)->group(function () {
         Route::get('master-code-list', 'masterCodeList');
         Route::get('edit-supplier-document/{id}', 'editSupplierDocument');
         Route::post('/store-requisition-document', 'storeRequisitionDocument')->name('master-data/store-requisition-document');
-
     });
 
     Route::post('store-travel-requisition-document', 'storeTravelRequisitionDocument')->name('store-travel-requisition-document');
@@ -138,14 +125,11 @@ Route::controller(MasterDataController::class)->group(function () {
     Route::get('delete-supplier-document/{id}', 'deleteSupplierDocument');
     Route::get('delete-record/{id}', 'deleteRecord');
     Route::get('delete-code/{id}', 'deleteCode');
-
 });
 
 Route::controller(StudentController::class)->group(function () {
-
     Route::group(['prefix' => '/users'], function () {
         Route::group(['middleware' => ['AdminAuth']], function () {
-
             Route::get('/register', 'register')->name('users.register');
             Route::get('/terms-and-conditions', 'user_terms_and_conditions')->name('users.terms-and-conditions');
             Route::get('/user-otp', function () {
@@ -163,17 +147,13 @@ Route::controller(StudentController::class)->group(function () {
 
         Route::post('user-account-creation', 'userAccountCreation')->name('user-account-creation');
         Route::post('contact-message-information', 'contactMessageInformation')->name('contact-message-information');
-
     });
     Route::get('/clear-session', 'flushSession');
 });
 
 Route::controller(StudentController::class)->group(function () {
-
     Route::group(['middleware' => ['StudentAuth']], function () {
-
         Route::group(['prefix' => '/student'], function () {
-
             Route::get('/dashboard', 'studentDashboard')->name('student.dashboard');
             Route::get('/profile', 'studentProfile')->name('student.profile');
             Route::get('/edit-student-profile', 'editStudentProfile');
@@ -184,7 +164,6 @@ Route::controller(StudentController::class)->group(function () {
 });
 
 Route::controller(SchoolController::class)->group(function () {
-
     Route::get('create-school', 'createSchool')->name('school.create-school');
     Route::get('term-dates/{schoolId}', 'termDates')->name('school.term-dates');
     Route::get('all-schools', 'allSchools')->name('school.allSchools');
@@ -218,8 +197,6 @@ Route::controller(SchoolController::class)->group(function () {
 });
 
 Route::controller(TeacherController::class)->group(function () {
-
-
     Route::get('add-teachers', 'addTeachers')->name('school.add-teachers');
     Route::get('/teachers', 'allTeachers')->name('teachers.all');
     Route::get('/school-teachers', 'schoolTeachers')->name('school.teachers');
@@ -231,15 +208,11 @@ Route::controller(TeacherController::class)->group(function () {
     Route::post('/teachers/update/{teacher}', 'storeUpdatedTeacherProfile')->name('teachers.update');
 
     Route::delete('/teachers/{id}', 'destroyTeacher')->name('teachers.destroy');
-
 });
 
-
 Route::controller(UserRightsAndPreviledges::class)->group(function () {
-
     Route::group(['middleware' => ['StudentAuth']], function () {
         Route::group(['prefix' => '/user-rights-and-previledges'], function () {
-
             Route::get('/setup', 'setup')->name('all.roles.setup');
             Route::get('/all-roles', 'allRoles')->name('all.users.roles');
             Route::get('/all-permissions', 'allPermissions')->name('all.users.permissions');
@@ -259,8 +232,7 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
 
         Route::post('/store-role', 'storeRole')->name('store.role');
         Route::post('/store-permission-role', 'storePermissionRole')->name('store.permission.role');
-        Route::post('/permissions/store-multiple', 'storeMultiplePermissions')
-            ->name('store.multiple.permissions');
+        Route::post('/permissions/store-multiple', 'storeMultiplePermissions')->name('store.multiple.permissions');
 
         Route::delete('/roles/{id}', 'deleteRole');
         Route::delete('/permissions/delete', 'destroyGroup')->name('permissions.delete');
@@ -274,43 +246,37 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
         Route::post('/store-new-user', 'storeNewUser')->name('users.store.new.user');
         Route::post('/update-user-information', 'updateUserInformation')->name('users.update.information');
         Route::post('/users/{id}/change-status', 'changeStatus');
-
     });
 
+    Route::controller(StudentController::class)
+        ->prefix('students')
+        ->group(function () {
+            Route::group(['middleware' => ['StudentAuth']], function () {
+                Route::get('students-dashboard', 'studentPortal')->name('all.students.dashboard');
+                Route::get('update-profile', action: 'updateProfiles')->name('students.update.profile');
+                Route::get('/search', 'searchStudent')->name('students.individual.search');
+                Route::get('/all-students', 'allStudents')->name('students.all.students');
+                Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
 
-    Route::controller(StudentController::class)->prefix('students')->group(function () {
+                Route::get('/export/{schoolId}/{type}', 'exportStudents')->name('students.export');
 
-        Route::group(['middleware' => ['StudentAuth']], function () {
+                Route::get('/students/{student}/edit', 'edit')->name('students.edit');
 
-            Route::get('students-dashboard', 'studentPortal')->name('all.students.dashboard');
-            Route::get('update-profile', action: 'updateProfiles')->name('students.update.profile');
-            Route::get('/search', 'searchStudent')->name('students.individual.search');
-            Route::get('/all-students', 'allStudents')->name('students.all.students');
-            Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
+                Route::get('/Information/{id}', 'showStudentInformation');
+                Route::put('/update/{id}', 'updateStudentInformation');
+                Route::post('/students/store', 'storeStudent')->name('students.store');
 
-            Route::get('/export/{schoolId}/{type}', 'exportStudents')
-                ->name('students.export');
+                Route::get('/transfer-form', 'moveStudentForm')->name('students.transfer');
 
-            Route::get('/students/{student}/edit', 'edit')->name('students.edit');
-
-            Route::get('/Information/{id}', 'showStudentInformation');
-            Route::put('/update/{id}', 'updateStudentInformation');
-            Route::post('/students/store', 'storeStudent')->name('students.store');
-
-            Route::get('/transfer-form', 'moveStudentForm')->name('students.transfer');
-
-            Route::get('/streams/by-class', 'getStreamsByClass')->name('streams.by.class');
-            Route::get('/students/search', 'searchStudentsByClassStream')->name('students.search');
-            Route::post('/students/move', 'moveStudent')->name('students.move');
+                Route::get('/streams/by-class', 'getStreamsByClass')->name('streams.by.class');
+                Route::get('/students/search', 'searchStudentsByClassStream')->name('students.search');
+                Route::post('/students/move', 'moveStudent')->name('students.move');
+            });
         });
-    });
 });
 
-
 Route::controller(ExamController::class)->group(function () {
-
     Route::group(['middleware' => ['StudentAuth']], function () {
-
         Route::get('/specific-school-students', 'schoolStudents')->name('all.specific.students');
         Route::get('/manage-exams', 'manageExams')->name('manage.exams');
         Route::get('/edit-exams', 'editExams')->name('edit.exams');
@@ -320,19 +286,14 @@ Route::controller(ExamController::class)->group(function () {
         Route::get('/exams/{exam}/{class}/ranking', 'downloadRankedResults')->name('exams.download.ranked');
         Route::get('/exams/download/reportcard/{exam}/{class}', 'downloadReportCard')->name('exams.download.reportcard');
 
-
         Route::post('/store-created-exam', 'storeCreatedExam');
         Route::post('/exams/upload-results', 'uploadResults')->name('exams.upload.results');
         Route::post('/exams/compute-results', 'computeResults')->name('exams.compute.results');
-
     });
 });
 
-
 Route::controller(GradingController::class)->group(function () {
-
     Route::group(['middleware' => ['StudentAuth']], function () {
-
         Route::post('/store-created-examination', 'storeCreatedExamination');
         Route::get('/import-marks', 'importMarks')->name('import.marks');
         Route::get('/create-examination', 'createExamination')->name('create.examination');
@@ -342,24 +303,18 @@ Route::controller(GradingController::class)->group(function () {
         Route::get('/active-exams', 'getActiveExams');
 
         Route::get('/import-marks', 'importMarks')->name('import.marks');
-        Route::get('/exam/results/{examId}', 'showExamResults')
-            ->name('exam.results');
+        Route::get('/exam/results/{examId}', 'showExamResults')->name('exam.results');
 
-        Route::get('/grading/dashboard', 'gradingDashboard')
-            ->name('grading.dashboard');
+        Route::get('/grading/dashboard', 'gradingDashboard')->name('grading.dashboard');
 
         Route::post('/toggle-exam-active', 'toggleExamActive')->name('toggle.exam.active');
         Route::post('/import/thanawi-results', 'importThanawiResults')->name('import.thanawi');
         Route::post('/import/idaad-results', 'importIdaadResults')->name('import.idaad');
-
     });
 });
 
-
 Route::controller(ItebController::class)->group(function () {
-
     Route::group(['middleware' => ['StudentAuth']], function () {
-
         Route::get('/search-iteb-students', 'searchItebStudents')->name('search.iteb.students');
         Route::get('/enter-marks', 'enterMarks')->name('enter.marks');
 
@@ -368,14 +323,12 @@ Route::controller(ItebController::class)->group(function () {
 
         Route::post('/iteb/save-marks', 'saveMarks')->name('iteb.save.marks');
         Route::post('/iteb/get-marks', 'getMarksForSubject')->name('iteb.get.marks');
-
+        Route::post('iteb/get-subject-marks', 'getSubjectMarks')->name('iteb.get.subject.marks');
 
         Route::get('/iteb/grading-summary', 'gradingSummary')->name('iteb.grading.summary');
         Route::post('/iteb/process-grading', 'processGrading')->name('iteb.process.grading');
         Route::post('/iteb/save-grading-results', 'saveGradingResults')->name('iteb.save.grading');
         Route::get('/iteb/export-grading', 'exportGrading')->name('iteb.export.grading');
-
-
 
         Route::get('/iteb/analytics/dashboard', 'analyticsDashboard')->name('iteb.analytics.dashboard');
         Route::post('/iteb/analytics/school-ranking', 'getSchoolRanking')->name('iteb.analytics.school.ranking');
@@ -384,6 +337,5 @@ Route::controller(ItebController::class)->group(function () {
         Route::post('/iteb/analytics/year-comparison', 'getYearComparison')->name('iteb.analytics.year.comparison');
         Route::post('/iteb/analytics/export-report', 'exportAnalyticsReport')->name('iteb.analytics.export');
         Route::get('/iteb/analytics/download/{format}', 'downloadReport')->name('iteb.analytics.download');
-
     });
 });

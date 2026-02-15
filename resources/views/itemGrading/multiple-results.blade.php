@@ -8,186 +8,66 @@
         <div class="container mt-4">
 
             <style>
-                /* Free-Standing Tabs - No Attached Lines */
-                .subject-tabs-wrapper {
-                    margin-bottom: 25px;
-                    padding: 10px 15px;
-                    background: transparent;
-                }
-
                 .subject-tabs {
                     display: flex;
                     flex-wrap: nowrap;
                     overflow-x: auto;
                     overflow-y: hidden;
                     scrollbar-width: thin;
-                    padding: 5px 0 15px 0;
-                    gap: 12px;
-                    scroll-behavior: smooth;
+                    padding-bottom: 5px;
+                    margin-bottom: 20px;
+                    border-bottom: 2px solid #dee2e6;
                 }
 
                 .subject-tabs::-webkit-scrollbar {
-                    height: 6px;
-                }
-
-                .subject-tabs::-webkit-scrollbar-track {
-                    background: #f1f1f1;
-                    border-radius: 10px;
+                    height: 5px;
                 }
 
                 .subject-tabs::-webkit-scrollbar-thumb {
-                    background: #287c44;
+                    background-color: #888;
                     border-radius: 10px;
                 }
 
-                .subject-tabs::-webkit-scrollbar-thumb:hover {
-                    background: #1e5f33;
-                }
-
                 .subject-tab {
-                    padding: 18px 25px;
-                    background-color: #ffffff;
-                    border: 1px solid #e0e0e0;
-                    border-radius: 16px;
+                    padding: 10px 20px;
+                    margin-right: 5px;
+                    background-color: #f8f9fa;
+                    border: 1px solid #dee2e6;
+                    border-bottom: none;
+                    border-radius: 8px 8px 0 0;
                     cursor: pointer;
-                    font-weight: 600;
-                    transition: all 0.3s ease;
+                    white-space: nowrap;
+                    font-weight: 500;
+                    transition: all 0.2s;
                     position: relative;
-                    min-width: 220px;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-                    flex: 0 0 auto;
+                    min-width: 150px;
+                    text-align: center;
                 }
 
                 .subject-tab:hover {
-                    background-color: #f0f7f2;
-                    border-color: #287c44;
-                    transform: translateY(-4px);
-                    box-shadow: 0 8px 16px rgba(40, 124, 68, 0.15);
+                    background-color: #e9ecef;
                 }
 
                 .subject-tab.active {
                     background-color: #287c44;
                     color: white;
                     border-color: #287c44;
-                    box-shadow: 0 8px 20px rgba(40, 124, 68, 0.25);
-                    transform: translateY(-2px);
                 }
 
-                /* Tab Content Layout */
-                .subject-tab .tab-content {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                }
-
-                .subject-tab .tab-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-start;
-                    width: 100%;
-                    gap: 10px;
-                }
-
-                .subject-tab .subject-info {
-                    flex: 1;
-                }
-
-                .subject-tab .subject-name {
-                    font-size: 15px;
-                    line-height: 1.4;
-                    font-weight: 600;
-                    word-break: break-word;
-                    white-space: normal;
-                    max-width: 180px;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-
-                .subject-tab.active .subject-name {
-                    color: white;
-                }
-
-                /* Progress Bar */
-                .subject-progress {
-                    height: 8px;
-                    background-color: #e9ecef;
-                    border-radius: 10px;
-                    margin: 8px 0;
-                    overflow: hidden;
-                    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-                }
-
-                .progress-fill {
-                    height: 100%;
-                    background: linear-gradient(90deg, #28a745, #34ce57);
-                    transition: width 0.3s ease;
-                    border-radius: 10px;
-                }
-
-                /* Stats Row */
-                .subject-tab .stats-row {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    font-size: 12px;
-                    font-weight: 500;
-                    color: #6c757d;
-                    margin-top: 5px;
-                    padding-top: 8px;
-                    border-top: 1px dashed rgba(0, 0, 0, 0.1);
-                }
-
-                .subject-tab.active .stats-row {
-                    color: rgba(255, 255, 255, 0.9);
-                    border-top: 1px dashed rgba(255, 255, 255, 0.3);
-                }
-
-                .subject-tab .stats-row span {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                }
-
-                .subject-tab .stats-row i {
-                    font-size: 11px;
-                }
-
-                .subject-tab .pending-badge {
+                .subject-tab .tab-badge {
+                    position: absolute;
+                    top: -5px;
+                    right: -5px;
                     background-color: #dc3545;
                     color: white;
-                    padding: 4px 10px;
-                    border-radius: 30px;
-                    font-size: 12px;
-                    font-weight: 600;
-                    display: inline-flex;
+                    border-radius: 50%;
+                    width: 20px;
+                    height: 20px;
+                    font-size: 11px;
+                    display: flex;
                     align-items: center;
-                    gap: 5px;
-                    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
-                }
-
-                .subject-tab .saved-badge {
-                    background-color: #e9ecef;
-                    color: #495057;
-                    padding: 4px 10px;
-                    border-radius: 30px;
-                    font-size: 12px;
-                    font-weight: 600;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 5px;
-                }
-
-                .subject-tab.active .saved-badge {
-                    background-color: rgba(255, 255, 255, 0.2);
-                    color: white;
-                }
-
-                /* Remove old badge */
-                .subject-tab .tab-badge {
-                    display: none;
+                    justify-content: center;
+                    font-weight: bold;
                 }
 
                 /* Tab Content Styling */
@@ -197,6 +77,21 @@
 
                 .tab-pane.active {
                     display: block;
+                }
+
+                /* Progress Bar */
+                .subject-progress {
+                    height: 5px;
+                    background-color: #e9ecef;
+                    border-radius: 10px;
+                    margin-top: 5px;
+                    overflow: hidden;
+                }
+
+                .progress-fill {
+                    height: 100%;
+                    background-color: #28a745;
+                    transition: width 0.3s;
                 }
 
                 /* Table Styling */
@@ -248,13 +143,9 @@
                 /* Responsive */
                 @media (max-width: 768px) {
                     .subject-tab {
-                        min-width: 200px;
-                        padding: 15px 20px;
-                    }
-
-                    .subject-tab .subject-name {
-                        font-size: 14px;
-                        max-width: 160px;
+                        min-width: 120px;
+                        padding: 8px 12px;
+                        font-size: 13px;
                     }
 
                     .action-buttons {
@@ -264,18 +155,6 @@
 
                     .action-buttons button {
                         width: 100%;
-                    }
-                }
-
-                @media (max-width: 480px) {
-                    .subject-tab {
-                        min-width: 180px;
-                        padding: 12px 15px;
-                    }
-
-                    .subject-tab .subject-name {
-                        font-size: 13px;
-                        max-width: 140px;
                     }
                 }
             </style>
@@ -329,35 +208,19 @@
                                     @endphp
                                     <div class="subject-tab {{ $index === 0 ? 'active' : '' }}"
                                         data-subject-id="{{ $subject->md_id }}" data-subject-name="{{ $subject->md_name }}">
-                                        <div class="tab-content">
-                                            <div class="tab-header">
-                                                <div class="subject-info">
-                                                    <div class="subject-name">{{ $subject->md_name }}</div>
-                                                </div>
+                                        <div class="d-flex flex-column">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span>{{ Str::limit($subject->md_name, 20) }}</span>
                                                 @if ($unsavedCount > 0)
-                                                    <span class="pending-badge">
-                                                        <i class="fa fa-clock"></i> {{ $unsavedCount }}
-                                                    </span>
-                                                @else
-                                                    <span class="saved-badge">
-                                                        <i class="fa fa-check-circle"></i> Complete
-                                                    </span>
+                                                    <span class="tab-badge"
+                                                        title="{{ $unsavedCount }} pending">{{ $unsavedCount }}</span>
                                                 @endif
                                             </div>
-
                                             <div class="subject-progress">
                                                 <div class="progress-fill" style="width: {{ $progressPercent }}%"></div>
                                             </div>
-
-                                            <div class="stats-row">
-                                                <span>
-                                                    <i class="fa fa-save"></i> {{ $savedCount }}/{{ $records->count() }}
-                                                    saved
-                                                </span>
-                                                <span>
-                                                    <i class="fa fa-percent"></i> {{ round($progressPercent) }}%
-                                                </span>
-                                            </div>
+                                            <small class="text-muted">{{ $savedCount }}/{{ $records->count() }}
+                                                saved</small>
                                         </div>
                                     </div>
                                 @endforeach
@@ -432,8 +295,7 @@
                                                                     <td>
                                                                         @if ($markValue)
                                                                             <span class="badge bg-success">Saved
-                                                                                ({{ $markValue }})
-                                                                            </span>
+                                                                                ({{ $markValue }})</span>
                                                                         @else
                                                                             <span
                                                                                 class="badge bg-warning text-dark">Pending</span>
@@ -488,10 +350,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-    </div>
-    </div>
     </div>
 @endsection
 
@@ -654,38 +512,24 @@
             const filledInputs = inputs.filter(function() {
                 return $(this).val() !== '';
             }).length;
-            const pending = totalInputs - filledInputs;
-            const progressPercent = (filledInputs / totalInputs) * 100;
 
             // Update progress bar
+            const progressPercent = (filledInputs / totalInputs) * 100;
             tab.find('.progress-fill').css('width', progressPercent + '%');
+            tab.find('small').text(`${filledInputs}/${totalInputs} saved`);
 
-            // Update stats row
-            const statsRow = tab.find('.stats-row');
-            statsRow.find('span:first-child').html(
-                `<i class="fa fa-save"></i> ${filledInputs}/${totalInputs} saved`);
-            statsRow.find('span:last-child').html(
-                `<i class="fa fa-percent"></i> ${Math.round(progressPercent)}%`);
-
-            // Update pending badge
-            const tabHeader = tab.find('.tab-header');
+            // Update badge
+            const pending = totalInputs - filledInputs;
             if (pending > 0) {
-                tabHeader.find('.pending-badge').remove();
-                tabHeader.append(`
-                    <span class="pending-badge">
-                        <i class="fa fa-clock"></i> ${pending}
-                    </span>
-                `);
+                if (tab.find('.tab-badge').length === 0) {
+                    tab.append('<span class="tab-badge"></span>');
+                }
+                tab.find('.tab-badge').text(pending).show();
             } else {
-                tabHeader.find('.pending-badge').remove();
-                tabHeader.append(`
-                    <span class="saved-badge">
-                        <i class="fa fa-check-circle"></i> Complete
-                    </span>
-                `);
+                tab.find('.tab-badge').hide();
             }
 
-            // Update status in form header
+            // Update status in header
             form.find('.subject-status .save-indicator')
                 .removeClass('saved unsaved')
                 .addClass(filledInputs === totalInputs ? 'saved' : 'unsaved');
@@ -767,32 +611,27 @@
                         method: 'POST',
                         data: form.serialize(),
                         success: function(response) {
-
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Saved!',
                                 text: 'Marks saved successfully',
-                                confirmButtonText: 'OK',
-                                allowOutsideClick: false
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
+                                timer: 1500,
+                                showConfirmButton: false
                             });
 
+                            // Reload after delay
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
                         },
                         error: function(xhr) {
-
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
-                                text: xhr.responseJSON && xhr.responseJSON
-                                    .message ?
-                                    xhr.responseJSON.message :
+                                text: xhr.responseJSON?.message ||
                                     'Failed to save marks',
                                 confirmButtonText: 'OK'
                             });
-
                         }
                     });
                 }

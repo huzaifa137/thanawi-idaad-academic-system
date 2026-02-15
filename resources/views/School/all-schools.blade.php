@@ -81,7 +81,6 @@ use App\Http\Controllers\Helper; // Keep if Helper::recordMdname is still used o
                                                 'label' => 'Active',
                                                 'class' => 'text-success',
                                                 'icon' => 'fas fa-check-circle',
-
                                             ];
                                         @endphp
                                         <span class="{{ $status['class'] }}">
