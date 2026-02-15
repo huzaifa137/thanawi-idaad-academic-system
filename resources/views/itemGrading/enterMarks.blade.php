@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="card-body bg-light">
-                        <form method="GET" action="{{ route('class.allocation.filter') }}">
+                        <form id="filterForm" method="GET" action="{{ route('class.allocation.filter') }}">
                             <div class="row">
 
                                 <!-- Year Dropdown -->
@@ -32,7 +32,7 @@
                                     <label><strong>Select Year</strong></label>
                                     <select name="year" class="form-control select2" required>
                                         <option value="">-- Select Year --</option>
-                                        @for ($year = 2018; $year <= 2030; $year++)
+                                        @for ($year = 2024; $year <= 2026; $year++)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endfor
                                     </select>
@@ -82,8 +82,22 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+        document.getElementById('filterForm').addEventListener('submit', function() {
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we fetch the records.',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+        });
+    </script>
 @endsection
