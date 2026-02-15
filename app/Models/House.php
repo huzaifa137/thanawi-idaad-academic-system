@@ -9,7 +9,7 @@ class House extends Model
     protected $table = 'houses';
     protected $primaryKey = 'ID';
 
-    public $timestamps = false; // because we use custom timestamp
+    public $timestamps = false; 
 
     protected $fillable = [
         'House',

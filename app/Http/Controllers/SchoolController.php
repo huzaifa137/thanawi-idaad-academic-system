@@ -10,7 +10,7 @@ use App\Models\SchoolProfile;
 use App\Models\TermDate;
 use App\Models\UpdateTracker;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\House;
 use Illuminate\Support\Facades\Storage;
 use Session;
 
@@ -62,7 +62,7 @@ class SchoolController extends Controller
 
     public function allSchools()
     {
-        $schools = School::latest()->get();
+        $schools = House::orderBy('id','Desc')->paginate(30);
 
         return view('School.all-schools', compact('schools'));
     }

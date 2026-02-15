@@ -9,6 +9,16 @@ use App\Models\AcademicYear;
 
 class Helper extends Controller
 {
+
+    public static function schoolName($school_id)
+    {
+        $schoolName = DB::table('houses')
+            ->where('Number', $school_id)
+            ->value('House');
+
+        return $schoolName;
+    }
+
     public static function user_id()
     {
         return $user = Session::get('LoggedAdmin');

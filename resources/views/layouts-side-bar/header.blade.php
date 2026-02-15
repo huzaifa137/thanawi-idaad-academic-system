@@ -10,9 +10,6 @@
 
             @php
                 use App\Http\Controllers\Helper;
-                use App\Models\School;
-                $schools = School::latest()->get();
-                $selectedSchool = session('LoggedSchool') ? School::find(session('LoggedSchool')) : null;
             @endphp
 
             <div class="dropdown side-nav">

@@ -121,16 +121,17 @@ class TeacherController extends Controller
     public function updateteacherProfile($id)
     {
 
+
         $user = DB::table('users')->where('id', $id)->first();
-        $roles = Role::all();
+        // $roles = Role::all();
         $userModel = User::find($id);
-        $userRoles = $userModel ? $userModel->roles->pluck('id')->toArray() : [];
+        // $userRoles = $userModel ? $userModel->roles->pluck('id')->toArray() : [];
 
         $teacher = DB::table('users')
             ->where('id', $id)
             ->first();
 
-        return view('Users.update-user-info', compact('teacher', 'roles', 'userRoles'));
+        return view('Users.update-user-info', compact('teacher'));
     }
 
     public function storeUpdatedTeacherProfile(Request $request, Teacher $teacher)

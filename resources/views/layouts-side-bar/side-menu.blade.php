@@ -1,8 +1,8 @@
-<!--aside open-->
 <div class="app-sidebar app-sidebar2">
-    <div class="app-sidebar__logo">
+    <div class="app-sidebar__logo" style="height: 155px; padding: 50px 10px;">
         <a class="header-brand" href="{{ url('/student/dashboard') }}">
-            <img src="{{ URL::asset('assets/images/brand/uplogolight.png') }}" alt="Covido logo">
+            <img src="{{ URL::asset('assets/images/brand/uplogolight.png') }}" alt="Covido logo"
+                style="height: 90px; width: auto;">
         </a>
     </div>
 </div>
@@ -57,10 +57,19 @@ use App\Helpers\PermissionHelper;
             </a>
         </li> --}}
 
-        <li class="slide">
+        {{-- Original Grading with uploading exam to be uploaded --}}
+
+        {{-- <li class="slide">
             <a class="side-menu__item" href="{{ route('create.examination') }}">
                 <i class="fas fa-balance-scale-right fa-2x mr-3"></i>
                 Grading
+            </a>
+        </li> --}}
+
+        <li class="slide">
+            <a class="side-menu__item" href="{{  url('/search-iteb-students')  }}">
+                <i class="fas fa-balance-scale-right fa-2x mr-3"></i>
+                Grading & Marks
             </a>
         </li>
 
@@ -91,8 +100,8 @@ use App\Helpers\PermissionHelper;
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <script>
-            $(document).ready(function () {
-                $('#helpSupportToggle').on('click', function (e) {
+            $(document).ready(function() {
+                $('#helpSupportToggle').on('click', function(e) {
                     e.preventDefault();
                     $(this).parent('.slide').toggleClass('active');
                 });
@@ -100,7 +109,7 @@ use App\Helpers\PermissionHelper;
         </script>
 
         <script>
-            document.getElementById('logoutMenu').addEventListener('click', function (event) {
+            document.getElementById('logoutMenu').addEventListener('click', function(event) {
                 event.preventDefault();
 
                 Swal.fire({

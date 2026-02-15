@@ -7,8 +7,19 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserRightsAndPreviledges;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\ItebController;
 use App\Http\Controllers\GradingController;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/show-sessions', function () {
+
+    // Get all session data
+    $allSessions = Session::all();
+
+    dd($allSessions);
+
+})->name('show.sessions');
 
 Route::get('/set-admin-session', function () {
     session(['LoggedAdmin' => 1]);
@@ -340,6 +351,39 @@ Route::controller(GradingController::class)->group(function () {
         Route::post('/toggle-exam-active', 'toggleExamActive')->name('toggle.exam.active');
         Route::post('/import/thanawi-results', 'importThanawiResults')->name('import.thanawi');
         Route::post('/import/idaad-results', 'importIdaadResults')->name('import.idaad');
+
+    });
+});
+
+
+Route::controller(ItebController::class)->group(function () {
+
+    Route::group(['middleware' => ['StudentAuth']], function () {
+
+        Route::get('/search-iteb-students', 'searchItebStudents')->name('search.iteb.students');
+        Route::get('/enter-marks', 'enterMarks')->name('enter.marks');
+
+        Route::get('/class-allocation', 'enterMarks');
+        Route::get('/class-allocation/filter', 'filter')->name('class.allocation.filter');
+
+        Route::post('/iteb/save-marks', 'saveMarks')->name('iteb.save.marks');
+        Route::post('/iteb/get-marks', 'getMarksForSubject')->name('iteb.get.marks');
+
+
+        Route::get('/iteb/grading-summary', 'gradingSummary')->name('iteb.grading.summary');
+        Route::post('/iteb/process-grading', 'processGrading')->name('iteb.process.grading');
+        Route::post('/iteb/save-grading-results', 'saveGradingResults')->name('iteb.save.grading');
+        Route::get('/iteb/export-grading', 'exportGrading')->name('iteb.export.grading');
+
+
+
+        Route::get('/iteb/analytics/dashboard', 'analyticsDashboard')->name('iteb.analytics.dashboard');
+        Route::post('/iteb/analytics/school-ranking', 'getSchoolRanking')->name('iteb.analytics.school.ranking');
+        Route::post('/iteb/analytics/student-ranking', 'getStudentRanking')->name('iteb.analytics.student.ranking');
+        Route::post('/iteb/analytics/subject-analysis', 'getSubjectAnalysis')->name('iteb.analytics.subject.analysis');
+        Route::post('/iteb/analytics/year-comparison', 'getYearComparison')->name('iteb.analytics.year.comparison');
+        Route::post('/iteb/analytics/export-report', 'exportAnalyticsReport')->name('iteb.analytics.export');
+        Route::get('/iteb/analytics/download/{format}', 'downloadReport')->name('iteb.analytics.download');
 
     });
 });

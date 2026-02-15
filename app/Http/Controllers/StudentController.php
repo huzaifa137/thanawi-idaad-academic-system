@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 
@@ -47,7 +48,7 @@ class StudentController extends Controller
     {
 
         // ACCOUNT STATUSES
-// --------------------------------------
+        // --------------------------------------
         // 1.Banned     ====> 0
         // 2.Locked     ====> 8
         // 3.Suspended  ====> 9
@@ -128,7 +129,6 @@ class StudentController extends Controller
                 'message' => 'OTP has been sent,check your email to proceed',
                 'redirect_url' => '/users/user-otp',
             ]);
-
         } else {
             return response()->json([
                 'status' => false,
@@ -187,7 +187,6 @@ class StudentController extends Controller
                     'redirect_url' => $url3,
                 ]);
             }
-
         } else {
 
             return response()->json([
@@ -198,67 +197,50 @@ class StudentController extends Controller
         }
     }
 
-
-    // Just look into this code, the modals were shifted and the migrations
     public function studentDashboard(GradingService $gradingService)
     {
-        $studentId = session('LoggedStudent');
+        // Dummy student
+        $student = (object) [
+            'id' => 1,
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+        ];
 
-        $student = DB::table('users')->where('id', $studentId)->first();
+        // Dummy exams data
+        $exams = collect([
+            (object) [
+                'exam_id' => 1,
+                'exam_name' => 'Midterm Exam',
+                'academic_year' => '2024/2025',
+                'exam_type' => 'Midterm',
+                'total_subjects' => 5,
+                'aggregate' => 375,
+                'division' => 'I',
+                'grade' => 'A',
+                'examsTaken' => 1,
+                'averageGrade' => 'A',
+                'passPercentage' => 100,
+            ],
+            (object) [
+                'exam_id' => 2,
+                'exam_name' => 'Final Exam',
+                'academic_year' => '2024/2025',
+                'exam_type' => 'Final',
+                'total_subjects' => 5,
+                'aggregate' => 320,
+                'division' => 'II',
+                'grade' => 'B',
+                'examsTaken' => 1,
+                'averageGrade' => 'B',
+                'passPercentage' => 80,
+            ],
+        ]);
 
-        // Get all exams taken by this student
-        $examResults = StudentExamResult::with(['exam', 'subject'])
-            ->where('student_id', $studentId)
-            ->get()
-            ->groupBy('exam_id');
-
-        $exams = $examResults->map(function ($results, $examId) use ($gradingService) {
-
-            $exam = $results->first()->exam;
-
-            $totalMarks = $results->sum('marks');
-            $averageMarks = $results->avg('marks');
-            $grade = $gradingService->calculateGrade($averageMarks);
-
-            $examsTaken = $results->groupBy('exam_id')->count();
-            $averageGrade = $gradingService->calculateGrade($averageMarks);
-
-            $subjectsPassed = $results->where('marks', '>=', 50)->count();
-            $totalSubjects = $results->count();
-
-            $passPercentage = $totalSubjects > 0
-                ? round(($subjectsPassed / $totalSubjects) * 100)
-                : 0;
-
-            // Determine division
-            $division = $averageMarks >= 80 ? 'I' :
-                ($averageMarks >= 70 ? 'II' :
-                    ($averageMarks >= 60 ? 'III' : 'IV'));
-
-            return (object) [
-                'exam_id' => $examId,
-                'exam_name' => $exam->exam_type . ' Exam',
-                'academic_year' => $exam->academic_year,
-                'exam_type' => ucfirst($exam->exam_type),
-                'total_subjects' => $totalSubjects,
-                'aggregate' => $totalMarks,
-                'division' => $division,
-                'grade' => $grade,
-                'examsTaken' => $examsTaken,
-                'averageGrade' => $averageGrade,
-                'passPercentage' => $passPercentage,
-            ];
-        })->values();
-
-        // **Overall stats for the overview cards**
+        // Overall stats
         $overallExamsTaken = $exams->sum('examsTaken');
         $overallAggregate = $exams->sum('aggregate');
-        $overallPassPercentage = $exams->avg('passPercentage') ?? 0;
-        // Overall average grade
-        $overallAverageMarks = $exams->avg(function ($exam) {
-            return $exam->aggregate / $exam->total_subjects;
-        });
-        $overallAverageGrade = $gradingService->calculateGrade($overallAverageMarks);
+        $overallPassPercentage = $exams->avg('passPercentage');
+        $overallAverageGrade = 'A'; // Dummy value
 
         return view('student.dashboard', compact(
             'student',
@@ -269,6 +251,78 @@ class StudentController extends Controller
             'overallAverageGrade'
         ));
     }
+
+
+    // // Just look into this code, the modals were shifted and the migrations
+    // public function studentDashboard(GradingService $gradingService)
+    // {
+    //     $studentId = session('LoggedStudent');
+
+    //     $student = DB::table('users')->where('id', $studentId)->first();
+
+    //     // Get all exams taken by this student
+    //     $examResults = StudentExamResult::with(['exam', 'subject'])
+    //         ->where('student_id', $studentId)
+    //         ->get()
+    //         ->groupBy('exam_id');
+
+    //     $exams = $examResults->map(function ($results, $examId) use ($gradingService) {
+
+    //         $exam = $results->first()->exam;
+
+    //         $totalMarks = $results->sum('marks');
+    //         $averageMarks = $results->avg('marks');
+    //         $grade = $gradingService->calculateGrade($averageMarks);
+
+    //         $examsTaken = $results->groupBy('exam_id')->count();
+    //         $averageGrade = $gradingService->calculateGrade($averageMarks);
+
+    //         $subjectsPassed = $results->where('marks', '>=', 50)->count();
+    //         $totalSubjects = $results->count();
+
+    //         $passPercentage = $totalSubjects > 0
+    //             ? round(($subjectsPassed / $totalSubjects) * 100)
+    //             : 0;
+
+    //         // Determine division
+    //         $division = $averageMarks >= 80 ? 'I' :
+    //             ($averageMarks >= 70 ? 'II' :
+    //                 ($averageMarks >= 60 ? 'III' : 'IV'));
+
+    //         return (object) [
+    //             'exam_id' => $examId,
+    //             'exam_name' => $exam->exam_type . ' Exam',
+    //             'academic_year' => $exam->academic_year,
+    //             'exam_type' => ucfirst($exam->exam_type),
+    //             'total_subjects' => $totalSubjects,
+    //             'aggregate' => $totalMarks,
+    //             'division' => $division,
+    //             'grade' => $grade,
+    //             'examsTaken' => $examsTaken,
+    //             'averageGrade' => $averageGrade,
+    //             'passPercentage' => $passPercentage,
+    //         ];
+    //     })->values();
+
+    //     // **Overall stats for the overview cards**
+    //     $overallExamsTaken = $exams->sum('examsTaken');
+    //     $overallAggregate = $exams->sum('aggregate');
+    //     $overallPassPercentage = $exams->avg('passPercentage') ?? 0;
+    //     // Overall average grade
+    //     $overallAverageMarks = $exams->avg(function ($exam) {
+    //         return $exam->aggregate / $exam->total_subjects;
+    //     });
+    //     $overallAverageGrade = $gradingService->calculateGrade($overallAverageMarks);
+
+    //     return view('student.dashboard', compact(
+    //         'student',
+    //         'exams',
+    //         'overallExamsTaken',
+    //         'overallAggregate',
+    //         'overallPassPercentage',
+    //         'overallAverageGrade'
+    //     ));
+    // }
 
     public function selectCurrentSchool()
     {
@@ -296,7 +350,6 @@ class StudentController extends Controller
 
 
             return view('users.schools-teacher-belongs-in', compact(['schoolsInExistance', 'userInfo', 'email']));
-
         } else {
             session()->flush();
             return redirect('/');
@@ -706,7 +759,6 @@ class StudentController extends Controller
             DB::commit();
 
             return response()->json(['message' => 'Student(s) moved successfully!']);
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -716,5 +768,4 @@ class StudentController extends Controller
             ], 500);
         }
     }
-
 }
