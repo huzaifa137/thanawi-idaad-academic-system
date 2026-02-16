@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use DB;
@@ -11,6 +12,15 @@ class Helper extends Controller
 {
 
     public static function schoolName($school_id)
+    {
+        $schoolName = DB::table('houses')
+            ->where('Number', $school_id)
+            ->value('House');
+
+        return $schoolName;
+    }
+
+    public static function subjectName($subject_id)
     {
         $schoolName = DB::table('houses')
             ->where('Number', $school_id)
@@ -137,14 +147,12 @@ class Helper extends Controller
                 } else {
                     $string .= '<option value="' . $row->md_id . '">' . $row->md_name . '</option>';
                 }
-
             } else if ($part == 2) {
                 if ($row->md_id == $selected) {
                     $string .= '<option selected value="' . $row->md_id . '">' . $row->md_name . ' (' . $row->md_code . ')</option>';
                 } else {
                     $string .= '<option value="' . $row->md_id . '">' . $row->md_name . ' (' . $row->md_code . ')</option>';
                 }
-
             }
         }
 
@@ -174,14 +182,12 @@ class Helper extends Controller
                 } else {
                     $string .= '<option value="' . $row->md_id . '">' . $row->md_name . '</option>';
                 }
-
             } else if ($part == 2) {
                 if ($row->md_id == $selected) {
                     $string .= '<option selected value="' . $row->md_id . '">' . $row->md_name . ' (' . $row->md_code . ')</option>';
                 } else {
                     $string .= '<option value="' . $row->md_id . '">' . $row->md_name . ' (' . $row->md_code . ')</option>';
                 }
-
             }
         }
 
@@ -201,7 +207,6 @@ class Helper extends Controller
             ->value('md_name');
 
         return $masterRecord;
-
     }
 
     public static function MasterRecordMdId($md_id)
@@ -212,7 +217,6 @@ class Helper extends Controller
             ->value('md_name');
 
         return $masterRecord;
-
     }
 
     public static function recordMdname($md_id)
@@ -330,7 +334,6 @@ class Helper extends Controller
             ->value('year');
 
         return $activeUploadingYear ?? 'Upload Year Not Set';
-
     }
 
     public static function activeUploadingThanawiYear()
@@ -341,7 +344,5 @@ class Helper extends Controller
             ->value('year');
 
         return $activeUploadingYear ?? 'Upload Year Not Set';
-
     }
-
 }

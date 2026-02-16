@@ -19,57 +19,6 @@ class ItebController extends Controller
     {
         return view('itemGrading.marks');
     }
-
-    // public function filter(Request $request)
-    // {
-    //     $thanawiPapers = MasterData::where(
-    //         'md_master_code_id',
-    //         config('constants.options.ThanawiPapers')
-    //     )->get();
-
-    //     $idaadPapers = MasterData::where(
-    //         'md_master_code_id',
-    //         config('constants.options.IdaadPapers')
-    //     )->get();
-
-    //     $year = $request->year;
-    //     $category = $request->category;
-    //     $schoolNumber = $request->school_number;
-
-    //     $records = ClassAllocation::where('Student_ID', 'LIKE', "%$schoolNumber%")
-    //         ->where('Student_ID', 'LIKE', "%-$category-%")
-    //         ->where('Student_ID', 'LIKE', "%-$year")
-    //         ->select('Student_ID')
-    //         ->distinct()
-    //         ->get();
-
-    //     $schoolName = Helper::schoolName($schoolNumber);
-
-    //     // Decide which subjectsubjects to use
-    //     $subjects = ($category == 'TH') ? $thanawiPapers : $idaadPapers;
-
-    //     // Get existing marks for the first subject by default (optional)
-    //     $existingMarks = [];
-    //     if ($subjects->isNotEmpty()) {
-    //         $firstSubject = $subjects->first();
-    //         $existingMarks = Mark::whereIn('student_id', $records->pluck('Student_ID'))
-    //             ->where('subject_id', $firstSubject->id)
-    //             ->pluck('mark', 'student_id')
-    //             ->toArray();
-    //     }
-
-    //     return view('itemGrading.results', compact(
-    //         'records',
-    //         'year',
-    //         'category',
-    //         'schoolNumber',
-    //         'schoolName',
-    //         'subjects',
-    //         'existingMarks'
-    //     ));
-    // }
-
-
     public function filter(Request $request)
     {
         $thanawiPapers = MasterData::where(
@@ -95,10 +44,8 @@ class ItebController extends Controller
 
         $schoolName = Helper::schoolName($schoolNumber);
 
-        // Decide which subjects to use
         $subjects = ($category == 'TH') ? $thanawiPapers : $idaadPapers;
 
-        // Get existing marks for ALL subjects (not just first one)
         $existingMarks = [];
         if ($subjects->isNotEmpty() && $records->isNotEmpty()) {
             $allMarks = Mark::whereIn('student_id', $records->pluck('Student_ID'))
@@ -110,7 +57,6 @@ class ItebController extends Controller
             }
         }
 
-      
         return view('itemGrading.results', compact(
             'records',
             'year',
@@ -264,7 +210,7 @@ class ItebController extends Controller
 
     public function gradingSummary(Request $request)
     {
-        // Get distinct years from marks or class allocations
+
         $years = ClassAllocation::select('Student_ID')
             ->get()
             ->map(function ($item) {
@@ -275,7 +221,6 @@ class ItebController extends Controller
             ->sort()
             ->values();
 
-        // Get categories
         $categories = ['TH' => 'Thanawi', 'ID' => 'Idaad'];
 
         $schools = ClassAllocation::select('Student_ID')
@@ -292,107 +237,131 @@ class ItebController extends Controller
             });
 
 
-        // dd($schools);
-        return view('itemGrading.grading-summary', compact('years', 'categories', 'schools'));
+        $totalStudents = ClassAllocation::distinct('Student_ID')->count('Student_ID');
+        $gradedSoFar = Mark::distinct('student_id')->count('student_id');
+        $pendingGrading = $totalStudents - $gradedSoFar;
+
+        $avgPerformance = Mark::selectRaw('AVG(total_mark) as avg_mark')
+            ->fromSub(function ($query) {
+                $query->selectRaw('student_id, SUM(mark) as total_mark')
+                    ->from('marks')
+                    ->groupBy('student_id');
+            }, 'student_totals')
+            ->value('avg_mark') ?? 0;
+
+        return view('itemGrading.grading-summary', compact(
+            'years',
+            'categories',
+            'schools',
+            'totalStudents',
+            'gradedSoFar',
+            'pendingGrading',
+            'avgPerformance'
+        ));
+    }
+public function processGrading(Request $request)
+{
+    $request->validate([
+        'year' => 'required',
+        'category' => 'required',
+        'school_number' => 'nullable',
+    ]);
+
+    $year = $request->year;
+    $category = $request->category;
+    $schoolNumber = $request->school_number;
+    $level = $request->level ?? 'A'; // Default to 'A' level
+
+    // Build query for students
+    $studentsQuery = ClassAllocation::select('Student_ID')
+        ->where('Student_ID', 'LIKE', "%-$category-%")
+        ->where('Student_ID', 'LIKE', "%-$year")
+        ->distinct();
+
+    if ($schoolNumber) {
+        $studentsQuery->where('Student_ID', 'LIKE', "$schoolNumber-%");
     }
 
-    /**
-     * Process and display grading results
-     */
-    public function processGrading(Request $request)
-    {
+    $students = $studentsQuery->pluck('Student_ID');
 
-        $request->validate([
-            'year' => 'required',
-            'category' => 'required',
-            'school_number' => 'nullable',
-        ]);
+    // Get subjects for this category
+    $subjectIds = $this->getSubjectIdsForCategory($category);
 
-        $year = $request->year;
-        $category = $request->category;
-        $schoolNumber = $request->school_number;
-        $level = $request->level ?? 'A'; // Default to 'A' level
+    // Get total possible marks (each subject out of 100)
+    $totalPossibleMarks = count($subjectIds) * 100;
 
-        // Build query for students
-        $studentsQuery = ClassAllocation::select('Student_ID')
-            ->where('Student_ID', 'LIKE', "%-$category-%")
-            ->where('Student_ID', 'LIKE', "%-$year")
-            ->distinct();
+    // Get all marks for these students and subjects
+    $marks = Mark::whereIn('student_id', $students)
+        ->whereIn('subject_id', $subjectIds)
+        ->get()
+        ->groupBy('student_id');
 
-        if ($schoolNumber) {
-            $studentsQuery->where('Student_ID', 'LIKE', "$schoolNumber-%");
-        }
+    // Calculate results for each student
+    $results = [];
+    foreach ($students as $studentId) {
+        $studentMarks = $marks->get($studentId, collect());
 
-        $students = $studentsQuery->pluck('Student_ID');
+        $totalMarks = $studentMarks->sum('mark');
+        $subjectsAttempted = $studentMarks->count();
 
-        // Get subjects for this category
-        $subjectIds = $this->getSubjectIdsForCategory($category);
+        // Calculate percentage based on total possible marks for category
+        $percentage = $totalPossibleMarks > 0
+            ? round(($totalMarks / $totalPossibleMarks) * 100, 2)
+            : 0;
 
-        // Get total possible marks (each subject out of 100)
-        $totalPossibleMarks = count($subjectIds) * 100;
+        // Get grade (D1, D2, C3, C4, F)
+        $gradeModel = Grading::getGrade($percentage, 'Marks', $level);
 
-        // Get all marks for these students and subjects
-        $marks = Mark::whereIn('student_id', $students)
-            ->whereIn('subject_id', $subjectIds)
-            ->get()
-            ->groupBy('student_id');
+        // Get classification (FIRST CLASS, SECOND CLASS UPPER, etc.)
+        $classificationModel = Grading::getGrade($percentage, 'Points', $level);
 
-        // Calculate results for each student
-        $results = [];
-        foreach ($students as $studentId) {
-            $studentMarks = $marks->get($studentId, collect());
-
-            $totalMarks = $studentMarks->sum('mark');
-            $subjectsAttempted = $studentMarks->count();
-
-            // Calculate percentage based on total possible marks for category
-            $percentage = $totalPossibleMarks > 0
-                ? round(($totalMarks / $totalPossibleMarks) * 100, 2)
-                : 0;
-
-            // Get grade (D1, D2, C3, C4, F)
-            $gradeModel = Grading::getGrade($percentage, 'Marks', $level);
-
-            // Get classification (FIRST CLASS, SECOND CLASS UPPER, etc.)
-            $classificationModel = Grading::getGrade($percentage, 'Points', $level);
-
-            $results[$studentId] = [
-                'student_id' => $studentId,
-                'total_marks' => $totalMarks,
-                'total_possible' => $totalPossibleMarks,
-                'subjects_attempted' => $subjectsAttempted,
-                'total_subjects' => count($subjectIds),
-                'percentage' => $percentage,
-                'grade' => $gradeModel->Grade ?? 'N/A',
-                'grade_comment' => $gradeModel->Comment ?? '',
-                'classification' => $classificationModel->Grade ?? 'N/A',
-                'classification_comment' => $classificationModel->Comment ?? '',
-                'level' => $level,
-                'marks_details' => $studentMarks,
+        // Build marks details with subject names using the helper
+        $marksDetails = [];
+        foreach ($studentMarks as $mark) {
+            $marksDetails[] = [
+                'subject_id' => $mark->subject_id,
+                'mark' => $mark->mark,
+                'subject_name' => Helper::item_md_name($mark->subject_id), // Using the same Helper class
             ];
         }
 
-        // Sort results by percentage descending
-        uasort($results, function ($a, $b) {
-            return $b['percentage'] <=> $a['percentage'];
-        });
-
-        // Get statistics
-        $statistics = $this->calculateStatistics($results, $level);
-
-        $schoolName = $schoolNumber ? Helper::schoolName($schoolNumber) : 'All Schools';
-
-        return view('itemGrading.grading-results', compact(
-            'results',
-            'year',
-            'category',
-            'schoolNumber',
-            'schoolName',
-            'statistics',
-            'level',
-            'totalPossibleMarks'
-        ));
+        $results[$studentId] = [
+            'student_id' => $studentId,
+            'total_marks' => $totalMarks,
+            'total_possible' => $totalPossibleMarks,
+            'subjects_attempted' => $subjectsAttempted,
+            'total_subjects' => count($subjectIds),
+            'percentage' => $percentage,
+            'grade' => $gradeModel->Grade ?? 'N/A',
+            'grade_comment' => $gradeModel->Comment ?? '',
+            'classification' => $classificationModel->Grade ?? 'N/A',
+            'classification_comment' => $classificationModel->Comment ?? '',
+            'level' => $level,
+            'marks_details' => $marksDetails, // Now includes subject names
+        ];
     }
+
+    // Sort results by percentage descending
+    uasort($results, function ($a, $b) {
+        return $b['percentage'] <=> $a['percentage'];
+    });
+
+    // Get statistics
+    $statistics = $this->calculateStatistics($results, $level);
+
+    $schoolName = $schoolNumber ? Helper::schoolName($schoolNumber) : 'All Schools';
+
+    return view('itemGrading.grading-results', compact(
+        'results',
+        'year',
+        'category',
+        'schoolNumber',
+        'schoolName',
+        'statistics',
+        'level',
+        'totalPossibleMarks'
+    ));
+}
 
     /**
      * Save computed results to database

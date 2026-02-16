@@ -278,13 +278,45 @@
                         max-width: 140px;
                     }
                 }
+
+                .card-footer .d-flex {
+                    flex-wrap: wrap;
+                    gap: 10px;
+                }
+
+                .card-footer .d-flex>div {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                }
+
+                .card-footer .d-flex>button {
+                    flex-shrink: 0;
+                }
+
+                @media (max-width: 576px) {
+                    .card-footer .d-flex {
+                        flex-direction: column;
+                        align-items: stretch;
+                    }
+
+                    .card-footer .d-flex>div {
+                        justify-content: flex-start;
+                        width: 100%;
+                    }
+
+                    .card-footer .d-flex>button {
+                        width: 100%;
+                    }
+                }
             </style>
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center"
                     style="background-color: #253f2d;">
                     <h4 class="mb-0">
-                        <i class="fa fa-school me-2"></i> School ID - {{ $schoolNumber ?? 'N/A' }} ({{ $schoolName ?? '' }})
+                        {{-- <i class="fa fa-school me-2"></i> School ID - {{ $schoolNumber ?? 'N/A' }} ({{ $schoolName ?? '' }}) --}}
+                        <i class="fa fa-school me-2"></i> School ID - {{ $schoolNumber ?? 'N/A' }}
                     </h4>
                     <span class="badge bg-light text-dark">
                         <i class="fa fa-users me-1"></i> {{ $records->count() }} Students
