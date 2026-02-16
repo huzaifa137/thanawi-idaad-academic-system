@@ -1,1073 +1,1563 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uganda Examination Grading System | Idaad & Thanawi Results Portal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #0D4B1E;
-            --primary-light: #1E7A3D;
-            --secondary: #F2A900;
-            --accent: #1A73E8;
-            --dark: #0C2915;
-            --light: #F8FCF9;
-            --gray: #5F6C72;
-            --gray-light: #E8F0E9;
-            --white: #FFFFFF;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.08);
-            --radius: 12px;
-            --radius-lg: 20px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background-color: var(--white);
-            color: var(--dark);
-            line-height: 1.7;
-            font-weight: 400;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Header */
-        header {
-            background-color: var(--white);
-            padding: 1.6rem 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .header-scrolled {
-            padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .header-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 54px;
-            height: 54px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 24px;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover .logo-icon {
-            transform: rotate(-10deg);
-        }
-
-        .logo-text h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark);
-            line-height: 1.2;
-        }
-
-        .logo-text p {
-            font-size: 0.85rem;
-            color: var(--gray);
-            font-weight: 500;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 3.5rem;
-            /* Increased gap */
-            margin-left: auto;
-            /* Push navigation to the right */
-            margin-right: 2rem;
-            /* Add space before buttons */
-        }
-
-        .nav-link {
-            color: var(--dark);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            position: relative;
-            padding: 0.5rem 0;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--primary);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--secondary);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .header-cta {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(13, 75, 30, 0.15);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary-light);
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(13, 75, 30, 0.05);
-            transform: translateY(-2px);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 10rem 0 6rem;
-            background: linear-gradient(135deg, rgba(248, 252, 249, 0.9) 0%, rgba(232, 240, 233, 0.7) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-bg-pattern {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 40%;
-            height: 100%;
-            background-image: radial-gradient(var(--primary-light) 1px, transparent 1px);
-            background-size: 30px 30px;
-            opacity: 0.03;
-            z-index: -1;
-        }
-
-        .hero-content {
-            display: grid;
-            grid-template-columns: 1.1fr 1fr;
-            gap: 5rem;
-            align-items: center;
-        }
-
-        .hero-text h1 {
-            font-size: 3.2rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-        }
-
-        .hero-text h1 span {
-            color: var(--primary);
-            position: relative;
-        }
-
-        .hero-text p {
-            font-size: 1.15rem;
-            color: var(--gray);
-            margin-bottom: 2.5rem;
-            max-width: 540px;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 4rem;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 3.5rem;
-        }
-
-        .stat {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-top: 0.5rem;
-            font-weight: 500;
-        }
-
-        .hero-visual {
-            position: relative;
-        }
-
-        .visual-card {
-            background-color: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 3rem 2.5rem;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .visual-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-        }
-
-        .grade-circle {
-            width: 160px;
-            height: 160px;
-            background: conic-gradient(var(--secondary) 75%, var(--secondary) 25%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 2.5rem;
-            position: relative;
-        }
-
-        .grade-circle::before {
-            content: '';
-            position: absolute;
-            width: 140px;
-            height: 140px;
-            background-color: var(--white);
-            border-radius: 50%;
-        }
-
-        .grade-circle span {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--primary);
-            z-index: 1;
-        }
-
-        .visual-info {
-            text-align: center;
-            color: var(--gray);
-        }
-
-        /* Features */
-        .section {
-            padding: 6rem 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 5rem;
-        }
-
-        .section-title h2 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 1.2rem;
-        }
-
-        .section-title p {
-            color: var(--gray);
-            max-width: 650px;
-            margin: 0 auto;
-            font-size: 1.1rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .feature {
-            background-color: var(--light);
-            border-radius: var(--radius);
-            padding: 2.5rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.4s ease;
-        }
-
-        .feature:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-            border-color: rgba(13, 75, 30, 0.1);
-        }
-
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            background-color: rgba(13, 75, 30, 0.08);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.8rem;
-            color: var(--primary);
-            font-size: 28px;
-            transition: all 0.3s ease;
-        }
-
-        .feature:hover .feature-icon {
-            background-color: var(--primary);
-            color: var(--white);
-            transform: scale(1.1);
-        }
-
-        .feature h3 {
-            font-size: 1.4rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .feature p {
-            color: var(--gray);
-            line-height: 1.7;
-        }
-
-        /* Process Section - UPDATED */
-        .process-container {
-            position: relative;
-            margin-top: 4rem;
-        }
-
-        .process-timeline {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        /* Horizontal line connecting the steps */
-        .process-timeline::before {
-            content: '';
-            position: absolute;
-            top: 40px;
-            /* Position at the middle of step numbers */
-            left: 10%;
-            right: 10%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-light), var(--secondary), var(--accent));
-            z-index: 1;
-            border-radius: 2px;
-        }
-
-        .process-step {
-            text-align: center;
-            position: relative;
-            z-index: 2;
-            flex: 1;
-            max-width: 250px;
-        }
-
-        .step-number {
-            width: 80px;
-            height: 80px;
-            background-color: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 2rem;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            border: 5px solid var(--primary-light);
-            box-shadow: var(--shadow);
-            position: relative;
-            z-index: 3;
-        }
-
-        .step-content h3 {
-            font-size: 1.4rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .step-content p {
-            color: var(--gray);
-            line-height: 1.6;
-        }
-
-        /* CTA */
-        .cta {
-            background-color: var(--primary);
-            color: var(--white);
-            padding: 6rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 400px;
-            height: 400px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        }
-
-        .cta::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 300px;
-            height: 300px;
-            background-color: rgba(255, 255, 255, 0.03);
-            border-radius: 50%;
-        }
-
-        .cta h2 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-            position: relative;
-            z-index: 2;
-        }
-
-        .cta p {
-            font-size: 1.2rem;
-            max-width: 650px;
-            margin: 0 auto 3rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 2;
-        }
-
-        .cta .btn {
-            background-color: var(--secondary);
-            color: var(--dark);
-            padding: 1rem 3rem;
-            font-size: 1.1rem;
-            font-weight: 700;
-            position: relative;
-            z-index: 2;
-        }
-
-        .cta .btn:hover {
-            background-color: #ffb700;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Footer */
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: var(--white);
-            padding: 5rem 0 2.5rem;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 3.5rem;
-            margin-bottom: 4rem;
-        }
-
-        .footer-col h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1.8rem;
-            color: var(--white);
-            font-weight: 700;
-        }
-
-        .footer-logo .logo-icon {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-logo p {
-            opacity: 0.8;
-            line-height: 1.7;
-            margin-bottom: 2rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 1rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .footer-links a:hover {
-            color: var(--white);
-            transform: translateX(5px);
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .social-icon {
-            width: 42px;
-            height: 42px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-icon:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-3px);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 0.7;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1100px) {
-            .hero-content {
-                grid-template-columns: 1fr;
-                gap: 4rem;
-            }
-
-            .hero-text h1 {
-                font-size: 2.8rem;
-            }
-
-            .process-timeline {
-                flex-wrap: wrap;
-                gap: 3rem;
-                justify-content: center;
-            }
-
-            .process-timeline::before {
-                display: none;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .header-wrapper {
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-
-            .nav-menu {
-                margin: 0;
-                gap: 2rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .header-cta {
-                margin-top: 0.5rem;
-            }
-
-            .hero {
-                padding: 8rem 0 4rem;
-            }
-
-            .hero-text h1 {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero-text h1 {
-                font-size: 2.4rem;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                text-align: center;
-            }
-
-            .hero-stats {
-                flex-direction: column;
-                gap: 2rem;
-            }
-
-            .section-title h2 {
-                font-size: 2rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .cta h2 {
-                font-size: 2.2rem;
-            }
-
-            .process-timeline {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-
-            .process-step {
-                max-width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-text h1 {
-                font-size: 2rem;
-            }
-
-            .section-title h2 {
-                font-size: 1.8rem;
-            }
-
-            .cta h2 {
-                font-size: 1.8rem;
-            }
-
-            .nav-menu {
-                gap: 1.5rem;
-            }
-        }
-
-        @media (max-width: 1100px) {
-            .footer-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2.5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
-            }
-        }
-    </style>
+    <meta charset="utf-8">
+    <title>Idaad & Thanawi Examination Board</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{{ asset('asset/img/favicon.ico') }}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{ asset('asset/lib/animate/animate.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('asset/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Header -->
-    <header id="main-header">
-        <div class="container header-wrapper">
-            <a href="{{ url('/') }}" class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-university"></i>
-                </div>
-                <div class="logo-text">
-                    <h1>Uganda Grading System</h1>
-                    <p>Idaad & Thanawi Results</p>
-                </div>
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner"
+            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Navbar Start -->
+        <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+            <a href="{{ route('home.page') }}" class="navbar-brand d-flex align-items-center">
+                <img src="{{ asset('assets/images/brand/logo.png') }}" alt="ITEB Logo" class="navbar-logo me-3">
+                <h1 class="m-0 text-primary">ITEB</h1>
             </a>
-
-            <nav class="nav-menu">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#process" class="nav-link">Process</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </nav>
-
-            <div class="header-cta">
-                <a href="{{ url('users/login') }}">
-                    <button class="btn btn-outline">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                </a>
-
-                <a href="{{ url('/users/public-portal') }}" class="btn btn-primary" style="text-decoration: none;">
-                    <i class="fas fa-user-graduate"></i> Portal
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-bg-pattern"></div>
-        <div class="container hero-content">
-            <div class="hero-text">
-                <h1>National Grading <span>Excellence</span></h1>
-                <p>A modern, transparent, and efficient system for grading Idaad and Thanawi examination results across
-                    Uganda. Ensuring accuracy and fairness for every student.</p>
-
-                <div class="hero-actions">
-                    <a href="{{ url('/users/login')}}" class="btn btn-primary" style="text-decoration: none;">
-                        <i class="fas fa-rocket"></i> Get Started
-                    </a>
-                    <a href="{{ url('users/login') }}" class="btn btn-outline" style="text-decoration: none;">
-                        <i class="fas fa-file-alt"></i> View Sample Report
-                    </a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav mx-auto">
+                    <a href="{{ route('home.page') }}" class="nav-item nav-link active">Home</a>
+                    <a href="{{ route('about.us') }}" class="nav-item nav-link">About Us</a>
+                    <a href="{{ route('contact.us') }}" class="nav-item nav-link">Contact Us</a>
+                    <a href="{{ route('users.login') }}" class="nav-item nav-link">Login</a>
                 </div>
-
-                <div class="hero-stats">
-                    <div class="stat">
-                        <div class="stat-value">100%</div>
-                        <div class="stat-label">Accuracy Rate</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">750k+</div>
-                        <div class="stat-label">Students Served</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">3k+</div>
-                        <div class="stat-label">Schools Registered</div>
-                    </div>
-                </div>
+                <a href="{{ route('public.portal') }}"
+                    class="btn btn-primary rounded-pill px-3 d-none d-lg-block">Portal<i
+                        class="fa fa-arrow-right ms-3"></i></a>
             </div>
+        </nav>
+        <!-- Navbar End -->
 
-            <div class="hero-visual">
-                <div class="visual-card">
-                    <div class="grade-circle">
-                        <span>A+</span>
-                    </div>
-                    <div class="visual-info">
-                        <h3 style="color: var(--dark); margin-bottom: 0.5rem;">Performance Excellence</h3>
-                        <p>Students achieving distinction increased by <strong
-                                style="color: var(--primary);">100%</strong> with our standardized system</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Features Section -->
-    <section class="section" id="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Advanced Grading Platform</h2>
-                <p>Our system combines cutting-edge technology with educational expertise to deliver the most accurate
-                    and reliable grading for Uganda's examinations.</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    <h3>Intelligent Algorithms</h3>
-                    <p>Advanced AI algorithms ensure consistent grading based on national standards, with continuous
-                        learning and improvement capabilities.</p>
-                </div>
-
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <h3>Bank-Level Security</h3>
-                    <p>End-to-end encryption, multi-factor authentication, and secure cloud infrastructure protect
-                        sensitive student data and examination integrity.</p>
-                </div>
-
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <h3>Comprehensive Analytics</h3>
-                    <p>Detailed performance analytics, trend identification, and educational insights for students,
-                        schools, and national education planning.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Process Section - UPDATED -->
-    <section class="section" id="process">
-        <div class="container">
-            <div class="section-title">
-                <h2>Streamlined Grading Process</h2>
-                <p>Our efficient 4-step workflow ensures accuracy and transparency in examination grading and result
-                    distribution.</p>
-            </div>
-
-            <div class="process-container">
-                <div class="process-timeline">
-                    <div class="process-step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h3>Data Collection</h3>
-                            <p>Secure digital submission of examination papers with automated validation and error
-                                detection.</p>
+        <!-- Carousel Start -->
+        <div class="container-fluid p-0 mb-5">
+            <div class="owl-carousel header-carousel position-relative">
+                <div class="owl-carousel-item position-relative">
+                    <img class="img-fluid" src="{{ asset('asset/img/carousel-1.jpg') }}" alt="">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                        style="background: rgba(0, 0, 0, .2);">
+                        <div class="container">
+                            <div class="row justify-content-start">
+                                <div class="col-10 col-lg-8">
+                                    <h1 class="display-2 text-white animated slideInDown mb-4">Idaad & Thanawi
+                                        Examination Board</h1>
+                                    <p class="fs-5 fw-medium text-white mb-4 pb-2">A modern, transparent, and efficient
+                                        system for grading Idaad and Thanawi examination results across Uganda.</p>
+                                    <a href=""
+                                        class="btn btn-primary rounded-pill py-sm-3 px-sm-5 me-3 animated slideInLeft">Learn
+                                        More</a>
+                                    <a href=""
+                                        class="btn btn-dark rounded-pill py-sm-3 px-sm-5 animated slideInRight">Our
+                                        Classes</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="process-step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h3>Automated Grading</h3>
-                            <p>System processes results using AI-powered algorithms aligned with national grading
-                                standards.</p>
-                        </div>
-                    </div>
-
-                    <div class="process-step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h3>Quality Control</h3>
-                            <p>Multi-level verification by qualified examiners ensures accuracy before final approval.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="process-step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h3>Result Distribution</h3>
-                            <p>Secure access to results via web portal, mobile app, SMS, and official school
-                                notifications.</p>
+                </div>
+                <div class="owl-carousel-item position-relative">
+                    <img class="img-fluid" src="{{ asset('asset/img/carousel-2.jpg') }}" alt="">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                        style="background: rgba(0, 0, 0, .2);">
+                        <div class="container">
+                            <div class="row justify-content-start">
+                                <div class="col-10 col-lg-8">
+                                    <h1 class="display-2 text-white animated slideInDown mb-4">Make A Brighter Future
+                                        For Your Child</h1>
+                                    <p class="fs-5 fw-medium text-white mb-4 pb-2">Ensuring accuracy and fairness for
+                                        every student.</p>
+                                    <a href=""
+                                        class="btn btn-primary rounded-pill py-sm-3 px-sm-5 me-3 animated slideInLeft">Learn
+                                        More</a>
+                                    <a href=""
+                                        class="btn btn-dark rounded-pill py-sm-3 px-sm-5 animated slideInRight">Our
+                                        Classes</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+        <!-- Carousel End -->
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Experience Modern Examination Grading</h2>
-            <p>Join the national movement towards accurate, transparent, and efficient assessment of Idaad and Thanawi
-                examination results.</p>
-            <a href="{{ url('/users/public-portal') }}" class="btn" style="text-decoration: none;">
-                <i class="fas fa-user-graduate"></i> Access online Portal
-            </a>
+
+        <!-- Facilities Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                    <h1 class="mb-3">Examination Structures</h1>
+                    <p>Idaad (O-Level): The Ordinary Level secondary education stage specializing in Islamic Theology.
+                        Generally a 4-year program.</p>
+                    <p>Thanawi (A-Level): The Advanced Level secondary education stage. Generally a 2-year program.</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="facility-item">
+                            <div class="facility-icon bg-primary">
+                                <span class="bg-primary"></span>
+                                <i class="fa fa-bus-alt fa-3x text-primary"></i>
+                                <span class="bg-primary"></span>
+                            </div>
+                            <div class="facility-text bg-primary">
+                                <h3 class="text-primary mb-3">Data Collection</h3>
+                                <p class="mb-0">Secure digital submission of examination papers with automated
+                                    validation and error detection.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="facility-item">
+                            <div class="facility-icon bg-success">
+                                <span class="bg-success"></span>
+                                <i class="fa fa-futbol fa-3x text-success"></i>
+                                <span class="bg-success"></span>
+                            </div>
+                            <div class="facility-text bg-success">
+                                <h3 class="text-success mb-3">Automated Grading</h3>
+                                <p class="mb-0">System processes results using AI-powered algorithms aligned with
+                                    national grading standards.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="facility-item">
+                            <div class="facility-icon bg-warning">
+                                <span class="bg-warning"></span>
+                                <i class="fa fa-home fa-3x text-warning"></i>
+                                <span class="bg-warning"></span>
+                            </div>
+                            <div class="facility-text bg-warning">
+                                <h3 class="text-warning mb-3">Quality Control</h3>
+                                <p class="mb-0">Multi-level verification by qualified examiners ensures accuracy
+                                    before final approval.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                        <div class="facility-item">
+                            <div class="facility-icon bg-info">
+                                <span class="bg-info"></span>
+                                <i class="fa fa-chalkboard-teacher fa-3x text-info"></i>
+                                <span class="bg-info"></span>
+                            </div>
+                            <div class="facility-text bg-info">
+                                <h3 class="text-info mb-3">Result Distribution</h3>
+                                <p class="mb-0">Secure access to results via web portal, mobile app, SMS, and
+                                    official school notifications.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+        <!-- Facilities End -->
 
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col footer-logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-university"></i>
+
+        <!-- About Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <h1 class="mb-4">About ITEB</h1>
+                        <p>UMSC Examination Board: Based in Kawempe. Conducts examinations under the Uganda Muslim
+                            Supreme Council. Dr. Sheikh Ziyad Swaleh Lubanga is the Executive Secretary</p>
+                        <p class="mb-4">IMPORTANT: many schools are adopting a "duo curriculum" (Combining standard
+                            secondary subjects with advanced Islamic Theology) to help students compete on the
+                            international market</p>
+                        <div class="row g-4 align-items-center">
+                            <div class="col-sm-6">
+                                <a class="btn btn-primary rounded-pill py-3 px-5" href="">Read More</a>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                        alt="" style="width: 45px; height: 45px;">
+                                    <div class="ms-3">
+                                        <h6 class="text-primary mb-1">Prof. Dr Ziyad Swalleh Lubanga</h6>
+                                        <small>Executive Secretary</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p>The official national platform for Idaad and Thanawi examination grading, developed in
-                        partnership with Uganda's Ministry of Education and Sports.</p>
-                    <div class="social-icons">
-                        <a href="javascript:void();" class="social-icon">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="javascript:void();" class="social-icon">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="javascript:void();" class="social-icon">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
+                    <div class="col-lg-6 about-img wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <img class="img-fluid w-75 rounded-circle bg-light p-3"
+                                    src="{{ asset('asset/img/about-1.jpg') }}" alt="">
+                            </div>
+                            <div class="col-6 text-start" style="margin-top: -150px;">
+                                <img class="img-fluid w-100 rounded-circle bg-light p-3"
+                                    src="{{ asset('asset/img/about-2.jpg') }}" alt="">
+                            </div>
+                            <div class="col-6 text-end" style="margin-top: -150px;">
+                                <img class="img-fluid w-100 rounded-circle bg-light p-3"
+                                    src="{{ asset('asset/img/about-3.jpg') }}" alt="">
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- About End -->
 
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
-                        <li><a href="#features"><i class="fas fa-cogs"></i> Features</a></li>
-                        <li><a href="#process"><i class="fas fa-sitemap"></i> Process</a></li>
-                        <li><a href="#contact"><i class="fas fa-headset"></i> Contact</a></li>
-                    </ul>
+
+        <!-- Call To Action Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="bg-light rounded">
+                    <div class="row g-0">
+                        <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s" style="min-height: 400px;">
+                            <div class="position-relative h-100">
+                                <img class="position-absolute w-100 h-100 rounded"
+                                    src="{{ asset('asset/img/call-to-action.jpg') }}" style="object-fit: cover;">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                            <div class="h-100 d-flex flex-column justify-content-center p-5">
+                                <h1 class="mb-4">Register Your School now</h1>
+                                <p class="mb-4">Join the ITEB family and ensure your students receive accurate,
+                                    timely, and secure examination results. Our platform offers a seamless experience
+                                    for schools to submit results, track progress, and access comprehensive reports.
+                                    Register now to empower your students with the recognition they deserve and
+                                    contribute to a brighter future for education in Uganda.
+                                </p>
+                                <a class="btn btn-primary py-3 px-5" href="">Get Started Now<i
+                                        class="fa fa-arrow-right ms-2"></i></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <!-- Call To Action End -->
 
-                <div class="footer-col">
-                    <h3>Resources</h3>
-                    <ul class="footer-links">
-                        <li><a href="javascript:void();"><i class="fas fa-file-pdf"></i> Grading Manual</a></li>
-                        <li><a href="javascript:void();"><i class="fas fa-video"></i> Tutorial Videos</a></li>
-                        <li><a href="javascript:void();"><i class="fas fa-chart-line"></i> Performance Data</a></li>
-                        <li><a href="javascript:void();"><i class="fas fa-newspaper"></i> Updates</a></li>
-                        <li><a href="javascript:void();"><i class="fas fa-shield-alt"></i> Security</a></li>
-                    </ul>
+
+        <!-- Classes Start-Idaad -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                    <h1 class="mb-3">Idaad Examinations set</h1>
+                    <p>Register your school for the coming Idaad Examinations on Our Portal now to avoid late
+                        registration costs</p>
                 </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="classes-item">
+                            <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                                <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-1.jpg') }}"
+                                    alt="">
+                            </div>
+                            <div class="bg-light rounded p-4 pt-5 mt-n5">
+                                <a class="d-block text-center h3 mt-3 mb-4" href="">Dictation and
+                                    Calligraphy</a>
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle flex-shrink-0"
+                                            src="{{ asset('asset/img/user.jpg') }}" alt=""
+                                            style="width: 45px; height: 45px;">
+                                        <div class="ms-3">
+                                            <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                            <small>H.O.D</small>
+                                        </div>
+                                    </div>
+                                    <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                                </div>
+                                <div class="row g-1">
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-primary pt-2">
+                                            <h6 class="text-primary mb-1">papers:</h6>
+                                            <small>10 papers</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-success pt-2">
+                                            <h6 class="text-success mb-1">Duration:</h6>
+                                            <small>6 days</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-warning pt-2">
+                                            <h6 class="text-warning mb-1">Capacity:</h6>
+                                            <small>S4 Equivalent</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="classes-item">
+                            <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                                <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-2.jpg') }}"
+                                    alt="">
+                            </div>
+                            <div class="bg-light rounded p-4 pt-5 mt-n5">
+                                <a class="d-block text-center h3 mt-3 mb-4" href="">Sources of Exegesis</a>
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle flex-shrink-0"
+                                            src="{{ asset('asset/img/user.jpg') }}" alt=""
+                                            style="width: 45px; height: 45px;">
+                                        <div class="ms-3">
+                                            <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                            <small>H.O.D</small>
+                                        </div>
+                                    </div>
+                                    <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                                </div>
+                                <div class="row g-1">
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-primary pt-2">
+                                            <h6 class="text-primary mb-1">papers:</h6>
+                                            <small>10 papers</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-success pt-2">
+                                            <h6 class="text-success mb-1">Duration:</h6>
+                                            <small>6 days</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-warning pt-2">
+                                            <h6 class="text-warning mb-1">Capacity:</h6>
+                                            <small>S4 Equivalent</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="classes-item">
+                            <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                                <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-3.jpg') }}"
+                                    alt="">
+                            </div>
+                            <div class="bg-light rounded p-4 pt-5 mt-n5">
+                                <a class="d-block text-center h3 mt-3 mb-4" href="">Islamic Monotheism
+                                    (Tawheed)</a>
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle flex-shrink-0"
+                                            src="{{ asset('asset/img/user.jpg') }}" alt=""
+                                            style="width: 45px; height: 45px;">
+                                        <div class="ms-3">
+                                            <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                            <small>H.O.D</small>
+                                        </div>
+                                    </div>
+                                    <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                                </div>
+                                <div class="row g-1">
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-primary pt-2">
+                                            <h6 class="text-primary mb-1">papers:</h6>
+                                            <small>10 papers</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-success pt-2">
+                                            <h6 class="text-success mb-1">Duration:</h6>
+                                            <small>6 days</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-warning pt-2">
+                                            <h6 class="text-warning mb-1">Capacity:</h6>
+                                            <small>S4 Equivalent</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="classes-item">
+                            <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                                <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-4.jpg') }}"
+                                    alt="">
+                            </div>
+                            <div class="bg-light rounded p-4 pt-5 mt-n5">
+                                <a class="d-block text-center h3 mt-3 mb-4" href="">Holy Qur’an Recitation and
+                                    Its Rules (Tilawah/Tajweed)</a>
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle flex-shrink-0"
+                                            src="{{ asset('asset/img/user.jpg') }}" alt=""
+                                            style="width: 45px; height: 45px;">
+                                        <div class="ms-3">
+                                            <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                            <small>H.O.D</small>
+                                        </div>
+                                    </div>
+                                    <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                                </div>
+                                <div class="row g-1">
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-primary pt-2">
+                                            <h6 class="text-primary mb-1">papers:</h6>
+                                            <small>10 papers</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-success pt-2">
+                                            <h6 class="text-success mb-1">Duration:</h6>
+                                            <small>6 days</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-warning pt-2">
+                                            <h6 class="text-warning mb-1">Capacity:</h6>
+                                            <small>S4 Equivalent</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="classes-item">
+                            <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                                <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-5.jpg') }}"
+                                    alt="">
+                            </div>
+                            <div class="bg-light rounded p-4 pt-5 mt-n5">
+                                <a class="d-block text-center h3 mt-3 mb-4" href="">Arabic Literature and
+                                    Texts</a>
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle flex-shrink-0"
+                                            src="{{ asset('asset/img/user.jpg') }}" alt=""
+                                            style="width: 45px; height: 45px;">
+                                        <div class="ms-3">
+                                            <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                            <small>H.O.D</small>
+                                        </div>
+                                    </div>
+                                    <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                                </div>
+                                <div class="row g-1">
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-primary pt-2">
+                                            <h6 class="text-primary mb-1">papers:</h6>
+                                            <small>10 papers</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-success pt-2">
+                                            <h6 class="text-success mb-1">Duration:</h6>
+                                            <small>6 days</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-warning pt-2">
+                                            <h6 class="text-warning mb-1">Capacity:</h6>
+                                            <small>S4 Equivalent</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="classes-item">
+                            <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                                <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-6.jpg') }}"
+                                    alt="">
+                            </div>
+                            <div class="bg-light rounded p-4 pt-5 mt-n5">
+                                <a class="d-block text-center h3 mt-3 mb-4" href="">Composition and
+                                    Comprehension (Insha’)</a>
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle flex-shrink-0"
+                                            src="{{ asset('asset/img/user.jpg') }}" alt=""
+                                            style="width: 45px; height: 45px;">
+                                        <div class="ms-3">
+                                            <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                            <small>H.O.D</small>
+                                        </div>
+                                    </div>
+                                    <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                                </div>
+                                <div class="row g-1">
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-primary pt-2">
+                                            <h6 class="text-primary mb-1">papers:</h6>
+                                            <small>10 papers</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-success pt-2">
+                                            <h6 class="text-success mb-1">Duration:</h6>
+                                            <small>6 days</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="border-top border-3 border-warning pt-2">
+                                            <h6 class="text-warning mb-1">Capacity:</h6>
+                                            <small>S4 Equivalent</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Classes End -->
 
-                <div class="footer-col">
-                    <h3>Contact Information</h3>
-                    <ul class="footer-links">
-                        <li><a href="javascript:void();"><i class="fas fa-map-marker-alt"></i> Ministry of Education,
-                                Kampala</a></li>
-                        <li><a href="javascript:void();"><i class="fas fa-phone"></i> +256 800 123 456</a></li>
-                        <li><a href="javascript:void();"><i class="fas fa-envelope"></i> support@ugresults.go.ug</a>
-                        </li>
-                        <li><a href="javascript:void();"><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 6:00 PM</a>
-                        </li>
-                        <li><a href="javascript:void();"><i class="fas fa-globe"></i> www.ugresults.go.ug</a></li>
-                    </ul>
+
+
+
+        <!-- Classes Start -->
+
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="classes-item">
+                    <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                        <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-7.jpg') }}"
+                            alt="">
+                    </div>
+                    <div class="bg-light rounded p-4 pt-5 mt-n5">
+                        <a class="d-block text-center h3 mt-3 mb-4" href="">Sources of Islamic Law (Usool
+                            al-Fiqh)</a>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="d-flex align-items-center">
+                                <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                    alt="" style="width: 45px; height: 45px;">
+                                <div class="ms-3">
+                                    <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                    <small>H.O.D</small>
+                                </div>
+                            </div>
+                            <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                        </div>
+                        <div class="row g-1">
+                            <div class="col-4">
+                                <div class="border-top border-3 border-primary pt-2">
+                                    <h6 class="text-primary mb-1">papers:</h6>
+                                    <small>10 papers</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-top border-3 border-success pt-2">
+                                    <h6 class="text-success mb-1">Duration:</h6>
+                                    <small>6 days</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-top border-3 border-warning pt-2">
+                                    <h6 class="text-warning mb-1">Capacity:</h6>
+                                    <small>S4 Equivalent</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="classes-item">
+                    <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                        <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-8.jpg') }}"
+                            alt="">
+                    </div>
+                    <div class="bg-light rounded p-4 pt-5 mt-n5">
+                        <a class="d-block text-center h3 mt-3 mb-4" href="">Sources of Prophetic Traditions
+                            (Usool al-Hadith)</a>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="d-flex align-items-center">
+                                <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                    alt="" style="width: 45px; height: 45px;">
+                                <div class="ms-3">
+                                    <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                    <small>H.O.D</small>
+                                </div>
+                            </div>
+                            <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                        </div>
+                        <div class="row g-1">
+                            <div class="col-4">
+                                <div class="border-top border-3 border-primary pt-2">
+                                    <h6 class="text-primary mb-1">papers:</h6>
+                                    <small>10 papers</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-top border-3 border-success pt-2">
+                                    <h6 class="text-success mb-1">Duration:</h6>
+                                    <small>6 days</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-top border-3 border-warning pt-2">
+                                    <h6 class="text-warning mb-1">Capacity:</h6>
+                                    <small>S4 Equivalent</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="classes-item">
+                    <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                        <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-9.jpg') }}"
+                            alt="">
+                    </div>
+                    <div class="bg-light rounded p-4 pt-5 mt-n5">
+                        <a class="d-block text-center h3 mt-3 mb-4" href="">Qur’anic Orals and Rhetoric</a>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="d-flex align-items-center">
+                                <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                    alt="" style="width: 45px; height: 45px;">
+                                <div class="ms-3">
+                                    <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                    <small>H.O.D</small>
+                                </div>
+                            </div>
+                            <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                        </div>
+                        <div class="row g-1">
+                            <div class="col-4">
+                                <div class="border-top border-3 border-primary pt-2">
+                                    <h6 class="text-primary mb-1">papers:</h6>
+                                    <small>10 papers</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-top border-3 border-success pt-2">
+                                    <h6 class="text-success mb-1">Duration:</h6>
+                                    <small>6 days</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-top border-3 border-warning pt-2">
+                                    <h6 class="text-warning mb-1">Capacity:</h6>
+                                    <small>S4 Equivalent</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="classes-item">
+                    <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                        <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-10.jpg') }}"
+                            alt="">
+                    </div>
+                    <div class="bg-light rounded p-4 pt-5 mt-n5">
+                        <a class="d-block text-center h3 mt-3 mb-4" href="">(Implied general papers) </a>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="d-flex align-items-center">
+                                <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                    alt="" style="width: 45px; height: 45px;">
+                                <div class="ms-3">
+                                    <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                    <small>H.O.D</small>
+                                </div>
+                            </div>
+                            <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                        </div>
+                        <div class="row g-1">
+                            <div class="col-4">
+                                <div class="border-top border-3 border-primary pt-2">
+                                    <h6 class="text-primary mb-1">papers:</h6>
+                                    <small>10 papers</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-top border-3 border-success pt-2">
+                                    <h6 class="text-success mb-1">Duration:</h6>
+                                    <small>6 days</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-top border-3 border-warning pt-2">
+                                    <h6 class="text-warning mb-1">Capacity:</h6>
+                                    <small>S4 Equivalent</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="footer-bottom">
-                <p>
-                    &copy; <span id="year"></span> Uganda Examination Grading System.
-                    All rights reserved. | Ministry of Education and Sports
-                </p>
-            </div>
-
-            <script>
-                document.getElementById("year").textContent = new Date().getFullYear();
-            </script>
-
         </div>
-    </footer>
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- Classes End -->
 
-    <script>
-        // Header scroll effect
-        const header = document.getElementById('main-header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('header-scrolled');
-            } else {
-                header.classList.remove('header-scrolled');
-            }
-        });
 
-        // Button interactions
 
-        // Animate features on scroll
-        const observerOptions = {
-            threshold: 0.15,
-            rootMargin: '0px 0px -100px 0px'
-        };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
 
-        // Animate features
-        document.querySelectorAll('.feature').forEach(feature => {
-            feature.style.opacity = '0';
-            feature.style.transform = 'translateY(20px)';
-            feature.style.transition = 'opacity 0.6s, transform 0.6s';
-            observer.observe(feature);
-        });
 
-        // Animate process steps
-        document.querySelectorAll('.process-step').forEach(step => {
-            step.style.opacity = '0';
-            step.style.transform = 'translateY(20px)';
-            step.style.transition = 'opacity 0.6s, transform 0.6s';
-            observer.observe(step);
-        });
 
-        // Counter animation for stats
-        const statValues = document.querySelectorAll('.stat-value');
-        statValues.forEach(stat => {
-            const originalText = stat.textContent;
-            const target = parseInt(originalText.replace(/[^0-9]/g, ''));
-            const suffix = originalText.replace(/[0-9]/g, '');
 
-            let count = 0;
-            const duration = 1500; // 1.5 seconds
-            const increment = target / (duration / 16); // 60fps
 
-            const updateCounter = () => {
-                if (count < target) {
-                    count += increment;
-                    if (count > target) count = target;
-                    stat.textContent = Math.floor(count) + suffix;
-                    requestAnimationFrame(updateCounter);
-                }
-            };
 
-            const statObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        updateCounter();
-                        statObserver.unobserve(entry.target);
-                    }
-                });
-            });
-            statObserver.observe(stat);
-        });
-    </script>
+
+
+
+
+
+    <!-- Classes Start-Thanawi -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                <h1 class="mb-3">Thanawi Examinations set</h1>
+                <p>Performance Insight: Hadith and Arabic Grammar are historically cited as the "worst done" subjects,
+                    presenting a major area for academic focus</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="classes-item">
+                        <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                            <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-8.jpg') }}"
+                                alt="">
+                        </div>
+                        <div class="bg-light rounded p-4 pt-5 mt-n5">
+                            <a class="d-block text-center h3 mt-3 mb-4" href="">Holy Qur’an Exegesis
+                                (Tafsir)</a>
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                        alt="" style="width: 45px; height: 45px;">
+                                    <div class="ms-3">
+                                        <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                        <small>H.O.D</small>
+                                    </div>
+                                </div>
+                                <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                            </div>
+                            <div class="row g-1">
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-primary pt-2">
+                                        <h6 class="text-primary mb-1">papers:</h6>
+                                        <small>15 papers</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-success pt-2">
+                                        <h6 class="text-success mb-1">Duration:</h6>
+                                        <small>8 days</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-warning pt-2">
+                                        <h6 class="text-warning mb-1">Capacity:</h6>
+                                        <small>S6 Equivalent</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="classes-item">
+                        <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                            <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-16.jpg') }}"
+                                alt="">
+                        </div>
+                        <div class="bg-light rounded p-4 pt-5 mt-n5">
+                            <a class="d-block text-center h3 mt-3 mb-4" href="">Grammar and Morphology
+                                (Sarf/Nahv)</a>
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                        alt="" style="width: 45px; height: 45px;">
+                                    <div class="ms-3">
+                                        <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                        <small>H.O.D</small>
+                                    </div>
+                                </div>
+                                <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                            </div>
+                            <div class="row g-1">
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-primary pt-2">
+                                        <h6 class="text-primary mb-1">papers:</h6>
+                                        <small>15 papers</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-success pt-2">
+                                        <h6 class="text-success mb-1">Duration:</h6>
+                                        <small>8 days</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-warning pt-2">
+                                        <h6 class="text-warning mb-1">Capacity:</h6>
+                                        <small>S6 Equivalent</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="classes-item">
+                        <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                            <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-14.jpg') }}"
+                                alt="">
+                        </div>
+                        <div class="bg-light rounded p-4 pt-5 mt-n5">
+                            <a class="d-block text-center h3 mt-3 mb-4" href="">Islamic Family Law</a>
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                        alt="" style="width: 45px; height: 45px;">
+                                    <div class="ms-3">
+                                        <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                        <small>H.O.D</small>
+                                    </div>
+                                </div>
+                                <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                            </div>
+                            <div class="row g-1">
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-primary pt-2">
+                                        <h6 class="text-primary mb-1">papers:</h6>
+                                        <small>15 papers</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-success pt-2">
+                                        <h6 class="text-success mb-1">Duration:</h6>
+                                        <small>8 days</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-warning pt-2">
+                                        <h6 class="text-warning mb-1">Capacity:</h6>
+                                        <small>S6 Equivalent</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="classes-item">
+                        <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                            <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-11.jpg') }}"
+                                alt="">
+                        </div>
+                        <div class="bg-light rounded p-4 pt-5 mt-n5">
+                            <a class="d-block text-center h3 mt-3 mb-4" href="">Arabic Literature</a>
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                        alt="" style="width: 45px; height: 45px;">
+                                    <div class="ms-3">
+                                        <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                        <small>H.O.D</small>
+                                    </div>
+                                </div>
+                                <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                            </div>
+                            <div class="row g-1">
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-primary pt-2">
+                                        <h6 class="text-primary mb-1">papers:</h6>
+                                        <small>15 papers</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-success pt-2">
+                                        <h6 class="text-success mb-1">Duration:</h6>
+                                        <small>8 days</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-warning pt-2">
+                                        <h6 class="text-warning mb-1">Capacity:</h6>
+                                        <small>S6 Equivalent</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="classes-item">
+                        <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                            <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-5.jpg') }}"
+                                alt="">
+                        </div>
+                        <div class="bg-light rounded p-4 pt-5 mt-n5">
+                            <a class="d-block text-center h3 mt-3 mb-4" href="">Jurisprudence of Rituals (Fiqh
+                                al-Ibadat)</a>
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                        alt="" style="width: 45px; height: 45px;">
+                                    <div class="ms-3">
+                                        <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                        <small>H.O.D</small>
+                                    </div>
+                                </div>
+                                <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                            </div>
+                            <div class="row g-1">
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-primary pt-2">
+                                        <h6 class="text-primary mb-1">papers:</h6>
+                                        <small>15 papers</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-success pt-2">
+                                        <h6 class="text-success mb-1">Duration:</h6>
+                                        <small>8 days</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-warning pt-2">
+                                        <h6 class="text-warning mb-1">Capacity:</h6>
+                                        <small>S6 Equivalent</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="classes-item">
+                        <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                            <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-18.jpg') }}"
+                                alt="">
+                        </div>
+                        <div class="bg-light rounded p-4 pt-5 mt-n5">
+                            <a class="d-block text-center h3 mt-3 mb-4" href="">Islamic History</a>
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                        alt="" style="width: 45px; height: 45px;">
+                                    <div class="ms-3">
+                                        <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                        <small>H.O.D</small>
+                                    </div>
+                                </div>
+                                <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                            </div>
+                            <div class="row g-1">
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-primary pt-2">
+                                        <h6 class="text-primary mb-1">papers:</h6>
+                                        <small>15 papers</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-success pt-2">
+                                        <h6 class="text-success mb-1">Duration:</h6>
+                                        <small>8 days</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-top border-3 border-warning pt-2">
+                                        <h6 class="text-warning mb-1">Capacity:</h6>
+                                        <small>S6 Equivalent</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Classes End -->
+
+
+
+
+    <!-- Classes Start -->
+
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="classes-item">
+                <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                    <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-15.jpg') }}"
+                        alt="">
+                </div>
+                <div class="bg-light rounded p-4 pt-5 mt-n5">
+                    <a class="d-block text-center h3 mt-3 mb-4" href="">Religion and Sects</a>
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center">
+                            <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                alt="" style="width: 45px; height: 45px;">
+                            <div class="ms-3">
+                                <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                <small>H.O.D</small>
+                            </div>
+                        </div>
+                        <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                    </div>
+                    <div class="row g-1">
+                        <div class="col-4">
+                            <div class="border-top border-3 border-primary pt-2">
+                                <h6 class="text-primary mb-1">papers:</h6>
+                                <small>15 papers</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-success pt-2">
+                                <h6 class="text-success mb-1">Duration:</h6>
+                                <small>8 days</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-warning pt-2">
+                                <h6 class="text-warning mb-1">Capacity:</h6>
+                                <small>S6 Equivalent</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+            <div class="classes-item">
+                <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                    <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-9.jpg') }}"
+                        alt="">
+                </div>
+                <div class="bg-light rounded p-4 pt-5 mt-n5">
+                    <a class="d-block text-center h3 mt-3 mb-4" href="">Sources of Islamic Law (Usool
+                        al-Fiqh)</a>
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center">
+                            <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                alt="" style="width: 45px; height: 45px;">
+                            <div class="ms-3">
+                                <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                <small>H.O.D</small>
+                            </div>
+                        </div>
+                        <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                    </div>
+                    <div class="row g-1">
+                        <div class="col-4">
+                            <div class="border-top border-3 border-primary pt-2">
+                                <h6 class="text-primary mb-1">papers:</h6>
+                                <small>15 papers</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-success pt-2">
+                                <h6 class="text-success mb-1">Duration:</h6>
+                                <small>8 days</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-warning pt-2">
+                                <h6 class="text-warning mb-1">Capacity:</h6>
+                                <small>S6 Equivalent</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="classes-item">
+                <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                    <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-4.jpg') }}"
+                        alt="">
+                </div>
+                <div class="bg-light rounded p-4 pt-5 mt-n5">
+                    <a class="d-block text-center h3 mt-3 mb-4" href="">Prophetic Traditions (Hadith)</a>
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center">
+                            <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                alt="" style="width: 45px; height: 45px;">
+                            <div class="ms-3">
+                                <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                <small>H.O.D</small>
+                            </div>
+                        </div>
+                        <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                    </div>
+                    <div class="row g-1">
+                        <div class="col-4">
+                            <div class="border-top border-3 border-primary pt-2">
+                                <h6 class="text-primary mb-1">papers:</h6>
+                                <small>15 papers</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-success pt-2">
+                                <h6 class="text-success mb-1">Duration:</h6>
+                                <small>8 days</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-warning pt-2">
+                                <h6 class="text-warning mb-1">Capacity:</h6>
+                                <small>S6 Equivalent</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="classes-item">
+                <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                    <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-17.jpg') }}"
+                        alt="">
+                </div>
+                <div class="bg-light rounded p-4 pt-5 mt-n5">
+                    <a class="d-block text-center h3 mt-3 mb-4" href="">Composition and Comprehension </a>
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center">
+                            <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                alt="" style="width: 45px; height: 45px;">
+                            <div class="ms-3">
+                                <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                <small>H.O.D</small>
+                            </div>
+                        </div>
+                        <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                    </div>
+                    <div class="row g-1">
+                        <div class="col-4">
+                            <div class="border-top border-3 border-primary pt-2">
+                                <h6 class="text-primary mb-1">papers:</h6>
+                                <small>15 papers</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-success pt-2">
+                                <h6 class="text-success mb-1">Duration:</h6>
+                                <small>8 days</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-warning pt-2">
+                                <h6 class="text-warning mb-1">Capacity:</h6>
+                                <small>S6 Equivalent</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+            <div class="classes-item">
+                <div class="bg-light rounded-circle w-75 mx-auto p-3">
+                    <img class="img-fluid rounded-circle" src="{{ asset('asset/img/classes-14.jpg') }}"
+                        alt="">
+                </div>
+                <div class="bg-light rounded p-4 pt-5 mt-n5">
+                    <a class="d-block text-center h3 mt-3 mb-4" href="">Orals</a>
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center">
+                            <img class="rounded-circle flex-shrink-0" src="{{ asset('asset/img/user.jpg') }}"
+                                alt="" style="width: 45px; height: 45px;">
+                            <div class="ms-3">
+                                <h6 class="text-primary mb-1">Jhon Doe</h6>
+                                <small>H.O.D</small>
+                            </div>
+                        </div>
+                        <span class="bg-primary text-white rounded-pill py-2 px-3" href=""></span>
+                    </div>
+                    <div class="row g-1">
+                        <div class="col-4">
+                            <div class="border-top border-3 border-primary pt-2">
+                                <h6 class="text-primary mb-1">papers:</h6>
+                                <small>15 papers</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-success pt-2">
+                                <h6 class="text-success mb-1">Duration:</h6>
+                                <small>8 days</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="border-top border-3 border-warning pt-2">
+                                <h6 class="text-warning mb-1">Capacity:</h6>
+                                <small>S6 Equivalent</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <!-- Classes End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Appointment Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="bg-light rounded">
+                <div class="row g-0">
+                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="h-100 d-flex flex-column justify-content-center p-5">
+                            <h1 class="mb-4">Make Appointment</h1>
+                            <form>
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control border-0" id="gname"
+                                                placeholder="Gurdian Name">
+                                            <label for="gname">School Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="email" class="form-control border-0" id="gmail"
+                                                placeholder="Gurdian Email">
+                                            <label for="gmail">School Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control border-0" id="cname"
+                                                placeholder="Child Name">
+                                            <label for="cname">Head Teacher's Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control border-0" id="cage"
+                                                placeholder="Child Age">
+                                            <label for="cage">Location</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <textarea class="form-control border-0" placeholder="Leave a message here" id="message" style="height: 100px"></textarea>
+                                            <label for="message">Message</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100 py-3" type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s" style="min-height: 400px;">
+                        <div class="position-relative h-100">
+                            <img class="position-absolute w-100 h-100 rounded"
+                                src="{{ asset('asset/img/appointment.jpg') }}" style="object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Appointment End -->
+
+
+    <!-- Team Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                <h1 class="mb-3">Board of Directors</h1>
+                <p>Meet our dedicated board members. </p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="team-item position-relative">
+                        <img class="img-fluid rounded-circle w-75" src="{{ asset('asset/img/team-1.jpg') }}"
+                            alt="">
+                        <div class="team-text">
+                            <h3>Prof Dr Ziyad Swaleh Lubanga</h3>
+                            <p>Executive Secretary</p>
+                            <div class="d-flex align-items-center">
+                                <a class="btn btn-square btn-primary mx-1" href=""><i
+                                        class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-square btn-primary  mx-1" href=""><i
+                                        class="fab fa-twitter"></i></a>
+                                <a class="btn btn-square btn-primary  mx-1" href=""><i
+                                        class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="team-item position-relative">
+                        <img class="img-fluid rounded-circle w-75" src="{{ asset('asset/img/team-2.jpg') }}"
+                            alt="">
+                        <div class="team-text">
+                            <h3>Sheikh Hatimu Wamala</h3>
+                            <p>Board Chairperson</p>
+                            <div class="d-flex align-items-center">
+                                <a class="btn btn-square btn-primary mx-1" href=""><i
+                                        class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-square btn-primary  mx-1" href=""><i
+                                        class="fab fa-twitter"></i></a>
+                                <a class="btn btn-square btn-primary  mx-1" href=""><i
+                                        class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="team-item position-relative">
+                        <img class="img-fluid rounded-circle w-75" src="{{ asset('asset/img/team-3.jpg') }}"
+                            alt="">
+                        <div class="team-text">
+                            <h3>Dr Shaban Mubaje</h3>
+                            <p>Mufti</p>
+                            <div class="d-flex align-items-center">
+                                <a class="btn btn-square btn-primary mx-1" href=""><i
+                                        class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-square btn-primary  mx-1" href=""><i
+                                        class="fab fa-twitter"></i></a>
+                                <a class="btn btn-square btn-primary  mx-1" href=""><i
+                                        class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+
+    <!-- Testimonial Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                <h1 class="mb-3">Our Clients Say!</h1>
+                <p>At the Uganda Muslim Supreme Council (UMSC) Examination Board, we are committed to upholding the
+                    highest standards in Islamic secondary education. Here’s what some of the leading Idaad and Thanawi
+                    institutions have to say about our examination processes, curriculum support, and professional
+                    conduct.</p>
+            </div>
+            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+                <div class="testimonial-item bg-light rounded p-5">
+                    <p class="fs-5">“For years, we have trusted the UMSC Examination Board to assess our Thanawi
+                        candidates. Their structured timetable, clear subject guidelines, and timely release of results
+                        give our students a competitive edge. ”</p>
+                    <div class="d-flex align-items-center bg-white me-n5" style="border-radius: 50px 0 0 50px;">
+                        <img class="img-fluid flex-shrink-0 rounded-circle"
+                            src="{{ asset('asset/img/testimonial-1.jpg') }}" style="width: 90px; height: 90px;">
+                        <div class="ps-3">
+                            <h3 class="mb-1">Sheikh Abdulrahman Kiggundu</h3>
+                            <span>Head of Academics</span>
+                        </div>
+                        <i class="fa fa-quote-right fa-3x text-primary ms-auto d-none d-sm-flex"></i>
+                    </div>
+                </div>
+                <div class="testimonial-item bg-light rounded p-5">
+                    <p class="fs-5">“The UMSC Examination Board has consistently demonstrated excellence in managing
+                        our examinations. Their attention to detail and commitment to fairness ensures that our students
+                        are assessed accurately and professionally.”</p>
+                    <div class="d-flex align-items-center bg-white me-n5" style="border-radius: 50px 0 0 50px;">
+                        <img class="img-fluid flex-shrink-0 rounded-circle"
+                            src="{{ asset('asset/img/testimonial-2.jpg') }}" style="width: 90px; height: 90px;">
+                        <div class="ps-3">
+                            <h3 class="mb-1">Sheikh Mustafa Kigunda</h3>
+                            <span>Head of Studies</span>
+                        </div>
+                        <i class="fa fa-quote-right fa-3x text-primary ms-auto d-none d-sm-flex"></i>
+                    </div>
+                </div>
+                <div class="testimonial-item bg-light rounded p-5">
+                    <p class="fs-5">“The UMSC team is always accessible. From the dispatch of examination packages to
+                        the eight gazetted centres, everything runs smoothly. Their anti‑malpractice measures are strict
+                        yet fair – this preserves the integrity of our Idaad graduates.</p>
+                    <div class="d-flex align-items-center bg-white me-n5" style="border-radius: 50px 0 0 50px;">
+                        <img class="img-fluid flex-shrink-0 rounded-circle"
+                            src="{{ asset('asset/img/testimonial-3.jpg') }}" style="width: 90px; height: 90px;">
+                        <div class="ps-3">
+                            <h3 class="mb-1">Sheikh Yusuf Kiganda</h3>
+                            <span>Head of Idaad Studies</span>
+                        </div>
+                        <i class="fa fa-quote-right fa-3x text-primary ms-auto d-none d-sm-flex"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="text-white mb-4">Get In Touch</h3>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>kampala-kawempe division</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+256 700 123456</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@iteb.org.ug</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href=""><i
+                                class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i
+                                class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i
+                                class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="text-white mb-4">Quick Links</h3>
+                    <a class="btn btn-link text-white-50" href="">About Us</a>
+                    <a class="btn btn-link text-white-50" href="">Contact Us</a>
+                    <a class="btn btn-link text-white-50" href="">Our Services</a>
+                    <a class="btn btn-link text-white-50" href="">Privacy Policy</a>
+                    <a class="btn btn-link text-white-50" href="">Terms & Condition</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="text-white mb-4">Photo Gallery</h3>
+                    <div class="row g-2 pt-2">
+                        <div class="col-4">
+                            <img class="img-fluid rounded bg-light p-1"
+                                src="{{ asset('asset/img/classes-1.jpg') }}" alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid rounded bg-light p-1"
+                                src="{{ asset('asset/img/classes-2.jpg') }}" alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid rounded bg-light p-1"
+                                src="{{ asset('asset/img/classes-3.jpg') }}" alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid rounded bg-light p-1"
+                                src="{{ asset('asset/img/classes-4.jpg') }}" alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid rounded bg-light p-1"
+                                src="{{ asset('asset/img/classes-5.jpg') }}" alt="">
+                        </div>
+                        <div class="col-4">
+                            <img class="img-fluid rounded bg-light p-1"
+                                src="{{ asset('asset/img/classes-6.jpg') }}" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="text-white mb-4">Newsletter</h3>
+                    <p>subscribe to our newsletter for updates</p>
+                    <div class="position-relative mx-auto" style="max-width: 400px;">
+                        <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text"
+                            placeholder="Your email">
+                        <button type="button"
+                            class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="#">iteb</a>, All Right Reserved.
+
+                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <div class="footer-menu">
+                            <a href="">Home</a>
+                            <a href="">Cookies</a>
+                            <a href="">Help</a>
+                            <a href="">FQAs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('asset/lib/wow/wow.min.js') }}"></script>
+    <script src="{{ asset('asset/lib/easing/easing.min.js') }}"></script>
+    <script src="{{ asset('asset/lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ asset('asset/lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{ asset('asset/js/main.js') }}"></script>
 </body>
+
 </html>

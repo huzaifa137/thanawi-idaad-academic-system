@@ -8,7 +8,6 @@
         <div class="container mt-4">
 
             <style>
-                /* Free-Standing Tabs - No Attached Lines */
                 .subject-tabs-wrapper {
                     margin-bottom: 25px;
                     padding: 10px 15px;

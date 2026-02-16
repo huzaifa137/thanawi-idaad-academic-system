@@ -9,9 +9,6 @@
 <!-- Font Awesome 6 CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-@php
-    use App\Http\Controllers\Helper;
-@endphp
 @section('content')
     <div class="side-app">
         <div class="container mt-4">
@@ -315,67 +312,61 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    {{-- At the top of your Blade view, after your existing includes --}}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            console.log('Document ready');
 
-<script>
-    $(document).ready(function() {
-        console.log('Document ready');
-
-        // -------------------------
-        // Initialize DataTable
-        // -------------------------
-        if (typeof $.fn.DataTable !== 'undefined' && !$.fn.DataTable.isDataTable('#resultsTable')) {
-            $('#resultsTable').DataTable({
-                pageLength: 25,
-                order: [
-                    [4, 'desc']
-                ],
-                dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'excelHtml5',
-                        text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-success btn-sm',
-                        title: 'Grading_Results_{{ $schoolName }}_{{ $category }}_{{ $year }}',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6]
+            // -------------------------
+            // Initialize DataTable
+            // -------------------------
+            if (typeof $.fn.DataTable !== 'undefined' && !$.fn.DataTable.isDataTable('#resultsTable')) {
+                $('#resultsTable').DataTable({
+                    pageLength: 25,
+                    order: [
+                        [4, 'desc']
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'excelHtml5',
+                            text: '<i class="fas fa-file-excel"></i> Excel',
+                            className: 'btn btn-success btn-sm',
+                            title: 'Grading_Results_{{ $schoolName }}_{{ $category }}_{{ $year }}',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6]
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            text: '<i class="fas fa-print"></i> Print',
+                            className: 'btn btn-info btn-sm',
+                            title: 'Grading Results - {{ $schoolName }} - {{ $category }} - {{ $year }}'
                         }
-                    },
-                    {
-                        extend: 'print',
-                        text: '<i class="fas fa-print"></i> Print',
-                        className: 'btn btn-info btn-sm',
-                        title: 'Grading Results - {{ $schoolName }} - {{ $category }} - {{ $year }}'
-                    }
-                ]
-            });
-        }
+                    ]
+                });
+            }
 
-        // -------------------------
-        // View Details Modal
-        // -------------------------
-        $('.view-details').on('click', function() {
-            const studentId = $(this).data('student-id');
-            const marksDetails = $(this).data('marks-details');
-            const totalMarks = $(this).data('total-marks');
-            const totalPossible = $(this).data('total-possible');
-            const percentage = $(this).data('percentage');
-            const grade = $(this).data('grade');
-            const gradeComment = $(this).data('grade-comment');
-            const classification = $(this).data('classification');
-            const classificationComment = $(this).data('classification-comment');
+            // -------------------------
+            // View Details Modal
+            // -------------------------
+            $('.view-details').on('click', function() {
+                const studentId = $(this).data('student-id');
+                const marksDetails = $(this).data('marks-details');
+                const totalMarks = $(this).data('total-marks');
+                const totalPossible = $(this).data('total-possible');
+                const percentage = $(this).data('percentage');
+                const grade = $(this).data('grade');
+                const gradeComment = $(this).data('grade-comment');
+                const classification = $(this).data('classification');
+                const classificationComment = $(this).data('classification-comment');
 
-            console.log('Student ID:', studentId);
-            console.log('Marks Details:', marksDetails); // Debug: see marks structure
+                console.log('Student ID:', studentId);
+                console.log('Marks Details:', marksDetails); // Debug: see marks structure
 
-            // Build modal content
-            let modalContent = `
+                // Build modal content
+                let modalContent = `
             <h6 class="mb-3">Student Index Number : <strong>${studentId}</strong></h6>
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -417,305 +408,112 @@
                     <tbody>
         `;
 
-            // Add subject marks - now using subject_name directly from the data
-            if (marksDetails && marksDetails.length > 0) {
-                marksDetails.forEach(mark => {
-                    // subject_name is now included directly in the mark object from the controller
-                    const subjectName = mark.subject_name || 'Unknown Subject';
-                    const markValue = mark.mark || 'N/A';
-                    
-                    modalContent += `<tr><td>${subjectName}</td><td>${markValue}</td></tr>`;
-                });
-            } else {
-                modalContent +=
-                    `<tr><td colspan="2" class="text-center text-muted">No subject marks available</td></tr>`;
-            }
+                // Add subject marks - now using subject_name directly from the data
+                if (marksDetails && marksDetails.length > 0) {
+                    marksDetails.forEach(mark => {
+                        // subject_name is now included directly in the mark object from the controller
+                        const subjectName = mark.subject_name || 'Unknown Subject';
+                        const markValue = mark.mark || 'N/A';
 
-            modalContent += `
+                        modalContent += `<tr><td>${subjectName}</td><td>${markValue}</td></tr>`;
+                    });
+                } else {
+                    modalContent +=
+                        `<tr><td colspan="2" class="text-center text-muted">No subject marks available</td></tr>`;
+                }
+
+                modalContent += `
                     </tbody>
                 </table>
             </div>
         `;
 
-            // Update modal content
-            $('#modalContent').html(modalContent);
+                // Update modal content
+                $('#modalContent').html(modalContent);
 
-            // Show modal via Bootstrap 5
-            const modalEl = document.getElementById('studentDetailsModal');
-            const modal = new bootstrap.Modal(modalEl);
-            modal.show();
+                // Show modal via Bootstrap 5
+                const modalEl = document.getElementById('studentDetailsModal');
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
 
-            // Clean up backdrops when modal is hidden
-            modalEl.addEventListener('hidden.bs.modal', function() {
-                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-                document.body.classList.remove('modal-open');
-            }, {
-                once: true
+                // Clean up backdrops when modal is hidden
+                modalEl.addEventListener('hidden.bs.modal', function() {
+                    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                    document.body.classList.remove('modal-open');
+                }, {
+                    once: true
+                });
             });
-        });
 
-        // -------------------------
-        // Save Results
-        // -------------------------
-        window.saveResults = function() {
-            if (!confirm('Are you sure you want to save these grading results?')) return;
+            // -------------------------
+            // Save Results
+            // -------------------------
+            window.saveResults = function() {
+                if (!confirm('Are you sure you want to save these grading results?')) return;
 
-            const form = document.getElementById('saveResultsForm');
-            const formData = new FormData(form);
+                const form = document.getElementById('saveResultsForm');
+                const formData = new FormData(form);
 
-            fetch('{{ route('iteb.save.grading') }}', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Saved!',
-                            text: data.message,
-                            confirmButtonText: 'OK'
-                        }).then(() => location.reload());
-                    } else {
+                fetch('{{ route('iteb.save.grading') }}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Saved!',
+                                text: data.message,
+                                confirmButtonText: 'OK'
+                            }).then(() => location.reload());
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: data.message
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
-                            text: data.message
+                            text: 'An error occurred while saving results.'
                         });
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'An error occurred while saving results.'
                     });
-                });
-        }
-
-        // -------------------------
-        // Export / Print
-        // -------------------------
-        window.exportToExcel = function() {
-            if ($.fn.DataTable && $.fn.DataTable.isDataTable('#resultsTable')) {
-                $('#resultsTable').DataTable().button('.buttons-excel').trigger();
             }
-        }
 
-        window.printResults = function() {
-            if ($.fn.DataTable && $.fn.DataTable.isDataTable('#resultsTable')) {
-                $('#resultsTable').DataTable().button('.buttons-print').trigger();
+            // -------------------------
+            // Export / Print
+            // -------------------------
+            window.exportToExcel = function() {
+                if ($.fn.DataTable && $.fn.DataTable.isDataTable('#resultsTable')) {
+                    $('#resultsTable').DataTable().button('.buttons-excel').trigger();
+                }
             }
-        }
-    });
-</script>
+
+            window.printResults = function() {
+                if ($.fn.DataTable && $.fn.DataTable.isDataTable('#resultsTable')) {
+                    $('#resultsTable').DataTable().button('.buttons-print').trigger();
+                }
+            }
+        });
+    </script>
 @endsection
 
-{{-- Load jQuery first --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-{{-- Load Bootstrap JS --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-{{-- Load DataTables and its dependencies --}}
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-{{-- Load DataTables Buttons and dependencies --}}
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
-
-{{-- <script>
-    $(document).ready(function() {
-        console.log('Document ready');
-
-        // -------------------------
-        // Initialize DataTable
-        // -------------------------
-        if (typeof $.fn.DataTable !== 'undefined' && !$.fn.DataTable.isDataTable('#resultsTable')) {
-            $('#resultsTable').DataTable({
-                pageLength: 25,
-                order: [
-                    [4, 'desc']
-                ],
-                dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'excelHtml5',
-                        text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-success btn-sm',
-                        title: 'Grading_Results_{{ $schoolName }}_{{ $category }}_{{ $year }}',
-                        exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5, 6]
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: '<i class="fas fa-print"></i> Print',
-                        className: 'btn btn-info btn-sm',
-                        title: 'Grading Results - {{ $schoolName }} - {{ $category }} - {{ $year }}'
-                    }
-                ]
-            });
-        }
-
-        // -------------------------
-        // View Details Modal
-        // -------------------------
-        $('.view-details').on('click', function() {
-            const studentId = $(this).data('student-id');
-            const marksDetails = $(this).data('marks-details');
-            const totalMarks = $(this).data('total-marks');
-            const totalPossible = $(this).data('total-possible');
-            const percentage = $(this).data('percentage');
-            const grade = $(this).data('grade');
-            const gradeComment = $(this).data('grade-comment');
-            const classification = $(this).data('classification');
-            const classificationComment = $(this).data('classification-comment');
-
-            console.log('Student ID:', studentId);
-
-            // Build modal content
-            let modalContent = `
-            <h6 class="mb-3">Student Index Number : <strong>${studentId}</strong></h6>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <tr>
-                        <th style="width: 30%">Total Marks</th>
-                        <td>${totalMarks} / ${totalPossible}</td>
-                    </tr>
-                    <tr>
-                        <th>Percentage</th>
-                        <td>${percentage}%</td>
-                    </tr>
-                    <tr>
-                        <th>Grade</th>
-                        <td>${grade}</td>
-                    </tr>
-                    <tr>
-                        <th>Grade Comment</th>
-                        <td>${gradeComment || 'N/A'}</td>
-                    </tr>
-                    <tr>
-                        <th>Classification</th>
-                        <td>${classification}</td>
-                    </tr>
-                    <tr>
-                        <th>Classification Comment</th>
-                        <td>${classificationComment || 'N/A'}</td>
-                    </tr>
-                </table>
-            </div>
-            <h6 class="mt-3">Subject Marks</h6>
-            <div class="table-responsive">
-                <table class="table table-sm table-bordered">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Subject</th>
-                            <th>Mark</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
-
-            // Add subject marks
-            if (marksDetails && marksDetails.length > 0) {
-                marksDetails.forEach(mark => {
-                    
-                    let subjectName = mark.subject?.md_name ?? 'N/A';
-                    modalContent += `<tr><td>${subjectName}</td><td>${mark.mark}</td></tr>`;
-                });
-            } else {
-                modalContent +=
-                    `<tr><td colspan="2" class="text-center text-muted">No subject marks available</td></tr>`;
-            }
-
-            modalContent += `
-                    </tbody>
-                </table>
-            </div>
-        `;
-
-            // Update modal content
-            $('#modalContent').html(modalContent);
-
-            // Show modal via Bootstrap 5
-            const modalEl = document.getElementById('studentDetailsModal');
-            const modal = new bootstrap.Modal(modalEl);
-            modal.show();
-
-            // Clean up backdrops when modal is hidden
-            modalEl.addEventListener('hidden.bs.modal', function() {
-                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-                document.body.classList.remove('modal-open');
-            }, {
-                once: true
-            });
-        });
-
-        // -------------------------
-        // Save Results
-        // -------------------------
-        window.saveResults = function() {
-            if (!confirm('Are you sure you want to save these grading results?')) return;
-
-            const form = document.getElementById('saveResultsForm');
-            const formData = new FormData(form);
-
-            fetch('{{ route('iteb.save.grading') }}', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Saved!',
-                            text: data.message,
-                            confirmButtonText: 'OK'
-                        }).then(() => location.reload());
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: data.message
-                        });
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'An error occurred while saving results.'
-                    });
-                });
-        }
-
-        // -------------------------
-        // Export / Print
-        // -------------------------
-        window.exportToExcel = function() {
-            if ($.fn.DataTable && $.fn.DataTable.isDataTable('#resultsTable')) {
-                $('#resultsTable').DataTable().button('.buttons-excel').trigger();
-            }
-        }
-
-        window.printResults = function() {
-            if ($.fn.DataTable && $.fn.DataTable.isDataTable('#resultsTable')) {
-                $('#resultsTable').DataTable().button('.buttons-print').trigger();
-            }
-        }
-    });
-</script> --}}
-

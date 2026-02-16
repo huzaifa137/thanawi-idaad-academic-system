@@ -110,7 +110,7 @@
             <div class="col-md-6 mb-4">
                 <div class="card shadow h-100">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Top Performers</h5>
+                        <h5 class="mb-0"><i class="fas fa-trophy me-2"></i> Top Performers</h5>
                         <button class="btn btn-sm btn-light" onclick="refreshSection('students')">
                             <i class="fas fa-redo"></i>
                         </button>

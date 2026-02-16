@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\password_reset_table;
@@ -271,7 +272,6 @@ class UserController extends Controller
                     'redirect_url' => $url3,
                 ]);
             }
-
         } else {
 
             return response()->json([
@@ -648,11 +648,6 @@ class UserController extends Controller
         return view('home-page', compact(['allCourses']));
     }
 
-    public function publicPortal()
-    {
-        return view('public-portal');
-    }
-
     public function editUserInformation()
     {
 
@@ -861,7 +856,6 @@ class UserController extends Controller
                 $master_code_id = $master_code_id[0];
 
                 return view('master-logic.edit-record', $data, compact(['tb_record', 'selected', 'master_code_name', 'master_code_id', 'md_id']));
-
             }
         } else {
             $master_code_name = DB::table('master_codes')->where('mc_id', $md_master_code_id)->pluck('mc_name');
@@ -874,7 +868,6 @@ class UserController extends Controller
             $master_code_id = $master_code_id[0];
 
             return view('master-logic.master-logic.edit-record', $data, compact(['tb_record', 'selected', 'master_code_name', 'master_code_id', 'md_id']));
-
         }
     }
 
@@ -929,7 +922,7 @@ class UserController extends Controller
     {
 
         // ACCOUNT STATUSES
-// --------------------------------------
+        // --------------------------------------
         // 1.Banned     ====> 0
         // 2.Locked     ====> 8
         // 3.Suspended  ====> 9
@@ -981,7 +974,6 @@ class UserController extends Controller
             );
 
             return back()->with('success', 'User account has been updated successfully');
-
         } else {
 
             User::updateOrCreate(
@@ -1012,4 +1004,8 @@ class UserController extends Controller
         return redirect()->back()->with('fail', 'User not found.');
     }
 
+    public function publicPortal()
+    {
+        return view('public-portal');
+    }
 }
