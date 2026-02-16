@@ -14,8 +14,10 @@
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap"
+        rel="stylesheet">
+
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -44,27 +46,33 @@
             border-color: var(--iteb-green) !important;
             color: #fff;
         }
+
         .btn-primary:hover {
             background-color: var(--iteb-green-dark) !important;
             border-color: var(--iteb-green-dark) !important;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(13, 75, 30, 0.15);
         }
+
         .btn-outline-primary {
             color: var(--iteb-green);
             border-color: var(--iteb-green);
         }
+
         .btn-outline-primary:hover {
             background-color: var(--iteb-green);
             border-color: var(--iteb-green);
             color: #fff;
         }
+
         .text-primary {
             color: var(--iteb-green) !important;
         }
+
         .bg-primary {
             background-color: var(--iteb-green) !important;
         }
+
         .border-primary {
             border-color: var(--iteb-green) !important;
         }
@@ -76,10 +84,12 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .portal-card:hover {
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             transform: translateY(-5px);
         }
+
         .captcha-code {
             font-family: 'Courier New', monospace;
             font-size: 1.8rem;
@@ -94,11 +104,13 @@
             padding: 0.25rem 0.75rem;
             display: inline-block;
         }
+
         .form-floating>.form-control:focus,
         .form-floating>.form-select:focus {
             border-color: var(--iteb-green-light);
             box-shadow: 0 0 0 0.25rem rgba(13, 75, 30, 0.1);
         }
+
         .results-table {
             width: 100%;
             border-collapse: separate;
@@ -107,23 +119,28 @@
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
         }
+
         .results-table thead {
             background-color: var(--iteb-green);
             color: white;
         }
+
         .results-table th {
             padding: 1rem 1.2rem;
             font-weight: 600;
             border: none;
         }
+
         .results-table td {
             padding: 1rem 1.2rem;
             background-color: white;
             border-bottom: 1px solid #e9ecef;
         }
+
         .results-table tbody tr:hover td {
             background-color: #f8fcf9;
         }
+
         .grade-badge {
             display: inline-block;
             padding: 0.35rem 1rem;
@@ -133,37 +150,45 @@
             text-align: center;
             min-width: 60px;
         }
+
         .grade-a {
             background-color: rgba(40, 167, 69, 0.12);
             color: #1e7a3d;
         }
+
         .grade-b {
             background-color: rgba(13, 75, 30, 0.12);
             color: #0d4b1e;
         }
+
         .grade-c {
             background-color: rgba(255, 193, 7, 0.12);
             color: #856404;
         }
+
         .summary-card {
             background: linear-gradient(145deg, #f8fcf9, #f0f7f2);
             border-radius: 16px;
             padding: 1.5rem;
         }
+
         .footer .btn-link {
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             padding-left: 0;
         }
+
         .footer .btn-link:hover {
             color: #fff;
             text-decoration: none;
             padding-left: 5px;
         }
+
         /* WOW animations */
         .wow {
             visibility: hidden;
         }
+
         .animated {
             animation-duration: 1s;
             animation-fill-mode: both;
@@ -174,7 +199,8 @@
 <body>
     <div class="container-xxl bg-white p-0">
         <!-- Spinner Start (exactly as about page) -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div id="spinner"
+            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
@@ -184,9 +210,7 @@
         <!-- Navbar Start (exact structure from about page, with Student Portal link added and active) -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
             <a href="{{ route('home.page') }}" class="navbar-brand d-flex align-items-center">
-                <img src="{{ asset('assets/images/brand/logo.png') }}" 
-                    alt="ITEB Logo" 
-                    class="navbar-logo me-3">
+                <img src="{{ asset('assets/images/brand/logo.png') }}" alt="ITEB Logo" class="navbar-logo me-3">
                 <h1 style="color: #FE5D37" class="m-0 text-primary">ITEB</h1>
             </a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -198,6 +222,7 @@
                     <a href="{{ route('about.us') }}" class="nav-item nav-link">About Us</a>
                     <a href="{{ route('public.portal') }}" class="nav-item nav-link active">Student Portal</a>
                     <a href="{{ route('contact.us') }}" class="nav-item nav-link">Contact Us</a>
+                    <a href="{{ route('users.login') }}" class="nav-item nav-link">Login</a>
                 </div>
                 <a href="{{ route('public.portal') }}" class="btn btn-primary rounded-pill px-3 d-none d-lg-block">
                     Portal<i class="fa fa-arrow-right ms-3"></i>
@@ -229,15 +254,19 @@
                     <div class="col-lg-7 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="portal-card p-4 p-lg-5">
                             <h2 class="mb-3 text-primary">Results Lookup</h2>
-                            <p class="text-secondary mb-4">Enter your examination details to retrieve your official results.</p>
+                            <p class="text-secondary mb-4">Enter your examination details to retrieve your official
+                                results.</p>
 
                             <form id="resultsForm">
                                 <div class="row g-4">
                                     <!-- Registration Number -->
                                     <div class="col-md-6">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="registrationNumber" placeholder="Registration Number" required maxlength="20">
-                                            <label for="registrationNumber"><i class="fa fa-id-card me-2 text-primary"></i>Registration Number</label>
+                                            <input type="text" class="form-control" id="registrationNumber"
+                                                placeholder="Registration Number" required maxlength="20">
+                                            <label for="registrationNumber"><i
+                                                    class="fa fa-id-card me-2 text-primary"></i>Registration
+                                                Number</label>
                                         </div>
                                     </div>
                                     <!-- Examination Year -->
@@ -252,7 +281,9 @@
                                                 <option value="2021">2021</option>
                                                 <option value="2020">2020</option>
                                             </select>
-                                            <label for="examYear"><i class="fa fa-calendar-alt me-2 text-primary"></i>Examination Year</label>
+                                            <label for="examYear"><i
+                                                    class="fa fa-calendar-alt me-2 text-primary"></i>Examination
+                                                Year</label>
                                         </div>
                                     </div>
                                     <!-- Examination Type -->
@@ -263,36 +294,46 @@
                                                 <option value="idaad">Idaad (Ordinary Level)</option>
                                                 <option value="thanawi">Thanawi (Advanced Level)</option>
                                             </select>
-                                            <label for="examType"><i class="fa fa-graduation-cap me-2 text-primary"></i>Examination Type</label>
+                                            <label for="examType"><i
+                                                    class="fa fa-graduation-cap me-2 text-primary"></i>Examination
+                                                Type</label>
                                         </div>
                                     </div>
                                     <!-- Center Number (Optional) -->
                                     <div class="col-md-6">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="centerNumber" placeholder="Center Number (Optional)">
-                                            <label for="centerNumber"><i class="fa fa-school me-2 text-primary"></i>Center Number (Optional)</label>
+                                            <input type="text" class="form-control" id="centerNumber"
+                                                placeholder="Center Number (Optional)">
+                                            <label for="centerNumber"><i
+                                                    class="fa fa-school me-2 text-primary"></i>Center Number
+                                                (Optional)</label>
                                         </div>
                                     </div>
                                     <!-- CAPTCHA Row -->
                                     <div class="col-12">
                                         <div class="d-flex flex-wrap align-items-center bg-light p-3 rounded-3">
                                             <div class="me-4 mb-2 mb-sm-0">
-                                                <label class="fw-bold text-dark mb-1"><i class="fa fa-shield-alt text-primary me-1"></i>Security</label>
+                                                <label class="fw-bold text-dark mb-1"><i
+                                                        class="fa fa-shield-alt text-primary me-1"></i>Security</label>
                                                 <div class="captcha-code" id="captchaText">A3B7C9</div>
                                             </div>
                                             <div class="flex-grow-1 me-2" style="min-width: 160px;">
-                                                <input type="text" class="form-control" id="captchaInput" placeholder="Enter code" required maxlength="6">
+                                                <input type="text" class="form-control" id="captchaInput"
+                                                    placeholder="Enter code" required maxlength="6">
                                             </div>
-                                            <button type="button" class="btn btn-outline-primary" id="refreshCaptcha">
+                                            <button type="button" class="btn btn-outline-primary"
+                                                id="refreshCaptcha">
                                                 <i class="fa fa-redo"></i>
                                             </button>
                                         </div>
                                     </div>
                                     <!-- Privacy Alert -->
                                     <div class="col-12">
-                                        <div class="alert alert-info d-flex align-items-center mb-2" style="background-color: rgba(13,75,30,0.05); border-left: 4px solid var(--iteb-green);">
+                                        <div class="alert alert-info d-flex align-items-center mb-2"
+                                            style="background-color: rgba(13,75,30,0.05); border-left: 4px solid var(--iteb-green);">
                                             <i class="fa fa-info-circle fs-4 me-3 text-primary"></i>
-                                            <div class="small">Your results are confidential and encrypted. Only displayed after successful verification.</div>
+                                            <div class="small">Your results are confidential and encrypted. Only
+                                                displayed after successful verification.</div>
                                         </div>
                                     </div>
                                     <!-- Submit Button -->
@@ -307,7 +348,8 @@
 
                         <!-- Loading Spinner (hidden by default) -->
                         <div class="text-center py-5 my-4" id="loadingSpinner" style="display: none;">
-                            <div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem;" role="status">
+                            <div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem;"
+                                role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
                             <p class="mt-3 fs-5 text-primary fw-semibold">Retrieving your results...</p>
@@ -320,9 +362,11 @@
                                 <div class="text-center mb-4">
                                     <h3 class="text-primary" id="studentName">Ismail Kateregga</h3>
                                     <p class="mb-2" id="studentProgram">Thanawi - Advanced Level</p>
-                                    <div class="alert alert-success d-inline-flex align-items-center gap-2 mx-auto" style="background-color: rgba(40,167,69,0.1); border-left-color: #28a745;">
+                                    <div class="alert alert-success d-inline-flex align-items-center gap-2 mx-auto"
+                                        style="background-color: rgba(40,167,69,0.1); border-left-color: #28a745;">
                                         <i class="fa fa-check-circle text-success"></i>
-                                        <span>Official results for <span id="examDetails">2025 Thanawi Examination</span></span>
+                                        <span>Official results for <span id="examDetails">2025 Thanawi
+                                                Examination</span></span>
                                     </div>
                                 </div>
 
@@ -415,27 +459,37 @@
                                 <i class="fa fa-info-circle text-primary fs-2 me-3"></i>
                                 Important Information
                             </h3>
-                            <div class="alert alert-warning d-flex align-items-start border-0" style="background-color: rgba(255,193,7,0.1);">
+                            <div class="alert alert-warning d-flex align-items-start border-0"
+                                style="background-color: rgba(255,193,7,0.1);">
                                 <i class="fa fa-exclamation-triangle text-warning fs-5 me-3 mt-1"></i>
-                                <div><strong>Provisional results:</strong> These results are provisional until confirmed by the examination board.</div>
+                                <div><strong>Provisional results:</strong> These results are provisional until confirmed
+                                    by the examination board.</div>
                             </div>
                             <ul class="list-unstyled mb-4">
-                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Results released 6-8 weeks after exams</li>
-                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Verify personal details match registration</li>
-                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Contact school for discrepancies</li>
-                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Keep registration number confidential</li>
-                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Printed results require school stamp</li>
+                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Results
+                                    released 6-8 weeks after exams</li>
+                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Verify
+                                    personal details match registration</li>
+                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Contact school
+                                    for discrepancies</li>
+                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Keep
+                                    registration number confidential</li>
+                                <li class="mb-3"><i class="fa fa-check-circle text-success me-2"></i> Printed
+                                    results require school stamp</li>
                             </ul>
 
-                            <h4 class="mt-5 mb-3"><i class="fa fa-question-circle text-primary me-2"></i>Frequently Asked Questions</h4>
+                            <h4 class="mt-5 mb-3"><i class="fa fa-question-circle text-primary me-2"></i>Frequently
+                                Asked Questions</h4>
                             <div class="accordion" id="faqAccordion">
                                 <div class="accordion-item border-0 mb-3">
                                     <h6 class="accordion-header">
-                                        <button class="accordion-button collapsed bg-white shadow-sm rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                        <button class="accordion-button collapsed bg-white shadow-sm rounded-3"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
                                             When are results released?
                                         </button>
                                     </h6>
-                                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div id="faq1" class="accordion-collapse collapse"
+                                        data-bs-parent="#faqAccordion">
                                         <div class="accordion-body bg-light rounded-bottom">
                                             Idaad results: March, Thanawi results: May each year.
                                         </div>
@@ -443,11 +497,13 @@
                                 </div>
                                 <div class="accordion-item border-0 mb-3">
                                     <h6 class="accordion-header">
-                                        <button class="accordion-button collapsed bg-white shadow-sm rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                        <button class="accordion-button collapsed bg-white shadow-sm rounded-3"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
                                             Forgot registration number?
                                         </button>
                                     </h6>
-                                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div id="faq2" class="accordion-collapse collapse"
+                                        data-bs-parent="#faqAccordion">
                                         <div class="accordion-body bg-light rounded-bottom">
                                             Contact your school administration or the examination board.
                                         </div>
@@ -455,11 +511,13 @@
                                 </div>
                                 <div class="accordion-item border-0">
                                     <h6 class="accordion-header">
-                                        <button class="accordion-button collapsed bg-white shadow-sm rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                        <button class="accordion-button collapsed bg-white shadow-sm rounded-3"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
                                             Are these results final?
                                         </button>
                                     </h6>
-                                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div id="faq3" class="accordion-collapse collapse"
+                                        data-bs-parent="#faqAccordion">
                                         <div class="accordion-body bg-light rounded-bottom">
                                             They are provisional until officially confirmed by the board.
                                         </div>
@@ -467,7 +525,8 @@
                                 </div>
                             </div>
 
-                            <div class="mt-5 p-3 rounded-3" style="background: linear-gradient(145deg, #e9f1e9, #dbe8db);">
+                            <div class="mt-5 p-3 rounded-3"
+                                style="background: linear-gradient(145deg, #e9f1e9, #dbe8db);">
                                 <div class="d-flex align-items-center">
                                     <i class="fa fa-headset text-primary fs-1 me-3"></i>
                                     <div>
@@ -489,13 +548,17 @@
                     <div class="row g-0 align-items-center">
                         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                             <div class="position-relative h-100">
-                                <img class="img-fluid h-100 w-100 object-fit-cover" src="{{ asset('asset/img/call-to-action.jpg') }}" alt="Register School" style="min-height: 300px; object-fit: cover;">
+                                <img class="img-fluid h-100 w-100 object-fit-cover"
+                                    src="{{ asset('asset/img/call-to-action.jpg') }}" alt="Register School"
+                                    style="min-height: 300px; object-fit: cover;">
                             </div>
                         </div>
                         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                             <div class="p-5">
                                 <h1 class="mb-4 text-primary">Register Your School</h1>
-                                <p class="mb-4">Join the ITEB family and ensure your students receive accurate, timely, and secure examination results. Our platform offers seamless results submission, tracking, and comprehensive reports.</p>
+                                <p class="mb-4">Join the ITEB family and ensure your students receive accurate,
+                                    timely, and secure examination results. Our platform offers seamless results
+                                    submission, tracking, and comprehensive reports.</p>
                                 <a href="{{ route('contact.us') }}" class="btn btn-primary py-3 px-5 rounded-pill">
                                     Get Started Now <i class="fa fa-arrow-right ms-2"></i>
                                 </a>
@@ -517,10 +580,14 @@
                         <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+256 700 123456</p>
                         <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@iteb.org.ug</p>
                         <div class="d-flex pt-2">
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i
+                                    class="fab fa-twitter"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i
+                                    class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i
+                                    class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-light btn-social" href=""><i
+                                    class="fab fa-linkedin-in"></i></a>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
@@ -534,22 +601,28 @@
                         <h3 class="text-white mb-4">Photo Gallery</h3>
                         <div class="row g-2 pt-2">
                             <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="{{ asset('asset/img/classes-1.jpg') }}" alt="">
+                                <img class="img-fluid rounded bg-light p-1"
+                                    src="{{ asset('asset/img/classes-1.jpg') }}" alt="">
                             </div>
                             <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="{{ asset('asset/img/classes-2.jpg') }}" alt="">
+                                <img class="img-fluid rounded bg-light p-1"
+                                    src="{{ asset('asset/img/classes-2.jpg') }}" alt="">
                             </div>
                             <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="{{ asset('asset/img/classes-3.jpg') }}" alt="">
+                                <img class="img-fluid rounded bg-light p-1"
+                                    src="{{ asset('asset/img/classes-3.jpg') }}" alt="">
                             </div>
                             <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="{{ asset('asset/img/classes-4.jpg') }}" alt="">
+                                <img class="img-fluid rounded bg-light p-1"
+                                    src="{{ asset('asset/img/classes-4.jpg') }}" alt="">
                             </div>
                             <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="{{ asset('asset/img/classes-5.jpg') }}" alt="">
+                                <img class="img-fluid rounded bg-light p-1"
+                                    src="{{ asset('asset/img/classes-5.jpg') }}" alt="">
                             </div>
                             <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="{{ asset('asset/img/classes-6.jpg') }}" alt="">
+                                <img class="img-fluid rounded bg-light p-1"
+                                    src="{{ asset('asset/img/classes-6.jpg') }}" alt="">
                             </div>
                         </div>
                     </div>
@@ -557,8 +630,10 @@
                         <h3 class="text-white mb-4">Newsletter</h3>
                         <p>Subscribe for exam updates & announcements.</p>
                         <div class="position-relative mx-auto" style="max-width: 400px;">
-                            <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
-                            <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
+                            <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text"
+                                placeholder="Your email">
+                            <button type="button"
+                                class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
                         </div>
                     </div>
                 </div>

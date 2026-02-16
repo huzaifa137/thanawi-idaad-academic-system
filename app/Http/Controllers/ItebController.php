@@ -261,6 +261,7 @@ class ItebController extends Controller
     }
     public function processGrading(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'year' => 'required',
             'category' => 'required',

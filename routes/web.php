@@ -256,7 +256,8 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
                 Route::get('students-dashboard', 'studentPortal')->name('all.students.dashboard');
                 Route::get('update-profile', action: 'updateProfiles')->name('students.update.profile');
                 Route::get('/search', 'searchStudent')->name('students.individual.search');
-                Route::get('/all-students', 'allStudents')->name('students.all.students');
+                // Route::get('/all-students', 'allStudents')->name('students.all.students');
+                Route::get('/all-students', 'allStudentsInformation')->name('students.all.students');
                 Route::get('/search/ajax', 'searchAjax')->name('students.search.ajax');
 
                 Route::get('/export/{schoolId}/{type}', 'exportStudents')->name('students.export');

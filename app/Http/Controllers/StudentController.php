@@ -6,7 +6,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Classroom;
 use App\Models\Stream;
+use App\Models\StudentBasic;
+use App\Models\House;
 use App\Models\Student;
+use App\Models\Subject;
 use DB;
 use App\Models\MasterData;
 use Illuminate\Http\Request;
@@ -18,7 +21,12 @@ use App\Models\School;
 use App\Imports\StudentExamImport;
 use App\Models\Exam;
 use App\Services\GradingService;
-use App\Models\StudentExamResult;
+use App\Models\Mark;
+use App\Models\ClassAllocation;
+use App\Models\Grading;
+use App\Models\StudentResult;
+use App\Http\Controllers\Helper;
+
 
 class StudentController extends Controller
 {
@@ -197,132 +205,161 @@ class StudentController extends Controller
         }
     }
 
-    public function studentDashboard(GradingService $gradingService)
-    {
-        // Dummy student
-        $student = (object) [
-            'id' => 1,
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-        ];
+public function studentDashboard(GradingService $gradingService)
+{
+    $years = ClassAllocation::select('Student_ID')
+        ->get()
+        ->map(function ($item) {
+            $parts = explode('-', $item->Student_ID);
+            return end($parts);
+        })
+        ->unique()
+        ->sort()
+        ->values();
 
-        // Dummy exams data
-        $exams = collect([
-            (object) [
-                'exam_id' => 1,
-                'exam_name' => 'Midterm Exam',
-                'academic_year' => '2024/2025',
-                'exam_type' => 'Midterm',
-                'total_subjects' => 5,
-                'aggregate' => 375,
-                'division' => 'I',
-                'grade' => 'A',
-                'examsTaken' => 1,
-                'averageGrade' => 'A',
-                'passPercentage' => 100,
-            ],
-            (object) [
-                'exam_id' => 2,
-                'exam_name' => 'Final Exam',
-                'academic_year' => '2024/2025',
-                'exam_type' => 'Final',
-                'total_subjects' => 5,
-                'aggregate' => 320,
-                'division' => 'II',
-                'grade' => 'B',
-                'examsTaken' => 1,
-                'averageGrade' => 'B',
-                'passPercentage' => 80,
-            ],
-        ]);
+    $categories = ['TH' => 'Thanawi', 'ID' => 'Idaad'];
 
-        // Overall stats
-        $overallExamsTaken = $exams->sum('examsTaken');
-        $overallAggregate = $exams->sum('aggregate');
-        $overallPassPercentage = $exams->avg('passPercentage');
-        $overallAverageGrade = 'A'; // Dummy value
+    $schools = ClassAllocation::select('Student_ID')
+        ->get()
+        ->map(function ($item) {
+            $parts = explode('-', $item->Student_ID);
+            return implode('-', array_slice($parts, 0, 2));
+        })
+        ->unique()
+        ->filter()
+        ->values()
+        ->mapWithKeys(function ($item) {
+            return [$item => Helper::schoolName($item) ?? $item];
+        });
 
-        return view('student.dashboard', compact(
-            'student',
-            'exams',
-            'overallExamsTaken',
-            'overallAggregate',
-            'overallPassPercentage',
-            'overallAverageGrade'
-        ));
+    $totalStudents = ClassAllocation::distinct('Student_ID')->count('Student_ID');
+    $gradedSoFar = Mark::distinct('student_id')->count('student_id');
+    $pendingGrading = $totalStudents - $gradedSoFar;
+
+    $avgPerformance = Mark::selectRaw('AVG(total_mark) as avg_mark')
+        ->fromSub(function ($query) {
+            $query->selectRaw('student_id, SUM(mark) as total_mark')
+                ->from('marks')
+                ->groupBy('student_id');
+        }, 'student_totals')
+        ->value('avg_mark') ?? 0;
+
+    // Updated dummy data
+    $dummyData = [
+        "_token" => "JqPydyj8citXjZhYtYUh6CbqKugMkQGQIuZeOINg",
+        "year" => "2025",
+        "category" => "ID",
+        "school_number" => null,
+        "level" => "A"
+    ];
+
+    // Create a fake request object
+    $request = new Request($dummyData);
+
+    // Extract variables from request
+    $year = $request->year;
+    $category = $request->category;
+    $schoolNumber = $request->school_number;
+    $level = $request->level ?? 'A';
+
+    // Build query for students
+    $studentsQuery = ClassAllocation::select('Student_ID')
+        ->where('Student_ID', 'LIKE', "%-$category-%")
+        ->where('Student_ID', 'LIKE', "%-$year")
+        ->distinct();
+
+    if ($schoolNumber) {
+        $studentsQuery->where('Student_ID', 'LIKE', "$schoolNumber-%");
     }
 
+    $students = $studentsQuery->pluck('Student_ID');
 
-    // // Just look into this code, the modals were shifted and the migrations
-    // public function studentDashboard(GradingService $gradingService)
-    // {
-    //     $studentId = session('LoggedStudent');
+    // Get subjects for this category
+    $subjectIds = $this->getSubjectIdsForCategory($category);
 
-    //     $student = DB::table('users')->where('id', $studentId)->first();
+    // Get total possible marks (each subject out of 100)
+    $totalPossibleMarks = count($subjectIds) * 100;
 
-    //     // Get all exams taken by this student
-    //     $examResults = StudentExamResult::with(['exam', 'subject'])
-    //         ->where('student_id', $studentId)
-    //         ->get()
-    //         ->groupBy('exam_id');
+    // Get all marks for these students and subjects
+    $marks = Mark::whereIn('student_id', $students)
+        ->whereIn('subject_id', $subjectIds)
+        ->get()
+        ->groupBy('student_id');
 
-    //     $exams = $examResults->map(function ($results, $examId) use ($gradingService) {
+    // Calculate results for each student
+    $results = [];
+    foreach ($students as $studentId) {
+        $studentMarks = $marks->get($studentId, collect());
 
-    //         $exam = $results->first()->exam;
+        $totalMarks = $studentMarks->sum('mark');
+        $subjectsAttempted = $studentMarks->count();
 
-    //         $totalMarks = $results->sum('marks');
-    //         $averageMarks = $results->avg('marks');
-    //         $grade = $gradingService->calculateGrade($averageMarks);
+        $percentage = $totalPossibleMarks > 0
+            ? round(($totalMarks / $totalPossibleMarks) * 100, 2)
+            : 0;
 
-    //         $examsTaken = $results->groupBy('exam_id')->count();
-    //         $averageGrade = $gradingService->calculateGrade($averageMarks);
+        $gradeModel = Grading::getGrade($percentage, 'Marks', $level);
+        $classificationModel = Grading::getGrade($percentage, 'Points', $level);
 
-    //         $subjectsPassed = $results->where('marks', '>=', 50)->count();
-    //         $totalSubjects = $results->count();
+        $marksDetails = [];
+        foreach ($studentMarks as $mark) {
+            $marksDetails[] = [
+                'subject_id' => $mark->subject_id,
+                'mark' => $mark->mark,
+                'subject_name' => Helper::item_md_name($mark->subject_id),
+            ];
+        }
 
-    //         $passPercentage = $totalSubjects > 0
-    //             ? round(($subjectsPassed / $totalSubjects) * 100)
-    //             : 0;
+        $results[$studentId] = [
+            'student_id' => $studentId,
+            'total_marks' => $totalMarks,
+            'total_possible' => $totalPossibleMarks,
+            'subjects_attempted' => $subjectsAttempted,
+            'total_subjects' => count($subjectIds),
+            'percentage' => $percentage,
+            'grade' => $gradeModel->Grade ?? 'N/A',
+            'grade_comment' => $gradeModel->Comment ?? '',
+            'classification' => $classificationModel->Grade ?? 'N/A',
+            'classification_comment' => $classificationModel->Comment ?? '',
+            'level' => $level,
+            'marks_details' => $marksDetails,
+        ];
+    }
 
-    //         // Determine division
-    //         $division = $averageMarks >= 80 ? 'I' :
-    //             ($averageMarks >= 70 ? 'II' :
-    //                 ($averageMarks >= 60 ? 'III' : 'IV'));
+    uasort($results, function ($a, $b) {
+        return $b['percentage'] <=> $a['percentage'];
+    });
 
-    //         return (object) [
-    //             'exam_id' => $examId,
-    //             'exam_name' => $exam->exam_type . ' Exam',
-    //             'academic_year' => $exam->academic_year,
-    //             'exam_type' => ucfirst($exam->exam_type),
-    //             'total_subjects' => $totalSubjects,
-    //             'aggregate' => $totalMarks,
-    //             'division' => $division,
-    //             'grade' => $grade,
-    //             'examsTaken' => $examsTaken,
-    //             'averageGrade' => $averageGrade,
-    //             'passPercentage' => $passPercentage,
-    //         ];
-    //     })->values();
+    $statistics = $this->calculateStatistics($results, $level);
+    $schoolName = $schoolNumber ? Helper::schoolName($schoolNumber) : 'All Schools';
 
-    //     // **Overall stats for the overview cards**
-    //     $overallExamsTaken = $exams->sum('examsTaken');
-    //     $overallAggregate = $exams->sum('aggregate');
-    //     $overallPassPercentage = $exams->avg('passPercentage') ?? 0;
-    //     // Overall average grade
-    //     $overallAverageMarks = $exams->avg(function ($exam) {
-    //         return $exam->aggregate / $exam->total_subjects;
-    //     });
-    //     $overallAverageGrade = $gradingService->calculateGrade($overallAverageMarks);
+    return view('student.dashboard', compact(
+        'years',
+        'categories',
+        'schools',
+        'totalStudents',
+        'gradedSoFar',
+        'pendingGrading',
+        'avgPerformance',
+        'results',
+        'year',
+        'category',
+        'schoolNumber',
+        'schoolName',
+        'statistics',
+        'level',
+        'totalPossibleMarks'
+    ));
+}
 
-    //     return view('student.dashboard', compact(
-    //         'student',
-    //         'exams',
-    //         'overallExamsTaken',
-    //         'overallAggregate',
-    //         'overallPassPercentage',
-    //         'overallAverageGrade'
-    //     ));
-    // }
+
+
+    private function getSubjectIdsForCategory($category)
+    {
+        // Implement this based on your subject-category mapping
+        // This is a placeholder - adjust according to your database structure
+        return Subject::where('category', $category)->pluck('id')->toArray();
+    }
 
     public function selectCurrentSchool()
     {
@@ -431,43 +468,46 @@ class StudentController extends Controller
         return response()->json(['message' => 'Student added successfully!']);
     }
 
-    public function allStudents()
+    public function allStudentsInformation(Request $request)
     {
-        $students = Student::with('school')
-            ->fromSub(function ($query) {
-                $query->from('students')
-                    ->select('*')
-                    ->selectRaw(
-                        'ROW_NUMBER() OVER (
-                    PARTITION BY school_id
-                    ORDER BY senior DESC, stream
-                ) as row_num'
-                    );
-            }, 'students')
-            ->where('row_num', '<=', 3)
-            ->orderBy('school_id')
-            ->orderBy('senior', 'desc')
-            ->orderBy('stream')
-            ->get();
+        $houses = House::orderBy('House')->get();
 
-        $groupedStudents = $students->groupBy(function ($student) {
-            return $student->school->name;
-        });
+        $years = StudentBasic::selectRaw('DISTINCT SUBSTRING_INDEX(Student_ID, "-", -1) as year')
+            ->whereRaw('Student_ID REGEXP ".*-[0-9]{4}$"')
+            ->orderBy('year', 'desc')
+            ->pluck('year');
 
-        $thanawiPapers = MasterData::where(
-            'md_master_code_id',
-            config('constants.options.ThanawiPapers')
-        )->get();
+        $studentsQuery = StudentBasic::with('house');
 
-        $idaadPapers = MasterData::where(
-            'md_master_code_id',
-            config('constants.options.IdaadPapers')
-        )->get();
+        if ($request->filled('house_id')) {
+            $selectedHouse = House::find($request->house_id);
+            if ($selectedHouse) {
+                $studentsQuery->where('House', $selectedHouse->House);
+            }
+        }
+
+        if ($request->filled('year')) {
+            $studentsQuery->where('Student_ID', 'LIKE', '%-' . $request->year);
+        }
+
+        if ($request->filled('type')) {
+            $type = $request->type;
+            if ($type === 'idaad') {
+                $studentsQuery->where('Student_ID', 'LIKE', '%-ID-%');
+            } elseif ($type === 'thanawi') {
+                $studentsQuery->where('Student_ID', 'LIKE', '%-TH-%');
+            }
+        }
+
+        $students = $studentsQuery
+            ->orderBy('Student_ID', 'asc')
+            ->paginate(10)
+            ->withQueryString();
 
         return view('student.all-students', compact(
-            'groupedStudents',
-            'thanawiPapers',
-            'idaadPapers'
+            'students',
+            'houses',
+            'years'
         ));
     }
 
@@ -552,11 +592,12 @@ class StudentController extends Controller
 
     public function searchAjax(Request $request)
     {
+
         $criteria = $request->input('criteria');
 
         switch ($criteria) {
             case 'admission_number':
-                $students = Student::where('admission_number', $request->admission_number)->get();
+                $students = StudentBasic::where('Student_ID', $request->admission_number)->get();
                 break;
 
             case 'name':
@@ -580,17 +621,9 @@ class StudentController extends Controller
                 return response()->json(['message' => 'Invalid criteria'], 400);
         }
 
-        // 🔹 These were missing
-        $classRecord = Helper::MasterRecordMerge(
-            config('constants.options.O_LEVEL'),
-            config('constants.options.A_LEVEL')
-        );
-
-        $StreamRecord = Stream::all();
-
         $html = view(
             'student.partials.results',
-            compact('students', 'classRecord', 'StreamRecord')
+            compact('students')
         )->render();
 
         return response()->json(['html' => $html]);
@@ -703,6 +736,55 @@ class StudentController extends Controller
         $classrooms = Classroom::where('school_id', $school_id)->get();
 
         return view('student.move-student', compact('school_id', 'classrooms'));
+    }
+
+    private function calculateStatistics($results, $level = 'A')
+    {
+        $count = count($results);
+
+        if ($count == 0) {
+            return [
+                'count' => 0,
+                'average' => 0,
+                'highest' => 0,
+                'lowest' => 0,
+                'grade_distribution' => [],
+                'class_distribution' => [],
+            ];
+        }
+
+        $percentages = array_column($results, 'percentage');
+
+        // Get grade distribution
+        $grades = Grading::marks($level)->get();
+        $gradeDistribution = [];
+        foreach ($grades as $grade) {
+            $gradeDistribution[$grade->Grade] = 0;
+        }
+
+        $classDistribution = [];
+        $classes = Grading::points($level)->get();
+        foreach ($classes as $class) {
+            $classDistribution[$class->Grade] = 0;
+        }
+
+        foreach ($results as $result) {
+            if (isset($gradeDistribution[$result['grade']])) {
+                $gradeDistribution[$result['grade']]++;
+            }
+            if (isset($classDistribution[$result['classification']])) {
+                $classDistribution[$result['classification']]++;
+            }
+        }
+
+        return [
+            'count' => $count,
+            'average' => round(array_sum($percentages) / $count, 2),
+            'highest' => max($percentages),
+            'lowest' => min($percentages),
+            'grade_distribution' => $gradeDistribution,
+            'class_distribution' => $classDistribution,
+        ];
     }
 
     public function getStreamsByClass(Request $request)

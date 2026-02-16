@@ -8,25 +8,23 @@ use App\Http\Controllers\Helper;
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
+                <th style="width:1px;">No.</th>
                 <th>Admission No</th>
                 <th>Name</th>
-                <th>Class</th>
-                <th>Stream</th>
-                <th>Gender</th>
-                <th style="text-align: center;">Action</th>
+                <th>Name (AR)</th>
+                <th>School</th>
+                {{-- <th style="text-align: center;">Action</th> --}}
             </tr>
         </thead>
         <tbody>
-            @foreach ($students as $student)
+            @foreach ($students as $count => $student)
                 <tr>
-                    <td>{{ $student->id }}</td>
-                    <td>{{ $student->admission_number }}</td>
-                    <td>{{ $student->firstname }} {{ $student->lastname }}</td>
-                    <td>{{ Helper::recordMdname($student->senior) }}</td>
-                    <td>{{ Helper::recordMdname($student->stream) }}</td>
-                    <td>{{ $student->gender }}</td>
-                    <td style="text-align: center;">
+                    <td>{{ $count + 1 }}</td>
+                    <td>{{ $student->Student_ID }}</td>
+                    <td>{{ $student->Student_Name }}</td>
+                    <td>{{ $student->Student_Name_AR }}</td>
+                    <td>{{ $student->House }}</td>
+                    {{-- <td style="text-align: center;">
                         <button class="btn btn-outline-primary btn-sm view-bio-btn" data-toggle="modal"
                             data-target="#viewStudentModal" data-id="{{ $student->id }}"
                             data-firstname="{{ $student->firstname }}" data-lastname="{{ $student->lastname }}"
@@ -46,7 +44,7 @@ use App\Http\Controllers\Helper;
                             class="btn btn-outline-primary btn-sm btn-edit-student">
                             <i class="fa fa-edit mr-1"></i> Edit
                         </a>
-                    </td>
+                    </td> --}}
                 </tr>
             @endforeach
         </tbody>
@@ -94,31 +92,6 @@ use App\Http\Controllers\Helper;
                                     <input type="text" name="admission_number" id="edit_admission_number"
                                         class="form-control">
                                 </div>
-                                <div class="form-group">
-                                    <label>Class</label>
-
-                                    <select class="form-control select2" id="edit_senior" name="edit_senior">
-                                        <option value="">-- Select --</option>
-                                        @foreach ($classRecord as $class)
-                                            <option value="{{ $class->md_name }}">
-                                                {{ $class->md_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Stream</label>
-                                    <select name="stream" id="edit_stream" class="form-control" disabled>
-                                        <option value="">-- Select Stream --</option>
-                                        @foreach ($StreamRecord as $stream)
-                                            <option value="{{ $stream->stream_id }}">
-                                                {{ Helper::recordMdname($stream->stream_id) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
                             </div>
 
                             <div class="col-md-6">
@@ -140,8 +113,7 @@ use App\Http\Controllers\Helper;
                                 </div>
                                 <div class="form-group">
                                     <label>Nationality</label>
-                                    <input type="text" name="nationality" id="edit_nationality"
-                                        class="form-control">
+                                    <input type="text" name="nationality" id="edit_nationality" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label>Guardian Names</label>
@@ -237,7 +209,7 @@ use App\Http\Controllers\Helper;
             z-index: 99999 !important;
         }
     </style>
-    
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 

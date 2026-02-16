@@ -69,4 +69,11 @@ class StudentBasic extends Model
         'ID_AR',
         'SNO'
     ];
+
+
+    // Relationship with House
+    public function house()
+    {
+        return $this->belongsTo(House::class, 'House', 'House');
+    }
 }

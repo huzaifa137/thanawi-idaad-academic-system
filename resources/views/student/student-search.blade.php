@@ -30,7 +30,7 @@ use App\Http\Controllers\Helper;
                                     <option value="" selected disabled>Select...</option>
                                     <option value="admission_number">Admission Number</option>
                                     {{-- <option value="name">Name & Class</option> --}}
-                                    <option value="phone">Phone Number</option>
+                                    {{-- <option value="phone">Phone Number</option> --}}
                                     {{-- <option value="student_id">Student ID</option> --}}
                                 </select>
                             </div>
@@ -40,7 +40,7 @@ use App\Http\Controllers\Helper;
                             </div>
 
                             <div class="mt-3">
-                                <button type="submit" class="btn btn-success d-none" id="searchBtn">
+                                <button type="submit" class="btn d-none text-white" id="searchBtn" style="background-color:#287c44;">
                                     <i class="fas fa-search"></i> Search
                                 </button>
                             </div>
@@ -50,7 +50,7 @@ use App\Http\Controllers\Helper;
 
                 <!-- Results -->
                 <div class="card mt-4 d-none" id="resultsCard">
-                    <div class="card-header bg-secondary text-white">
+                    <div class="card-header text-white" style="background-color:#0d4b1f;">
                         <h5 class="mb-0">Search Results</h5>
                     </div>
                     <div class="card-body bg-white" id="searchResults">
@@ -91,14 +91,13 @@ use App\Http\Controllers\Helper;
                             <div class="form-group">
                                 <label for="senior">Class</label>
                                 <select class="form-control select2" name="senior">
-    <option value="">-- Select --</option>
-    @foreach ($classRecord as $class)
-        <option value="{{ $class->md_id }}">
-            {{ $class->md_name }}
-        </option>
-    @endforeach
-</select>
-
+                                    <option value="">-- Select --</option>
+                                    @foreach ($classRecord as $class)
+                                        <option value="{{ $class->md_id }}">
+                                            {{ $class->md_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         `,
                 phone: `

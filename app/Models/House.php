@@ -9,7 +9,7 @@ class House extends Model
     protected $table = 'houses';
     protected $primaryKey = 'ID';
 
-    public $timestamps = false; 
+    public $timestamps = false;
 
     protected $fillable = [
         'House',
@@ -26,4 +26,9 @@ class House extends Model
         'Head' => 'integer',
         'ContactPerson' => 'integer',
     ];
+
+    public function students()
+    {
+        return $this->hasMany(StudentBasic::class, 'House', 'House');
+    }
 }
