@@ -1,8 +1,9 @@
 <div class="app-sidebar app-sidebar2">
-    <div class="app-sidebar__logo" style="height: 155px; padding: 50px 10px;">
+    {{-- <div class="app-sidebar__logo" style="height: 155px; padding: 50px 10px;"> --}}
+    <div class="app-sidebar__logo">
         <a class="header-brand" href="{{ url('/student/dashboard') }}">
             <img src="{{ URL::asset('assets/images/brand/uplogolight.png') }}" alt="Covido logo"
-                style="height: 90px; width: auto;">
+                style="width: 100%; height: auto; max-width: 170px;">
         </a>
     </div>
 </div>
@@ -67,7 +68,7 @@ use App\Helpers\PermissionHelper;
         </li> --}}
 
         <li class="slide">
-            <a class="side-menu__item" href="{{  url('/search-iteb-students')  }}">
+            <a class="side-menu__item" href="{{ url('/search-iteb-students') }}">
                 <i class="fas fa-balance-scale-right fa-2x mr-3"></i>
                 Grading & Marks
             </a>

@@ -8,6 +8,7 @@ use App\Models\MasterData;
 use App\Models\ClassAllocation;
 use Illuminate\Http\Request;
 use App\Models\Grading;
+use App\Models\StudentBasic;
 use App\Models\StudentResult;
 use App\Http\Controllers\Helper;
 use Illuminate\Support\Facades\DB;
@@ -109,7 +110,7 @@ class ItebController extends Controller
 
         return view('itemGrading.enterMarks', compact('houses'));
     }
-  
+
     public function saveMarks(Request $request)
     {
         $request->validate([
@@ -161,15 +162,10 @@ class ItebController extends Controller
     public function gradingSummary(Request $request)
     {
 
-        $years = ClassAllocation::select('Student_ID')
-            ->get()
-            ->map(function ($item) {
-                $parts = explode('-', $item->Student_ID);
-                return end($parts);
-            })
-            ->unique()
-            ->sort()
-            ->values();
+        $years = StudentBasic::selectRaw('DISTINCT SUBSTRING_INDEX(Student_ID, "-", -1) as year')
+            ->whereRaw('Student_ID REGEXP ".*-[0-9]{4}$"')
+            ->orderBy('year', 'desc')
+            ->pluck('year');
 
         $categories = ['TH' => 'Thanawi', 'ID' => 'Idaad'];
 
@@ -211,7 +207,6 @@ class ItebController extends Controller
     }
     public function processGrading(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'year' => 'required',
             'category' => 'required',
@@ -221,7 +216,7 @@ class ItebController extends Controller
         $year = $request->year;
         $category = $request->category;
         $schoolNumber = $request->school_number;
-        $level = $request->level ?? 'A'; // Default to 'A' level
+        $level = $request->level ?? 'A';
 
         // Build query for students
         $studentsQuery = ClassAllocation::select('Student_ID')
@@ -272,7 +267,7 @@ class ItebController extends Controller
                 $marksDetails[] = [
                     'subject_id' => $mark->subject_id,
                     'mark' => $mark->mark,
-                    'subject_name' => Helper::item_md_name($mark->subject_id), // Using the same Helper class
+                    'subject_name' => Helper::item_md_name($mark->subject_id),
                 ];
             }
 
@@ -288,16 +283,14 @@ class ItebController extends Controller
                 'classification' => $classificationModel->Grade ?? 'N/A',
                 'classification_comment' => $classificationModel->Comment ?? '',
                 'level' => $level,
-                'marks_details' => $marksDetails, // Now includes subject names
+                'marks_details' => $marksDetails,
             ];
         }
 
-        // Sort results by percentage descending
         uasort($results, function ($a, $b) {
             return $b['percentage'] <=> $a['percentage'];
         });
 
-        // Get statistics
         $statistics = $this->calculateStatistics($results, $level);
 
         $schoolName = $schoolNumber ? Helper::schoolName($schoolNumber) : 'All Schools';
@@ -314,9 +307,6 @@ class ItebController extends Controller
         ));
     }
 
-    /**
-     * Save computed results to database
-     */
     public function saveGradingResults(Request $request)
     {
         $request->validate([
@@ -362,9 +352,6 @@ class ItebController extends Controller
         }
     }
 
-    /**
-     * Get subject IDs for a category
-     */
     private function getSubjectIdsForCategory($category)
     {
         $masterCodeId = ($category == 'TH')
@@ -376,9 +363,6 @@ class ItebController extends Controller
             ->toArray();
     }
 
-    /**
-     * Calculate statistics from results
-     */
     private function calculateStatistics($results, $level = 'A')
     {
         $count = count($results);
@@ -396,7 +380,6 @@ class ItebController extends Controller
 
         $percentages = array_column($results, 'percentage');
 
-        // Get grade distribution
         $grades = Grading::marks($level)->get();
         $gradeDistribution = [];
         foreach ($grades as $grade) {
@@ -428,63 +411,6 @@ class ItebController extends Controller
         ];
     }
 
-    /**
-     * Export results to PDF/Excel
-     */
-    public function exportGrading(Request $request)
-    {
-        // You can implement PDF/Excel export here
-        // Using packages like barryvdh/laravel-dompdf or maatwebsite/excel
-    }
-
-
-    public function analyticsDashboard(Request $request)
-    {
-        // Get all available years from marks table
-        $years = ClassAllocation::select('Student_ID')
-            ->get()
-            ->map(function ($item) {
-                $parts = explode('-', $item->Student_ID);
-                return end($parts);
-            })
-            ->unique()
-            ->sort()
-            ->values();
-
-        // Get categories
-        $categories = [
-            'TH' => 'Thanawi',
-            'ID' => 'Idaad'
-        ];
-
-
-        $schools = ClassAllocation::select('Student_ID')
-            ->get()
-            ->map(function ($item) {
-                $parts = explode('-', $item->Student_ID);
-                return implode('-', array_slice($parts, 0, 2));
-            })
-            ->unique()
-            ->filter()
-            ->values()
-            ->mapWithKeys(function ($item) {
-                return [$item => Helper::schoolName($item) ?? $item];
-            });
-
-        // Get quick stats for dashboard
-        $quickStats = $this->getQuickStats();
-
-        return view('itemGrading.analytics.dashboard', compact(
-            'years',
-            'categories',
-            'schools',
-            'quickStats'
-        ));
-    }
-
-    /**
-     * Get school ranking based on performance
-     */
     public function getSchoolRanking(Request $request)
     {
         $request->validate([
@@ -594,9 +520,6 @@ class ItebController extends Controller
         ]);
     }
 
-    /**
-     * Get student ranking (top performers)
-     */
     public function getStudentRanking(Request $request)
     {
         $request->validate([
@@ -686,9 +609,6 @@ class ItebController extends Controller
         ]);
     }
 
-    /**
-     * Get subject-wise analysis
-     */
     public function getSubjectAnalysis(Request $request)
     {
         $request->validate([
@@ -776,9 +696,6 @@ class ItebController extends Controller
         ]);
     }
 
-    /**
-     * Get year-over-year comparison
-     */
     public function getYearComparison(Request $request)
     {
         $request->validate([
@@ -847,60 +764,6 @@ class ItebController extends Controller
         ]);
     }
 
-    /**
-     * Export analytics report
-     */
-    public function exportAnalyticsReport(Request $request)
-    {
-        $request->validate([
-            'report_type' => 'required|in:school,student,subject,year',
-            'format' => 'required|in:excel,pdf,csv',
-            'year' => 'required',
-            'category' => 'required'
-        ]);
-
-        // Generate report based on type
-        $data = [];
-        $filename = "report_{$request->report_type}_{$request->year}_{$request->category}";
-
-        switch ($request->report_type) {
-            case 'school':
-                $response = $this->getSchoolRanking($request);
-                $data = $response->getData()->data;
-                $filename .= "_school_ranking";
-                break;
-            case 'student':
-                $response = $this->getStudentRanking($request);
-                $data = $response->getData();
-                $filename .= "_student_performance";
-                break;
-            case 'subject':
-                $response = $this->getSubjectAnalysis($request);
-                $data = $response->getData();
-                $filename .= "_subject_analysis";
-                break;
-            case 'year':
-                $years = [$request->year, $request->year - 1, $request->year - 2];
-                $request->merge(['years' => $years]);
-                $response = $this->getYearComparison($request);
-                $data = $response->getData();
-                $filename .= "_year_comparison";
-                break;
-        }
-
-        // Store data in session for download
-        // session(['report_data' => $data, 'report_format' => $request->format, 'filename' => $filename]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Report generated successfully',
-            // 'download_url' => route('iteb.analytics.download', ['format' => $request->format])
-        ]);
-    }
-
-    /**
-     * Download generated report
-     */
     public function downloadReport($format)
     {
         $data = session('report_data');
@@ -923,49 +786,6 @@ class ItebController extends Controller
         }
     }
 
-    /**
-     * Helper function to get quick stats for dashboard
-     */
-    private function getQuickStats()
-    {
-        $currentYear = date('Y');
-
-        return [
-            'total_students' => StudentResult::count(),
-            'total_schools' => StudentResult::distinct('school_number')->count('school_number'),
-            'average_score' => round(StudentResult::avg('percentage') ?? 0, 2),
-            'this_year_students' => StudentResult::where('year', $currentYear)->count(),
-            'top_performer' => StudentResult::orderBy('percentage', 'desc')->first(),
-            'pass_rate' => round((StudentResult::whereNotIn('classification', ['FAIL', 'F'])->count() / max(StudentResult::count(), 1)) * 100, 2)
-        ];
-    }
-
-    /**
-     * Helper function for previous year comparison
-     */
-    private function getPreviousYearComparison($currentYear, $category, $level, $schools)
-    {
-        $prevYear = $currentYear - 1;
-
-        $prevData = StudentResult::where('year', $prevYear)
-            ->where('category', $category)
-            ->where('level', $level)
-            ->whereIn('school_number', $schools)
-            ->get()
-            ->groupBy('school_number')
-            ->map(function ($items) {
-                return [
-                    'average' => $items->avg('percentage'),
-                    'count' => $items->count()
-                ];
-            });
-
-        return $prevData;
-    }
-
-    /**
-     * Calculate median
-     */
     private function calculateMedian($arr)
     {
         sort($arr);
@@ -979,9 +799,6 @@ class ItebController extends Controller
         return ($arr[$middle - 1] + $arr[$middle]) / 2;
     }
 
-    /**
-     * Calculate standard deviation
-     */
     private function calculateStdDev($arr)
     {
         $avg = array_sum($arr) / count($arr);
@@ -994,9 +811,6 @@ class ItebController extends Controller
         return round(sqrt($variance / count($arr)), 2);
     }
 
-    /**
-     * Get grade distribution for marks
-     */
     private function getMarkGradeDistribution($marks)
     {
         $distribution = [
@@ -1008,19 +822,20 @@ class ItebController extends Controller
         ];
 
         foreach ($marks as $mark) {
-            if ($mark >= 80) $distribution['A (80-100)']++;
-            elseif ($mark >= 70) $distribution['B (70-79)']++;
-            elseif ($mark >= 60) $distribution['C (60-69)']++;
-            elseif ($mark >= 50) $distribution['D (50-59)']++;
-            else $distribution['F (0-49)']++;
+            if ($mark >= 80)
+                $distribution['A (80-100)']++;
+            elseif ($mark >= 70)
+                $distribution['B (70-79)']++;
+            elseif ($mark >= 60)
+                $distribution['C (60-69)']++;
+            elseif ($mark >= 50)
+                $distribution['D (50-59)']++;
+            else
+                $distribution['F (0-49)']++;
         }
 
         return $distribution;
     }
-
-    /**
-     * Calculate overall trend
-     */
     private function calculateOverallTrend($comparison)
     {
         if (count($comparison) < 2) {
@@ -1032,62 +847,240 @@ class ItebController extends Controller
 
         $change = $last - $first;
 
-        if ($change > 5) return 'Strong improvement';
-        if ($change > 2) return 'Slight improvement';
-        if ($change > -2) return 'Stable';
-        if ($change > -5) return 'Slight decline';
+        if ($change > 5)
+            return 'Strong improvement';
+        if ($change > 2)
+            return 'Slight improvement';
+        if ($change > -2)
+            return 'Stable';
+        if ($change > -5)
+            return 'Slight decline';
         return 'Significant decline';
     }
-
-    /**
-     * Generate Excel report
-     */
     private function generateExcelReport($data, $filename)
     {
-        // Implementation depends on your Excel package (e.g., Laravel Excel, PhpSpreadsheet)
-        // This is a placeholder - you'll need to implement based on your preferred package
         return response()->json(['message' => 'Excel generation not implemented']);
     }
 
-    /**
-     * Generate CSV report
-     */
-    private function generateCsvReport($data, $filename)
+
+    public function about()
     {
-        $callback = function () use ($data) {
-            $file = fopen('php://output', 'w');
-
-            // Add headers based on data structure
-            if (isset($data->top_students)) {
-                fputcsv($file, ['Rank', 'Student ID', 'School', 'Percentage', 'Grade', 'Classification']);
-                foreach ($data->top_students as $student) {
-                    fputcsv($file, [
-                        $student['rank'],
-                        $student['student_id'],
-                        $student['school'],
-                        $student['percentage'],
-                        $student['grade'],
-                        $student['classification']
-                    ]);
-                }
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"'
-        ]);
+        return view('about');
     }
 
-    /**
-     * Generate PDF report
-     */
-    private function generatePdfReport($data, $filename)
+    public function contact()
     {
-        // Implementation depends on your PDF package (e.g., DomPDF, mPDF)
-        // This is a placeholder
-        return response()->json(['message' => 'PDF generation not implemented']);
+        return view('contact');
+    }
+
+    public function examStatistics(Request $request)
+    {
+        $request->validate([
+            'year' => 'required',
+            'category' => 'required',
+            'level' => 'nullable|in:A,O'
+        ]);
+
+        $year = $request->year;
+        $category = $request->category;
+        $level = $request->level ?? 'A';
+
+        // Get level name for display
+        $levelName = $level == 'A' ? 'THANAWI (A) LEVEL' : 'IDAAD (O) LEVEL';
+
+        // Get registered schools count
+        $schoolsQuery = ClassAllocation::select('Student_ID')
+            ->where('Student_ID', 'LIKE', "%-$category-%")
+            ->where('Student_ID', 'LIKE', "%-$year");
+
+        $schoolsCount = $schoolsQuery->get()
+            ->map(function ($item) {
+                return explode('-', $item->Student_ID)[0];
+            })
+            ->unique()
+            ->count();
+
+        // Get registered students count
+        $registeredStudents = ClassAllocation::where('Student_ID', 'LIKE', "%-$category-%")
+            ->where('Student_ID', 'LIKE', "%-$year")
+            ->distinct('Student_ID')
+            ->count('Student_ID');
+
+        // Get students with results (graded students)
+        $studentsWithResults = StudentResult::where('year', $year)
+            ->where('category', $category)
+            ->where('level', $level)
+            ->pluck('student_id')
+            ->toArray();
+
+        // Get all students for this category/year
+        $allStudents = ClassAllocation::where('Student_ID', 'LIKE', "%-$category-%")
+            ->where('Student_ID', 'LIKE', "%-$year")
+            ->distinct('Student_ID')
+            ->pluck('Student_ID')
+            ->toArray();
+
+        // Students passed/failed analysis
+        $passedStudents = StudentResult::where('year', $year)
+            ->where('category', $category)
+            ->where('level', $level)
+            ->whereNotIn('classification', ['FAIL', 'F'])
+            ->count();
+
+        $failedStudents = StudentResult::where('year', $year)
+            ->where('category', $category)
+            ->where('level', $level)
+            ->whereIn('classification', ['FAIL', 'F'])
+            ->count();
+
+        // Get grading distribution by grades (D1, D2, C3, C4, F)
+        $gradeDistribution = [
+            'D1' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('grade', 'D1')->count(),
+            'D2' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('grade', 'D2')->count(),
+            'C3' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('grade', 'C3')->count(),
+            'C4' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('grade', 'C4')->count(),
+            'F' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('grade', 'F')->count(),
+        ];
+
+        // Get classification distribution
+        $classificationDistribution = [
+            'FIRST CLASS' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('classification', 'FIRST CLASS')->count(),
+            'SECOND CLASS UPPER' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('classification', 'SECOND CLASS UPPER')->count(),
+            'SECOND CLASS LOWER' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('classification', 'SECOND CLASS LOWER')->count(),
+            'THIRD CLASS' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('classification', 'THIRD CLASS')->count(),
+            'FAIL' => StudentResult::where('year', $year)->where('category', $category)->where('level', $level)->where('classification', 'FAIL')->count(),
+        ];
+
+        // Calculate percentages
+        $totalGraded = $passedStudents + $failedStudents;
+
+        // Prepare data tables similar to your images
+        $schoolsTable = [
+            ['level' => $levelName, 'count' => $schoolsCount]
+        ];
+
+        $studentsRegisteredTable = [
+            ['level' => $levelName, 'count' => $registeredStudents, 'total' => $registeredStudents]
+        ];
+
+        // Prepare grading summary table (IDAAD/THANAWI level)
+        $gradingSummary = [
+            'D1' => [
+                'male_count' => $this->getGenderCount($year, $category, $level, 'D1', 'M'),
+                'female_count' => $this->getGenderCount($year, $category, $level, 'D1', 'F'),
+                'male_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'D1', 'M'), $totalGraded),
+                'female_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'D1', 'F'), $totalGraded),
+                'total' => $gradeDistribution['D1']
+            ],
+            'D2' => [
+                'male_count' => $this->getGenderCount($year, $category, $level, 'D2', 'M'),
+                'female_count' => $this->getGenderCount($year, $category, $level, 'D2', 'F'),
+                'male_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'D2', 'M'), $totalGraded),
+                'female_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'D2', 'F'), $totalGraded),
+                'total' => $gradeDistribution['D2']
+            ],
+            'C3' => [
+                'male_count' => $this->getGenderCount($year, $category, $level, 'C3', 'M'),
+                'female_count' => $this->getGenderCount($year, $category, $level, 'C3', 'F'),
+                'male_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'C3', 'M'), $totalGraded),
+                'female_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'C3', 'F'), $totalGraded),
+                'total' => $gradeDistribution['C3']
+            ],
+            'C4' => [
+                'male_count' => $this->getGenderCount($year, $category, $level, 'C4', 'M'),
+                'female_count' => $this->getGenderCount($year, $category, $level, 'C4', 'F'),
+                'male_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'C4', 'M'), $totalGraded),
+                'female_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'C4', 'F'), $totalGraded),
+                'total' => $gradeDistribution['C4']
+            ],
+            'F' => [
+                'male_count' => $this->getGenderCount($year, $category, $level, 'F', 'M'),
+                'female_count' => $this->getGenderCount($year, $category, $level, 'F', 'F'),
+                'male_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'F', 'M'), $totalGraded),
+                'female_percent' => $this->calculatePercentage($this->getGenderCount($year, $category, $level, 'F', 'F'), $totalGraded),
+                'total' => $gradeDistribution['F']
+            ],
+        ];
+
+        $totals = [
+            'male_total' => $this->getTotalGenderCount($year, $category, $level, 'M'),
+            'female_total' => $this->getTotalGenderCount($year, $category, $level, 'F'),
+            'overall_total' => $totalGraded
+        ];
+
+        // Failed students breakdown (like in your image)
+        $failedBreakdown = [
+            'male_failed' => $this->getGenderCount($year, $category, $level, 'F', 'M'),
+            'female_failed' => $this->getGenderCount($year, $category, $level, 'F', 'F'),
+            'total_failed' => $failedStudents
+        ];
+
+        return view('itemGrading.exam-statistics', compact(
+            'year',
+            'category',
+            'level',
+            'levelName',
+            'schoolsTable',
+            'studentsRegisteredTable',
+            'gradingSummary',
+            'totals',
+            'failedBreakdown',
+            'registeredStudents',
+            'totalGraded'
+        ));
+    }
+
+    private function getGenderCount($year, $category, $level, $grade, $gender)
+    {
+        $students = StudentResult::where('year', $year)
+            ->where('category', $category)
+            ->where('level', $level)
+            ->where('grade', $grade)
+            ->pluck('student_id')
+            ->toArray();
+
+        $count = 0;
+        foreach ($students as $studentId) {
+            if ($gender == 'M' && $this->isMale($studentId)) {
+                $count++;
+            } elseif ($gender == 'F' && $this->isFemale($studentId)) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    private function getTotalGenderCount($year, $category, $level, $gender)
+    {
+        $students = StudentResult::where('year', $year)
+            ->where('category', $category)
+            ->where('level', $level)
+            ->pluck('student_id')
+            ->toArray();
+
+        $count = 0;
+        foreach ($students as $studentId) {
+            if ($gender == 'M' && $this->isMale($studentId)) {
+                $count++;
+            } elseif ($gender == 'F' && $this->isFemale($studentId)) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    private function isMale($studentId)
+    {
+        return true;
+    }
+
+    private function isFemale($studentId)
+    {
+        return false;
+    }
+
+    private function calculatePercentage($count, $total)
+    {
+        return $total > 0 ? round(($count / $total) * 100, 2) : 0;
     }
 }

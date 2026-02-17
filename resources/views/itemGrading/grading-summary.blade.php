@@ -1,37 +1,205 @@
-{{-- resources/views/itemGrading/grading-summary.blade.php --}}
 @extends('layouts-side-bar.master')
 
 @section('content')
     <div class="side-app">
         <div class="container mt-4">
+
+            <div class="row g-4">
+                <!-- Total Students Card -->
+                <div class="col-md-4">
+                    <div class="card stats-card bg-gradient-primary border-0 shadow-lg">
+                        <div class="card-body position-relative">
+                            <div class="stats-icon-wrapper">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                            <div class="stats-content">
+                                <span class="stats-label text-white text-uppercase small fw-bold">Overall Student
+                                    Population</span>
+                                <h3 class="stats-number text-white mb-0">{{ $totalStudents }}</h3>
+                                <small class="text-white"><i class="fas fa-arrow-up me-1"></i> Total enrolled</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graded Records Card -->
+                <div class="col-md-4">
+                    <div class="card stats-card bg-gradient-success border-0 shadow-lg">
+                        <div class="card-body position-relative">
+                            <div class="stats-icon-wrapper">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                            <div class="stats-content">
+                                <span class="stats-label text-white text-uppercase small fw-bold">Overall Total Graded
+                                    Records</span>
+                                <h3 class="stats-number text-white mb-0">{{ $gradedSoFar }}</h3>
+                                <small class="text-white"><i class="fas fa-file-alt me-1"></i> Completed
+                                    assessments</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Average Performance Card -->
+                <div class="col-md-4">
+                    <div class="card stats-card bg-gradient-info border-0 shadow-lg">
+                        <div class="card-body position-relative">
+                            <div class="stats-icon-wrapper">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                            <div class="stats-content">
+                                <span class="stats-label text-white text-uppercase small fw-bold">Average
+                                    Performance</span>
+                                <h3 class="stats-number text-white mb-0">{{ number_format($avgPerformance, 1) }}%</h3>
+                                <i class="fas fa-trophy text-white me-1"></i> <span class="text-white">Overall
+                                    Achievement</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                /* Modern Stats Cards Styling */
+                .stats-card {
+                    border-radius: 20px;
+                    overflow: hidden;
+                    transition: all 0.3s ease;
+                    border: none;
+                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+                }
+
+                .stats-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
+                }
+
+                .stats-card .card-body {
+                    padding: 1.8rem 1.5rem;
+                    min-height: 160px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+
+                .stats-icon-wrapper {
+                    width: 60px;
+                    height: 60px;
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 15px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 1.2rem;
+                    backdrop-filter: blur(5px);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                }
+
+                .stats-icon-wrapper i {
+                    color: white;
+                    opacity: 0.9;
+                }
+
+                .stats-content {
+                    flex: 1;
+                }
+
+                .stats-label {
+                    display: block;
+                    font-size: 0.8rem;
+                    letter-spacing: 0.5px;
+                    margin-bottom: 0.5rem;
+                    font-weight: 600;
+                }
+
+                .stats-number {
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    line-height: 1.2;
+                    margin-bottom: 0.5rem;
+                }
+
+                .bg-gradient-primary {
+                    background: linear-gradient(0, #0d4b1f 0%, #0d4b1f 100%);
+                }
+
+                .bg-gradient-success {
+                    background: linear-gradient(135deg, #287c44 0%, #287c44 100%);
+                }
+
+                .bg-gradient-info {
+                    background: linear-gradient(135deg, #253f2d 0%, #253f2d 100%);
+                }
+
+                @media (max-width: 768px) {
+                    .stats-card .card-body {
+                        padding: 1.5rem;
+                    }
+
+                    .stats-icon-wrapper {
+                        width: 50px;
+                        height: 50px;
+                    }
+
+                    .stats-number {
+                        font-size: 2rem;
+                    }
+                }
+
+                .stats-card:hover .stats-icon-wrapper {
+                    transform: scale(1.1);
+                    transition: transform 0.3s ease;
+                }
+
+                .stats-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M10 10 L90 10 L90 90 L10 90 Z" fill="none" stroke="white" stroke-width="2"/></svg>');
+                    opacity: 0.1;
+                    pointer-events: none;
+                }
+            </style>
+
+            <!-- Add Font Awesome if not already included -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
             <div class="card shadow-lg border-0">
-                <div class="card-header text-white" style="background-color: #17a2b8;">
+                <div class="card-header text-white d-flex justify-content-between align-items-center"
+                    style="background-color: #287c44;">
                     <h4 class="mb-0">
-                        <i class="fas fa-chart-line me-2"></i> Grading Summary
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Grading & Examination Summary
                     </h4>
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('iteb.process.grading') }}" method="POST" id="gradingFilterForm">
-                        @csrf
+                    <!-- Grading Summary Form -->
+                    <div class="mb-4 pb-3 border-bottom">
+                        <h5 class="mb-3" style="color: #287c44">
+                            <i class="fas fa-calculator me-2"></i> Schools Grading Report
+                        </h5>
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group mb-3">
+                        <form action="{{ route('iteb.process.grading') }}" method="POST" id="gradingFilterForm"
+                            class="mb-3">
+                            @csrf
+                            <div class="row g-3">
+                                <div class="col-md-3">
                                     <label class="form-label fw-bold">Year <span class="text-danger">*</span></label>
-                                    <select name="year" class="form-control select2" required>
+                                    <select name="year" class="form-select select2" required>
                                         <option value="">-- Select Year --</option>
                                         @foreach ($years as $year)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group mb-3">
+                                <div class="col-md-3">
                                     <label class="form-label fw-bold">Category <span class="text-danger">*</span></label>
-                                    <select name="category" class="form-control" required>
+                                    <select name="category" class="form-select select2" required>
                                         <option value="">-- Select Category --</option>
                                         @foreach ($categories as $key => $value)
                                             <option value="{{ $key }}">{{ $value }} ({{ $key }})
@@ -39,88 +207,362 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group mb-3">
-                                    <label class="form-label fw-bold">School (Optional)</label>
-                                    <select name="school_number" class="form-control select2">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">School</label>
+                                    <select name="school_number" class="form-select select2">
                                         <option value="">-- All Schools --</option>
                                         @foreach ($schools as $code => $name)
-                                            <option value="{{ $code }}">{{ $name }} ({{ $code }})
+                                            <option value="{{ $code }}"
+                                                title="{{ $name }} ({{ $code }})">
+                                                {{ Str::limit($name, 30) }} ({{ $code }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">Optional</small>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold">Level</label>
+                                    <select name="level" class="form-select select2" required>
+                                        <option value="">-- Select Level --</option>
+                                        <option value="A">Level A</option>
+                                        <option value="O">Level O</option>
+                                    </select>
+                                    <small class="text-muted">Grading level</small>
+                                </div>
+
+                               <div class="col-12 mt-3" style="text-align: right;">
+    <button type="submit"
+        style="
+            background-color: #287c44;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 100%;
+            font-size: 14px;
+            cursor: pointer;
+        ">
+        <i class="fas fa-magnifying-glass-chart" style="margin-right:8px;"></i>
+        Generate School Report
+    </button>
+</div>
+
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Examination Statistics Form -->
+                    <div>
+                        <h5 class="mb-3" style="color: #287c44;">
+                            <i class="fas fa-poll me-2"></i>
+                            General Examination Statistics
+                        </h5>
+
+                        <form action="{{ route('iteb.exam.statistics') }}" method="GET">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Year <span class="text-danger">*</span></label>
+                                    <select name="year" class="form-select select2" required>
+                                        <option value="">-- Select Year --</option>
+                                        @foreach ($years ?? [] as $y)
+                                            <option value="{{ $y }}"
+                                                {{ isset($year) && $y == $year ? : '' }}>
+                                                {{ $y }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group mb-3">
-                                    <label class="form-label fw-bold">Level</label>
-                                    <select name="level" class="form-control">
-                                        <option value="A">Level A</option>
-                                        <option value="O">Level O</option>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold">Category <span class="text-danger">*</span></label>
+                                    <select name="category" class="form-select select2" required>
+                                        <option value="">-- Select Category --</option>
+                                        <option value="ID"
+                                            {{ isset($category) && $category == 'ID' ? 'selected' : '' }}>
+                                            Idaad (ID)
+                                        </option>
+                                        <option value="TH"
+                                            {{ isset($category) && $category == 'TH' ? 'selected' : '' }}>
+                                            Thanawi (TH)
+                                        </option>
                                     </select>
-                                    <small class="text-muted">Grading level for classification</small>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">School</label>
+                                    <select name="school_number" class="form-select select2">
+                                        <option value="">-- All Schools --</option>
+                                        @foreach ($schools ?? [] as $code => $name)
+                                            <option value="{{ $code }}"
+                                                title="{{ $name }} ({{ $code }})">
+                                                {{ Str::limit($name, 30) }} ({{ $code }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <small class="text-muted">Optional</small>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label class="form-label fw-bold">Level</label>
+                                    <select name="level" class="form-select select2">
+                                        <option value="">-- All --</option>
+                                        <option value="A" {{ isset($level) && $level == 'A' ? 'selected' : '' }}>
+                                            Level A</option>
+                                        <option value="O" {{ isset($level) && $level == 'O' ? 'selected' : '' }}>
+                                            Level O</option>
+                                    </select>
+                                    <small class="text-muted">Optional</small>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row mt-3">
-                            <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-info text-white px-5 py-2">
-                                    <i class="fas fa-calculator me-2"></i> Generate Grading Report
-                                </button>
+                            <div class="row mt-3">
+    <div class="col-12" style="text-align: right;">
+        <button type="submit"
+            style="
+                background-color: #287c44;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                width: 100%;
+                max-width: 100%;
+                font-size: 14px;
+            ">
+            <i class="fas fa-magnifying-glass-chart" style="margin-right:8px;"></i>
+            Generate General Exams Statistics
+        </button>
+    </div>
+</div>
+
+                        </form>
+                    </div>
+
+                    <!-- Quick Stats Preview -->
+                    <div class="row mt-4 pt-3 border-top">
+                        <div class="col-md-3 col-6">
+                            <div class="bg-light p-2 rounded text-center">
+                                <small class="text-muted">Total Schools</small>
+                                <h6 class="mb-0">{{ count($schools ?? []) }}</h6>
                             </div>
                         </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-3">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">
-                            <h6>Total Students</h6>
-                            <h3>{{ $totalStudents }}</h3>
+                        <div class="col-md-3 col-6">
+                            <div class="bg-light p-2 rounded text-center">
+                                <small class="text-muted">Categories</small>
+                                <h6 class="mb-0">{{ count($categories ?? []) }}</h6>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="card bg-success text-white">
-                        <div class="card-body">
-                            <h6>Graded So Far</h6>
-                            <h3>{{ $gradedSoFar }}</h3>
+                        <div class="col-md-3 col-6">
+                            <div class="bg-light p-2 rounded text-center">
+                                <small class="text-muted">Years Active</small>
+                                <h6 class="mb-0">{{ count($years ?? []) }}</h6>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body">
-                            <h6>Pending Grading</h6>
-                            <h3>{{ $pendingGrading }}</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">
-                            <h6>Avg Performance</h6>
-                            <h3>{{ number_format($avgPerformance, 1) }}%</h3>
+                        <div class="col-md-3 col-6">
+                            <div class="bg-light p-2 rounded text-center">
+                                <small class="text-muted">Last Updated</small>
+                                <h6 class="mb-0">{{ now()->format('M d, Y') }}</h6>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Add this CSS to enhance the dropdown styling -->
+            <style>
+                /* Form Labels */
+                .form-label {
+                    font-size: 0.9rem;
+                    margin-bottom: 0.25rem;
+                    font-weight: 600;
+                    color: #495057;
+                    white-space: nowrap;
+                }
+
+                /* Form Selects */
+                .form-select,
+                .form-control {
+                    border-radius: 0.5rem;
+                    border: 1px solid #dee2e6;
+                    padding: 0.5rem 0.75rem;
+                    transition: all 0.2s;
+                    font-size: 0.95rem;
+                    width: 100%;
+                }
+
+                .form-select:focus,
+                .form-control:focus {
+                    border-color: #287c44;
+                    box-shadow: 0 0 0 0.2rem rgba(40, 124, 68, 0.1);
+                }
+
+                /* Card Styling */
+                .card {
+                    border-radius: 1rem;
+                    overflow: hidden;
+                    border: none;
+                }
+
+                .card-header {
+                    border-bottom: none;
+                    padding: 1rem 1.5rem;
+                }
+
+                .badge {
+                    padding: 0.5rem 0.75rem;
+                    font-weight: 500;
+                    border-radius: 2rem;
+                }
+
+                .btn {
+                    border-radius: 2rem;
+                    font-weight: 500;
+                    padding: 0.5rem 1.5rem;
+                }
+
+                h5 {
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                    color: #2c3e50;
+                }
+
+                .border-bottom {
+                    border-color: #e9ecef !important;
+                }
+
+                .bg-light {
+                    background-color: #f8f9fa !important;
+                }
+
+                /* Custom styling for select dropdowns with long text */
+                select.form-select option {
+                    max-width: 100%;
+                    white-space: normal;
+                    word-wrap: break-word;
+                    padding: 8px;
+                }
+
+                /* Style for the optional badge */
+                small.text-muted {
+                    font-size: 0.75rem;
+                    display: block;
+                    margin-top: 0.25rem;
+                    opacity: 0.8;
+                    font-style: italic;
+                }
+
+                /* ===== BALANCED SPACING FIX ===== */
+
+                /* Remove extra padding and margins */
+                .row.g-3 {
+                    margin-left: -8px;
+                    margin-right: -8px;
+                }
+
+                .row.g-3>[class*="col-"] {
+                    padding-left: 8px;
+                    padding-right: 8px;
+                    margin-bottom: 0.5rem;
+                }
+
+                /* Specific column widths with balanced spacing */
+                @media (min-width: 768px) {
+
+                    /* Year field - 23% width */
+                    .col-md-3 {
+                        flex: 0 0 auto;
+                        width: 23%;
+                    }
+
+                    /* Category field - 23% width */
+                    .col-md-3:nth-child(2) {
+                        width: 23%;
+                    }
+
+                    /* School field - 32% width (more space for long names) */
+                    .col-md-4 {
+                        flex: 0 0 auto;
+                        width: 32%;
+                    }
+
+                    /* Level field - 22% width */
+                    .col-md-2 {
+                        flex: 0 0 auto;
+                        width: 22%;
+                    }
+
+                    /* Remove the vertical dividers */
+                    .row.g-3>[class*="col-"]:not(:last-child)::after {
+                        display: none;
+                    }
+
+                    /* Add subtle spacing between fields */
+                    .row.g-3>[class*="col-"] {
+                        position: relative;
+                    }
+
+                    /* Optional: Very subtle right border for separation */
+                    .row.g-3>[class*="col-"]:not(:last-child) {
+                        border-right: 1px solid rgba(222, 226, 230, 0.3);
+                    }
+
+                    /* Remove the left padding from level field */
+                    .col-md-2 {
+                        padding-left: 8px !important;
+                    }
+
+                    /* Remove the special background from level field */
+                    .col-md-2 .form-select {
+                        background-color: #ffffff;
+                        border-left-width: 1px;
+                    }
+                }
+
+                /* Mobile responsiveness */
+                @media (max-width: 767px) {
+                    .row.g-3>[class*="col-"] {
+                        width: 100%;
+                        margin-bottom: 1rem;
+                    }
+
+                    .col-md-2 {
+                        margin-top: 0;
+                        padding-top: 0;
+                        border-top: none;
+                    }
+                }
+
+                /* Better visual hierarchy with subtle box shadows on focus */
+                .form-select:focus {
+                    position: relative;
+                    z-index: 1;
+                }
+
+                /* Hover effect */
+                .form-select:hover,
+                .form-control:hover {
+                    border-color: #287c44;
+                }
+
+                /* Button hover effect */
+                .btn:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+
+                .btn:active {
+                    transform: translateY(0);
+                }
+            </style>
 
         </div>
     </div>
     </div>
     </div>
     </div>
-    
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -3,6 +3,7 @@
 
 
 
+
 <!-- USE FULL QUERIES IN THIS PROJECT -->
 
 <!-- (FETCHING STUDENT ID FOR THE NEW STUDENT BEING ADDED TO THE STUDENT_BASIC TABLE TO BE USED IN THE CLASS ALLOCATION TABLE) -->
@@ -17,6 +18,15 @@ ORDER BY id;
     <i class="fe fe-check"></i> Send
 </button>
 
+Now, i have this code for analytics, but its on a smaller level, but first go through it and see it, i want to get
+number of schools registered in that year, split into 2 columns Idaad (0) Level and Thanawi (A) Level with total numbers
+as in 57 and 26, and then Number of students registered in that year, as in remember Idaad we said in their Student_IDs
+they have ID, like IT-074-ID-251-2025 and Thanawi IT-001-TH-010-2025 , then Students Passed:, the Students Failed
+altogether from schools, Then another table Pass and Fail Percentage in Idaad and Thanawi, Then Ten Best Students, Then
+Ten Best Students Thanawi Specific, (Its own table alone), then Then Ten Best Students Idaad Specific, (Its own table
+alone), Best done subjects , these all should include percentages and a so on ,Ten Best Subjects(A Level), Ten Best
+Subjects (O level ), Worst done Subjects(5) in A Level,Worst done Subjects(5) in O Level,Then General Performance in
+Idaad (O Level) showing School Name, then followed with 1st class, 2nd , 3rd and so on, so this
 
 <script type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

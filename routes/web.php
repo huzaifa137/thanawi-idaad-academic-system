@@ -324,6 +324,7 @@ Route::controller(GradingController::class)->group(function () {
 
 Route::controller(ItebController::class)->group(function () {
     Route::group(['middleware' => ['StudentAuth']], function () {
+
         Route::get('/search-iteb-students', 'searchItebStudents')->name('search.iteb.students');
         Route::get('/enter-marks', 'enterMarks')->name('enter.marks');
 
@@ -346,20 +347,11 @@ Route::controller(ItebController::class)->group(function () {
         Route::post('/iteb/analytics/year-comparison', 'getYearComparison')->name('iteb.analytics.year.comparison');
         Route::post('/iteb/analytics/export-report', 'exportAnalyticsReport')->name('iteb.analytics.export');
         Route::get('/iteb/analytics/download/{format}', 'downloadReport')->name('iteb.analytics.download');
-    });
-});
 
-Route::controller(ReportGradingController::class)->group(function () {
-    Route::group(['middleware' => ['StudentAuth']], function () {
-
-        Route::get('/iteb/grading/analytics', 'gradingAnalytics')->name('iteb.grading.analytics');
-        Route::post('/iteb/grading/advanced-filter', 'advancedFilter')->name('iteb.grading.advanced-filter');
-        Route::get('/iteb/grading/top-performers', 'topPerformers')->name('iteb.grading.top-performers');
-        Route::get('/iteb/grading/subject-analysis', 'subjectAnalysis')->name('iteb.grading.subject-analysis');
-        Route::get('/iteb/grading/gender-analysis', 'genderAnalysis')->name('iteb.grading.gender-analysis');
-        Route::get('/iteb/grading/export-analytics', 'exportAnalytics')->name('iteb.grading.export-analytics');
+        Route::match(['get', 'post'], '/iteb/exam-statistics', 'examStatistics')->name('iteb.exam.statistics');
     });
 
     Route::get('/about', 'about')->name('about.us');
     Route::get('/contact', 'contact')->name('contact.us');
 });
+
