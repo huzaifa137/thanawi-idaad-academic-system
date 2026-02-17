@@ -205,153 +205,60 @@ class StudentController extends Controller
         }
     }
 
-public function studentDashboard(GradingService $gradingService)
-{
-    $years = ClassAllocation::select('Student_ID')
-        ->get()
-        ->map(function ($item) {
-            $parts = explode('-', $item->Student_ID);
-            return end($parts);
-        })
-        ->unique()
-        ->sort()
-        ->values();
-
-    $categories = ['TH' => 'Thanawi', 'ID' => 'Idaad'];
-
-    $schools = ClassAllocation::select('Student_ID')
-        ->get()
-        ->map(function ($item) {
-            $parts = explode('-', $item->Student_ID);
-            return implode('-', array_slice($parts, 0, 2));
-        })
-        ->unique()
-        ->filter()
-        ->values()
-        ->mapWithKeys(function ($item) {
-            return [$item => Helper::schoolName($item) ?? $item];
-        });
-
-    $totalStudents = ClassAllocation::distinct('Student_ID')->count('Student_ID');
-    $gradedSoFar = Mark::distinct('student_id')->count('student_id');
-    $pendingGrading = $totalStudents - $gradedSoFar;
-
-    $avgPerformance = Mark::selectRaw('AVG(total_mark) as avg_mark')
-        ->fromSub(function ($query) {
-            $query->selectRaw('student_id, SUM(mark) as total_mark')
-                ->from('marks')
-                ->groupBy('student_id');
-        }, 'student_totals')
-        ->value('avg_mark') ?? 0;
-
-    // Updated dummy data
-    $dummyData = [
-        "_token" => "JqPydyj8citXjZhYtYUh6CbqKugMkQGQIuZeOINg",
-        "year" => "2025",
-        "category" => "ID",
-        "school_number" => null,
-        "level" => "A"
-    ];
-
-    // Create a fake request object
-    $request = new Request($dummyData);
-
-    // Extract variables from request
-    $year = $request->year;
-    $category = $request->category;
-    $schoolNumber = $request->school_number;
-    $level = $request->level ?? 'A';
-
-    // Build query for students
-    $studentsQuery = ClassAllocation::select('Student_ID')
-        ->where('Student_ID', 'LIKE', "%-$category-%")
-        ->where('Student_ID', 'LIKE', "%-$year")
-        ->distinct();
-
-    if ($schoolNumber) {
-        $studentsQuery->where('Student_ID', 'LIKE', "$schoolNumber-%");
-    }
-
-    $students = $studentsQuery->pluck('Student_ID');
-
-    // Get subjects for this category
-    $subjectIds = $this->getSubjectIdsForCategory($category);
-
-    // Get total possible marks (each subject out of 100)
-    $totalPossibleMarks = count($subjectIds) * 100;
-
-    // Get all marks for these students and subjects
-    $marks = Mark::whereIn('student_id', $students)
-        ->whereIn('subject_id', $subjectIds)
-        ->get()
-        ->groupBy('student_id');
-
-    // Calculate results for each student
-    $results = [];
-    foreach ($students as $studentId) {
-        $studentMarks = $marks->get($studentId, collect());
-
-        $totalMarks = $studentMarks->sum('mark');
-        $subjectsAttempted = $studentMarks->count();
-
-        $percentage = $totalPossibleMarks > 0
-            ? round(($totalMarks / $totalPossibleMarks) * 100, 2)
-            : 0;
-
-        $gradeModel = Grading::getGrade($percentage, 'Marks', $level);
-        $classificationModel = Grading::getGrade($percentage, 'Points', $level);
-
-        $marksDetails = [];
-        foreach ($studentMarks as $mark) {
-            $marksDetails[] = [
-                'subject_id' => $mark->subject_id,
-                'mark' => $mark->mark,
-                'subject_name' => Helper::item_md_name($mark->subject_id),
-            ];
-        }
-
-        $results[$studentId] = [
-            'student_id' => $studentId,
-            'total_marks' => $totalMarks,
-            'total_possible' => $totalPossibleMarks,
-            'subjects_attempted' => $subjectsAttempted,
-            'total_subjects' => count($subjectIds),
-            'percentage' => $percentage,
-            'grade' => $gradeModel->Grade ?? 'N/A',
-            'grade_comment' => $gradeModel->Comment ?? '',
-            'classification' => $classificationModel->Grade ?? 'N/A',
-            'classification_comment' => $classificationModel->Comment ?? '',
-            'level' => $level,
-            'marks_details' => $marksDetails,
+    public function studentDashboard(GradingService $gradingService)
+    {
+        // Dummy student
+        $student = (object) [
+            'id' => 1,
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
         ];
+
+        // Dummy exams data
+        $exams = collect([
+            (object) [
+                'exam_id' => 1,
+                'exam_name' => 'Midterm Exam',
+                'academic_year' => '2024/2025',
+                'exam_type' => 'Midterm',
+                'total_subjects' => 5,
+                'aggregate' => 375,
+                'division' => 'I',
+                'grade' => 'A',
+                'examsTaken' => 1,
+                'averageGrade' => 'A',
+                'passPercentage' => 100,
+            ],
+            (object) [
+                'exam_id' => 2,
+                'exam_name' => 'Final Exam',
+                'academic_year' => '2024/2025',
+                'exam_type' => 'Final',
+                'total_subjects' => 5,
+                'aggregate' => 320,
+                'division' => 'II',
+                'grade' => 'B',
+                'examsTaken' => 1,
+                'averageGrade' => 'B',
+                'passPercentage' => 80,
+            ],
+        ]);
+
+        // Overall stats
+        $overallExamsTaken = $exams->sum('examsTaken');
+        $overallAggregate = $exams->sum('aggregate');
+        $overallPassPercentage = $exams->avg('passPercentage');
+        $overallAverageGrade = 'A'; // Dummy value
+
+        return view('student.dashboard', compact(
+            'student',
+            'exams',
+            'overallExamsTaken',
+            'overallAggregate',
+            'overallPassPercentage',
+            'overallAverageGrade'
+        ));
     }
-
-    uasort($results, function ($a, $b) {
-        return $b['percentage'] <=> $a['percentage'];
-    });
-
-    $statistics = $this->calculateStatistics($results, $level);
-    $schoolName = $schoolNumber ? Helper::schoolName($schoolNumber) : 'All Schools';
-
-    return view('student.dashboard', compact(
-        'years',
-        'categories',
-        'schools',
-        'totalStudents',
-        'gradedSoFar',
-        'pendingGrading',
-        'avgPerformance',
-        'results',
-        'year',
-        'category',
-        'schoolNumber',
-        'schoolName',
-        'statistics',
-        'level',
-        'totalPossibleMarks'
-    ));
-}
-
 
 
     private function getSubjectIdsForCategory($category)
@@ -427,46 +334,117 @@ public function studentDashboard(GradingService $gradingService)
         );
     }
 
+    public function addNewStudent()
+    {
+        $years = StudentBasic::selectRaw('DISTINCT SUBSTRING_INDEX(Student_ID, "-", -1) as year')
+            ->whereRaw('Student_ID REGEXP ".*-[0-9]{4}$"')
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        $schools = House::select('ID', 'House', 'Number')->get();
+
+        $defaultSchoolNumber = $schools->first() ? $schools->first()->Number : 'IT-001';
+        $currentYear = date('Y');
+        $newStudentId = $defaultSchoolNumber . '-ID-001-' . $currentYear;
+
+        return view('student.add-new-student', compact('schools', 'years', 'newStudentId'));
+    }
+
+
+    public function generateStudentID(Request $request)
+    {
+        $schoolId = $request->school_id;
+        $category = $request->category;
+        $year = $request->year;
+
+        if (!$schoolId || !$category || !$year) {
+            return response()->json(['student_id' => ''], 200);
+        }
+
+        $school = DB::table('houses')->where('ID', $schoolId)->first();
+        if (!$school) {
+            return response()->json(['student_id' => ''], 200);
+        }
+
+        $schoolNumber = $school->Number;
+
+        $lastNumber = DB::table('students_basic')
+            ->where('Student_ID', 'LIKE', $schoolNumber . '-' . $category . '-%-' . $year)
+            ->selectRaw("
+            MAX(
+                CAST(
+                    SUBSTRING_INDEX(
+                        SUBSTRING_INDEX(Student_ID, '-', 4),
+                        '-', 
+                        -1
+                    ) AS UNSIGNED
+                )
+            ) as max_number
+        ")
+            ->value('max_number');
+
+        $newNumber = str_pad(($lastNumber ?? 0) + 1, 3, '0', STR_PAD_LEFT);
+
+        $newStudentID = $schoolNumber . '-' . $category . '-' . $newNumber . '-' . $year;
+
+        return response()->json(['student_id' => $newStudentID]);
+    }
+
     public function storeStudent(Request $request)
     {
 
-
+    
         $validated = $request->validate([
-            // Required fields
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'senior' => 'nullable|max:255',
-            'stream' => 'nullable|max:255',
-            'gender' => 'required|in:Male,Female,Other',
-            'school_id' => 'required|integer|exists:schools,id',
-
-            // Optional fields
-            'admission_number' => 'nullable|string|max:255|unique:students,admission_number',
-            'primary_contact' => 'nullable|string|max:255',
-            'other_contact' => 'nullable|string|max:255',
-            'date_of_admission' => 'nullable|date',
-            'date_of_birth' => 'nullable|date',
-            'place_of_birth' => 'nullable|string|max:255',
-            'nationality' => 'nullable|string|max:255',
-            'ple_score' => 'nullable|numeric|between:0,999.99',
-            'uce_score' => 'nullable|numeric|between:0,999.99',
-            'previous_school' => 'nullable|string|max:255',
-            'primary_school_name' => 'nullable|string|max:255',
-            'guardian_names' => 'nullable|string|max:255',
-            'relation' => 'nullable|string|max:255',
-            'guardian_phone' => 'nullable|string|max:255',
-            'guardian_email' => 'nullable|email|max:255',
-            'home_address' => 'nullable|string',
-            'birth_certificate_entry_number' => 'nullable|string|max:255',
-            'medical_history' => 'nullable|string',
-            'comments' => 'nullable|string',
+            'school_id' => 'required|string|max:45',
+            'Category' => 'required|string|max:10',
+            'Admission_Year' => 'required|integer',
+            'Student_ID' => 'required|string|max:25|unique:students_basic,Student_ID',
+            'Student_Name' => 'required|string|max:100',
+            'Student_Name_AR' => 'nullable|string|max:45',
+            'Date_of_Birth' => 'nullable|date',
+            'StudentSex' => 'required|string|in:Male,Female',
+            'StudentNationality' => 'nullable|string|max:45',
         ]);
 
+        DB::beginTransaction();
 
-        $student = Student::create($validated);
+        try {
 
-        return response()->json(['message' => 'Student added successfully!']);
+            $student = StudentBasic::create([
+                'Student_ID' => $validated['Student_ID'],
+                'Student_Name' => $validated['Student_Name'],
+                'Student_Name_AR' => $validated['Student_Name_AR'] ?? null,
+                'Date_of_Birth' => $validated['Date_of_Birth'] ?? null,
+                'StudentSex' => $validated['StudentSex'],
+                'StudentsNationality' => $validated['StudentNationality'] ?? null,
+                'House' => Helper::ar_schoolName($validated['school_id']),
+                'Class' => $validated['Category'],
+                'admnyr' => $validated['Admission_Year'],
+                'EntryDate' => now(),
+            ]);
+
+            ClassAllocation::create([
+                'Student_ID' => $student->Student_ID,
+                'Class_ID' => 001,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Student added successfully!',
+                'student_id' => $student->Student_ID
+            ]);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
 
     public function allStudentsInformation(Request $request)
     {

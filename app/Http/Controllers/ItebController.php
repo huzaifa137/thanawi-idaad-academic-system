@@ -109,57 +109,7 @@ class ItebController extends Controller
 
         return view('itemGrading.enterMarks', compact('houses'));
     }
-
-    // public function saveMarks(Request $request)
-    // {
-
-    //     $request->validate([
-    //         'subject_id' => 'required|exists:master_datas,md_id',
-    //         'marks' => 'required|array',
-    //         'marks.*' => 'required|numeric|min:0|max:100',
-    //     ], [
-    //         'subject_id.required' => 'Please select a subject before submitting.',
-    //         'marks.*.required' => 'All students must have a mark.',
-    //         'marks.*.numeric' => 'Marks must be numbers.',
-    //         'marks.*.min' => 'Marks cannot be less than 0.',
-    //         'marks.*.max' => 'Marks cannot exceed 100.',
-    //     ]);
-
-    //     $subjectId = $request->input('subject_id');
-    //     $marks = $request->input('marks');
-    //     $students = $request->input('students');
-
-    //     $missing = array_diff($students, array_keys($marks));
-    //     if (!empty($missing)) {
-    //         return back()->withErrors([
-    //             'marks' => 'Missing marks for students: ' . implode(', ', $missing)
-    //         ])->withInput();
-    //     }
-
-    //     foreach ($marks as $studentKey => $mark) {
-    //         $parts = explode('-', $studentKey);
-    //         $year = array_pop($parts);
-    //         $school_number = implode('-', array_slice($parts, 0, 2));
-    //         $category = implode('-', array_slice($parts, 2));
-
-    //         Mark::updateOrCreate(
-    //             [
-    //                 'student_id' => $studentKey,
-    //                 'subject_id' => $subjectId,
-    //             ],
-    //             [
-    //                 'mark' => $mark,
-    //                 'year' => $year,
-    //                 'category' => $category,
-    //                 'school_number' => $school_number
-    //             ]
-    //         );
-    //     }
-
-    //     return redirect()->back()->with('success', 'Marks submitted successfully for ' . count($marks) . ' students!');
-    // }
-
-
+  
     public function saveMarks(Request $request)
     {
         $request->validate([

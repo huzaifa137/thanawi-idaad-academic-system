@@ -2,6 +2,17 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
+
+<!-- USE FULL QUERIES IN THIS PROJECT -->
+
+<!-- (FETCHING STUDENT ID FOR THE NEW STUDENT BEING ADDED TO THE STUDENT_BASIC TABLE TO BE USED IN THE CLASS ALLOCATION TABLE) -->
+ 
+SELECT id, Student_ID, House
+FROM students_basic
+WHERE Student_ID LIKE 'IT-001-ID-%-2025'
+ORDER BY id;
+
+
 <button type="button" class="btn btn-lg btn-primary btn-block px-4" onclick="confirmSubmission(this)">
     <i class="fe fe-check"></i> Send
 </button>

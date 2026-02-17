@@ -7,8 +7,18 @@ use App\Http\Controllers\Helper;
         <div class="row">
             <div class="col-12">
                 <div class="card mt-5">
-                    <div class="card-header">
+
+                    <div class="card-header  text-white d-flex justify-content-between align-items-center"
+                        style="background-color: #253F2D;">
                         <h3 class="card-title">All Students</h3>
+                        <a href="{{ route('students.add.new.student') }}" class="btn btn-sm" style="background-color: #287C44;">
+                            <span
+                                class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center me-1"
+                                style="width: 20px; height: 20px;">
+                                <i class="fas fa-plus" style="font-size: 12px;"></i>
+                            </span>
+                            <span class="text-white">Add Student</span>
+                        </a>
                     </div>
 
                     <div class="card-body">
@@ -72,34 +82,48 @@ use App\Http\Controllers\Helper;
                         </form>
 
                         <!-- Students Table -->
-                        <!-- Active Filters Summary -->
                         @if (request()->anyFilled(['house_id', 'year', 'type']))
-                            <div class="alert alert-info mb-3">
-                                <strong>Active Filters:</strong>
+                            <div class="alert mb-3 text-white rounded-0" style="background-color: #287c44;">
+                                <strong>Active Filters : </strong>
+
                                 @if (request('house_id'))
-                                    @php $selectedHouse = $houses->firstWhere('ID', request('house_id')); @endphp
-                                    <span class="badge badge-info mr-2">House: {{ $selectedHouse->House ?? '' }}</span>
+                                    @php
+                                        $selectedHouse = $houses->firstWhere('ID', request('house_id'));
+                                    @endphp
+                                    <span class="badge mr-2 rounded-0" style="background-color: #0d4b1f;">
+                                        House: {{ $selectedHouse->House ?? '' }}
+                                    </span>
                                 @endif
+
                                 @if (request('year'))
-                                    <span class="badge badge-info mr-2">Year: {{ request('year') }}</span>
+                                    <span class="badge mr-2 rounded-0" style="background-color: #0d4b1f;">
+                                        Year: {{ request('year') }}
+                                    </span>
                                 @endif
+
                                 @if (request('type'))
-                                    <span class="badge badge-info mr-2">Type: {{ ucfirst(request('type')) }}</span>
+                                    <span class="badge mr-2 rounded-0" style="background-color: #0d4b1f;">
+                                        Category: {{ ucfirst(request('type')) }}
+                                    </span>
                                 @endif
-                                <a href="{{ route('students.all.students') }}" class="float-right">Clear all filters</a>
+
+                                <a href="{{ route('students.all.students') }}" class="float-right text-white">
+                                    Clear all filters
+                                </a>
                             </div>
                         @endif
+
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Student ID</th>
-                                        <th>Student Name</th>
-                                        <th>Student Name (AR)</th>
-                                        <th>House</th>
-                                        <th>House Details</th>
-                                        <th>Actions</th>
+                                        <th class="text-center">#</th>
+                                        <th class="text-center">Student ID</th>
+                                        <th class="text-center">Student Name</th>
+                                        <th class="text-center">Student Name (AR)</th>
+                                        <th class="text-center">House</th>
+                                        <th class="text-center">House Details</th>
+                                        <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -309,15 +333,15 @@ use App\Http\Controllers\Helper;
                                         <td>${formatValue(data.house)}</td>
                                     </tr>
                                     ${data.houseName ? `
-                                                                                                <tr>
-                                                                                                    <th class="text-dark">House Details:</th>
-                                                                                                    <td>
-                                                                                                        <strong>Name:</strong> ${formatValue(data.houseName)}<br>
-                                                                                                        <strong>Location:</strong> ${formatValue(data.houseLocation)}<br>
-                                                                                                        <strong>Number:</strong> ${formatValue(data.houseNumber)}
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                ` : ''}
+                                                                                                            <tr>
+                                                                                                                <th class="text-dark">House Details:</th>
+                                                                                                                <td>
+                                                                                                                    <strong>Name:</strong> ${formatValue(data.houseName)}<br>
+                                                                                                                    <strong>Location:</strong> ${formatValue(data.houseLocation)}<br>
+                                                                                                                    <strong>Number:</strong> ${formatValue(data.houseNumber)}
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            ` : ''}
                                 </table>
                             </div>
                             <div class="col-md-6">
@@ -442,20 +466,20 @@ use App\Http\Controllers\Helper;
 
                         <!-- Medical Information -->
                         ${(data.disabilities || data.chronicDiseases) ? `
-                                                                                    <div class="row mt-3">
-                                                                                        <div class="col-12">
-                                                                                            <div class="card">
-                                                                                                <div class="card-header">
-                                                                                                    <h6>Medical Information</h6>
+                                                                                                <div class="row mt-3">
+                                                                                                    <div class="col-12">
+                                                                                                        <div class="card">
+                                                                                                            <div class="card-header">
+                                                                                                                <h6>Medical Information</h6>
+                                                                                                            </div>
+                                                                                                            <div class="card-body">
+                                                                                                                ${data.disabilities ? `<p><strong>Disabilities:</strong> ${data.disabilities}</p>` : ''}
+                                                                                                                ${data.chronicDiseases ? `<p><strong>Chronic Diseases:</strong> ${data.chronicDiseases}</p>` : ''}
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                                <div class="card-body">
-                                                                                                    ${data.disabilities ? `<p><strong>Disabilities:</strong> ${data.disabilities}</p>` : ''}
-                                                                                                    ${data.chronicDiseases ? `<p><strong>Chronic Diseases:</strong> ${data.chronicDiseases}</p>` : ''}
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    ` : ''}
+                                                                                                ` : ''}
 
                         <!-- Nationality/Citizenship Information -->
                         <div class="row mt-3">

@@ -265,14 +265,21 @@ Route::controller(UserRightsAndPreviledges::class)->group(function () {
                 Route::get('/students/{student}/edit', 'edit')->name('students.edit');
 
                 Route::get('/Information/{id}', 'showStudentInformation');
+
+                Route::get('/add-new-student', 'addNewStudent')->name('students.add.new.student');
+
                 Route::put('/update/{id}', 'updateStudentInformation');
                 Route::post('/students/store', 'storeStudent')->name('students.store');
 
                 Route::get('/transfer-form', 'moveStudentForm')->name('students.transfer');
 
+
                 Route::get('/streams/by-class', 'getStreamsByClass')->name('streams.by.class');
                 Route::get('/students/search', 'searchStudentsByClassStream')->name('students.search');
                 Route::post('/students/move', 'moveStudent')->name('students.move');
+
+                Route::get('students/generate-id', 'generateStudentID')->name('students.generate-id');
+
             });
         });
 });

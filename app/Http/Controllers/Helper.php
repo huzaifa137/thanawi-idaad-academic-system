@@ -20,6 +20,16 @@ class Helper extends Controller
         return $schoolName;
     }
 
+
+    public static function ar_schoolName($school_id)
+    {
+        $schoolName = DB::table('houses')
+            ->where('id', $school_id)
+            ->value('House');
+
+        return $schoolName;
+    }
+
     public static function subjectName($subject_id)
     {
         $schoolName = DB::table('houses')
