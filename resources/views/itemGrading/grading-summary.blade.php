@@ -2,6 +2,353 @@
 
 @section('content')
     <div class="side-app">
+
+        <style>
+            /* Modern Stats Cards Styling */
+            .stats-card {
+                border-radius: 20px;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                border: none;
+                background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            }
+
+            .stats-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            .stats-card .card-body {
+                padding: 1.8rem 1.5rem;
+                min-height: 160px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .stats-icon-wrapper {
+                width: 60px;
+                height: 60px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 1.2rem;
+                backdrop-filter: blur(5px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
+
+            .stats-icon-wrapper i {
+                color: white;
+                opacity: 0.9;
+            }
+
+            .stats-content {
+                flex: 1;
+            }
+
+            .stats-label {
+                display: block;
+                font-size: 0.8rem;
+                letter-spacing: 0.5px;
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+            }
+
+            .stats-number {
+                font-size: 2.5rem;
+                font-weight: 700;
+                line-height: 1.2;
+                margin-bottom: 0.5rem;
+            }
+
+            .bg-gradient-primary {
+                background: linear-gradient(0, #0d4b1f 0%, #0d4b1f 100%);
+            }
+
+            .bg-gradient-success {
+                background: linear-gradient(135deg, #287c44 0%, #287c44 100%);
+            }
+
+            .bg-gradient-info {
+                background: linear-gradient(135deg, #253f2d 0%, #253f2d 100%);
+            }
+
+            @media (max-width: 768px) {
+                .stats-card .card-body {
+                    padding: 1.5rem;
+                }
+
+                .stats-icon-wrapper {
+                    width: 50px;
+                    height: 50px;
+                }
+
+                .stats-number {
+                    font-size: 2rem;
+                }
+            }
+
+            .stats-card:hover .stats-icon-wrapper {
+                transform: scale(1.1);
+                transition: transform 0.3s ease;
+            }
+
+            .stats-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M10 10 L90 10 L90 90 L10 90 Z" fill="none" stroke="white" stroke-width="2"/></svg>');
+                opacity: 0.1;
+                pointer-events: none;
+            }
+
+            /* Form Labels */
+            .form-label {
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
+                font-weight: 600;
+                color: #495057;
+                white-space: nowrap;
+            }
+
+            /* Form Selects */
+            .form-select,
+            .form-control {
+                border-radius: 0.5rem;
+                border: 1px solid #dee2e6;
+                padding: 0.5rem 0.75rem;
+                transition: all 0.2s;
+                font-size: 0.95rem;
+                width: 100%;
+            }
+
+            .form-select:focus,
+            .form-control:focus {
+                border-color: #287c44;
+                box-shadow: 0 0 0 0.2rem rgba(40, 124, 68, 0.1);
+            }
+
+            /* Card Styling */
+            .card {
+                border-radius: 1rem;
+                overflow: hidden;
+                border: none;
+            }
+
+            .card-header {
+                border-bottom: none;
+                padding: 1rem 1.5rem;
+            }
+
+            .badge {
+                padding: 0.5rem 0.75rem;
+                font-weight: 500;
+                border-radius: 2rem;
+            }
+
+            .btn {
+                border-radius: 2rem;
+                font-weight: 500;
+                padding: 0.5rem 1.5rem;
+            }
+
+            h5 {
+                font-weight: 600;
+                font-size: 1.1rem;
+                color: #2c3e50;
+            }
+
+            .border-bottom {
+                border-color: #e9ecef !important;
+            }
+
+            .bg-light {
+                background-color: #f8f9fa !important;
+            }
+
+            /* Custom styling for select dropdowns with long text */
+            select.form-select option {
+                max-width: 100%;
+                white-space: normal;
+                word-wrap: break-word;
+                padding: 8px;
+            }
+
+            /* Style for the optional badge */
+            small.text-muted {
+                font-size: 0.75rem;
+                display: block;
+                margin-top: 0.25rem;
+                opacity: 0.8;
+                font-style: italic;
+            }
+
+            /* ===== BALANCED SPACING FIX ===== */
+
+            /* Remove extra padding and margins */
+            .row.g-3 {
+                margin-left: -8px;
+                margin-right: -8px;
+            }
+
+            .row.g-3>[class*="col-"] {
+                padding-left: 8px;
+                padding-right: 8px;
+                margin-bottom: 0.5rem;
+            }
+
+            /* Specific column widths with balanced spacing */
+            @media (min-width: 768px) {
+
+                /* Year field - 23% width */
+                .col-md-3 {
+                    flex: 0 0 auto;
+                    width: 23%;
+                }
+
+                /* Category field - 23% width */
+                .col-md-3:nth-child(2) {
+                    width: 23%;
+                }
+
+                /* School field - 32% width (more space for long names) */
+                .col-md-4 {
+                    flex: 0 0 auto;
+                    width: 32%;
+                }
+
+                /* Level field - 22% width */
+                .col-md-2 {
+                    flex: 0 0 auto;
+                    width: 22%;
+                }
+
+                /* Remove the vertical dividers */
+                .row.g-3>[class*="col-"]:not(:last-child)::after {
+                    display: none;
+                }
+
+                /* Add subtle spacing between fields */
+                .row.g-3>[class*="col-"] {
+                    position: relative;
+                }
+
+                /* Optional: Very subtle right border for separation */
+                .row.g-3>[class*="col-"]:not(:last-child) {
+                    border-right: 1px solid rgba(222, 226, 230, 0.3);
+                }
+
+                /* Remove the left padding from level field */
+                .col-md-2 {
+                    padding-left: 8px !important;
+                }
+
+                /* Remove the special background from level field */
+                .col-md-2 .form-select {
+                    background-color: #ffffff;
+                    border-left-width: 1px;
+                }
+            }
+
+            /* Mobile responsiveness */
+            @media (max-width: 767px) {
+                .row.g-3>[class*="col-"] {
+                    width: 100%;
+                    margin-bottom: 1rem;
+                }
+
+                .col-md-2 {
+                    margin-top: 0;
+                    padding-top: 0;
+                    border-top: none;
+                }
+            }
+
+            /* Better visual hierarchy with subtle box shadows on focus */
+            .form-select:focus {
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Hover effect */
+            .form-select:hover,
+            .form-control:hover {
+                border-color: #287c44;
+            }
+
+            /* Button hover effect */
+            .btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .btn:active {
+                transform: translateY(0);
+            }
+
+            /* Subject tables styling */
+.card-header {
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+}
+
+.card-header.bg-success {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
+}
+
+.card-header.bg-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 0.75rem;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(0,0,0,0.02);
+}
+
+/* Subject badges */
+.badge.bg-success {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+}
+
+.badge.bg-warning {
+    color: #212529 !important;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+}
+
+.badge.bg-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+}
+
+.badge.bg-danger {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+}
+
+/* Bronze badge for 3rd place */
+.badge.bg-bronze {
+    background-color: #cd7f32 !important;
+    color: white;
+}
+        </style>
+
+
+            <!-- Add Font Awesome if not already included -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
         <div class="container mt-4">
 
             <div class="row g-4">
@@ -59,114 +406,6 @@
                 </div>
             </div>
 
-            <style>
-                /* Modern Stats Cards Styling */
-                .stats-card {
-                    border-radius: 20px;
-                    overflow: hidden;
-                    transition: all 0.3s ease;
-                    border: none;
-                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-                }
-
-                .stats-card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
-                }
-
-                .stats-card .card-body {
-                    padding: 1.8rem 1.5rem;
-                    min-height: 160px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-
-                .stats-icon-wrapper {
-                    width: 60px;
-                    height: 60px;
-                    background: rgba(255, 255, 255, 0.2);
-                    border-radius: 15px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin-right: 1.2rem;
-                    backdrop-filter: blur(5px);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                }
-
-                .stats-icon-wrapper i {
-                    color: white;
-                    opacity: 0.9;
-                }
-
-                .stats-content {
-                    flex: 1;
-                }
-
-                .stats-label {
-                    display: block;
-                    font-size: 0.8rem;
-                    letter-spacing: 0.5px;
-                    margin-bottom: 0.5rem;
-                    font-weight: 600;
-                }
-
-                .stats-number {
-                    font-size: 2.5rem;
-                    font-weight: 700;
-                    line-height: 1.2;
-                    margin-bottom: 0.5rem;
-                }
-
-                .bg-gradient-primary {
-                    background: linear-gradient(0, #0d4b1f 0%, #0d4b1f 100%);
-                }
-
-                .bg-gradient-success {
-                    background: linear-gradient(135deg, #287c44 0%, #287c44 100%);
-                }
-
-                .bg-gradient-info {
-                    background: linear-gradient(135deg, #253f2d 0%, #253f2d 100%);
-                }
-
-                @media (max-width: 768px) {
-                    .stats-card .card-body {
-                        padding: 1.5rem;
-                    }
-
-                    .stats-icon-wrapper {
-                        width: 50px;
-                        height: 50px;
-                    }
-
-                    .stats-number {
-                        font-size: 2rem;
-                    }
-                }
-
-                .stats-card:hover .stats-icon-wrapper {
-                    transform: scale(1.1);
-                    transition: transform 0.3s ease;
-                }
-
-                .stats-card::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M10 10 L90 10 L90 90 L10 90 Z" fill="none" stroke="white" stroke-width="2"/></svg>');
-                    opacity: 0.1;
-                    pointer-events: none;
-                }
-            </style>
-
-            <!-- Add Font Awesome if not already included -->
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center"
                     style="background-color: #287c44;">
@@ -213,8 +452,7 @@
                                     <select name="school_number" class="form-select select2">
                                         <option value="">-- All Schools --</option>
                                         @foreach ($schools as $code => $name)
-                                            <option value="{{ $code }}"
-                                                title="{{ $name }} ({{ $code }})">
+                                            <option value="{{ $code }}" title="{{ $name }} ({{ $code }})">
                                                 {{ Str::limit($name, 30) }} ({{ $code }})
                                             </option>
                                         @endforeach
@@ -232,23 +470,22 @@
                                     <small class="text-muted">Grading level</small>
                                 </div>
 
-                               <div class="col-12 mt-3" style="text-align: right;">
-    <button type="submit"
-        style="
-            background-color: #287c44;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            max-width: 100%;
-            font-size: 14px;
-            cursor: pointer;
-        ">
-        <i class="fas fa-magnifying-glass-chart" style="margin-right:8px;"></i>
-        Generate School Report
-    </button>
-</div>
+                                <div class="col-12 mt-3" style="text-align: right;">
+                                    <button type="submit" style="
+                            background-color: #287c44;
+                            color: white;
+                            padding: 12px 20px;
+                            border: none;
+                            border-radius: 5px;
+                            width: 100%;
+                            max-width: 100%;
+                            font-size: 14px;
+                            cursor: pointer;
+                        ">
+                                        <i class="fas fa-magnifying-glass-chart" style="margin-right:8px;"></i>
+                                        Generate School Report
+                                    </button>
+                                </div>
 
                             </div>
                         </form>
@@ -268,8 +505,7 @@
                                     <select name="year" class="form-select select2" required>
                                         <option value="">-- Select Year --</option>
                                         @foreach ($years ?? [] as $y)
-                                            <option value="{{ $y }}"
-                                                {{ isset($year) && $y == $year ? : '' }}>
+                                            <option value="{{ $y }}" {{ isset($year) && $y == $year ?: '' }}>
                                                 {{ $y }}
                                             </option>
                                         @endforeach
@@ -280,12 +516,10 @@
                                     <label class="form-label fw-bold">Category <span class="text-danger">*</span></label>
                                     <select name="category" class="form-select select2" required>
                                         <option value="">-- Select Category --</option>
-                                        <option value="ID"
-                                            {{ isset($category) && $category == 'ID' ? 'selected' : '' }}>
+                                        <option value="ID" {{ isset($category) && $category == 'ID' ? 'selected' : '' }}>
                                             Idaad (ID)
                                         </option>
-                                        <option value="TH"
-                                            {{ isset($category) && $category == 'TH' ? 'selected' : '' }}>
+                                        <option value="TH" {{ isset($category) && $category == 'TH' ? 'selected' : '' }}>
                                             Thanawi (TH)
                                         </option>
                                     </select>
@@ -296,8 +530,7 @@
                                     <select name="school_number" class="form-select select2">
                                         <option value="">-- All Schools --</option>
                                         @foreach ($schools ?? [] as $code => $name)
-                                            <option value="{{ $code }}"
-                                                title="{{ $name }} ({{ $code }})">
+                                            <option value="{{ $code }}" title="{{ $name }} ({{ $code }})">
                                                 {{ Str::limit($name, 30) }} ({{ $code }})
                                             </option>
                                         @endforeach
@@ -319,23 +552,22 @@
                             </div>
 
                             <div class="row mt-3">
-    <div class="col-12" style="text-align: right;">
-        <button type="submit"
-            style="
-                background-color: #287c44;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 4px;
-                width: 100%;
-                max-width: 100%;
-                font-size: 14px;
-            ">
-            <i class="fas fa-magnifying-glass-chart" style="margin-right:8px;"></i>
-            Generate General Exams Statistics
-        </button>
-    </div>
-</div>
+                                <div class="col-12" style="text-align: right;">
+                                    <button type="submit" style="
+                                background-color: #287c44;
+                                color: white;
+                                padding: 10px 20px;
+                                border: none;
+                                border-radius: 4px;
+                                width: 100%;
+                                max-width: 100%;
+                                font-size: 14px;
+                            ">
+                                        <i class="fas fa-magnifying-glass-chart" style="margin-right:8px;"></i>
+                                        Generate General Exams Statistics
+                                    </button>
+                                </div>
+                            </div>
 
                         </form>
                     </div>
@@ -370,193 +602,6 @@
                 </div>
             </div>
 
-            <!-- Add this CSS to enhance the dropdown styling -->
-            <style>
-                /* Form Labels */
-                .form-label {
-                    font-size: 0.9rem;
-                    margin-bottom: 0.25rem;
-                    font-weight: 600;
-                    color: #495057;
-                    white-space: nowrap;
-                }
-
-                /* Form Selects */
-                .form-select,
-                .form-control {
-                    border-radius: 0.5rem;
-                    border: 1px solid #dee2e6;
-                    padding: 0.5rem 0.75rem;
-                    transition: all 0.2s;
-                    font-size: 0.95rem;
-                    width: 100%;
-                }
-
-                .form-select:focus,
-                .form-control:focus {
-                    border-color: #287c44;
-                    box-shadow: 0 0 0 0.2rem rgba(40, 124, 68, 0.1);
-                }
-
-                /* Card Styling */
-                .card {
-                    border-radius: 1rem;
-                    overflow: hidden;
-                    border: none;
-                }
-
-                .card-header {
-                    border-bottom: none;
-                    padding: 1rem 1.5rem;
-                }
-
-                .badge {
-                    padding: 0.5rem 0.75rem;
-                    font-weight: 500;
-                    border-radius: 2rem;
-                }
-
-                .btn {
-                    border-radius: 2rem;
-                    font-weight: 500;
-                    padding: 0.5rem 1.5rem;
-                }
-
-                h5 {
-                    font-weight: 600;
-                    font-size: 1.1rem;
-                    color: #2c3e50;
-                }
-
-                .border-bottom {
-                    border-color: #e9ecef !important;
-                }
-
-                .bg-light {
-                    background-color: #f8f9fa !important;
-                }
-
-                /* Custom styling for select dropdowns with long text */
-                select.form-select option {
-                    max-width: 100%;
-                    white-space: normal;
-                    word-wrap: break-word;
-                    padding: 8px;
-                }
-
-                /* Style for the optional badge */
-                small.text-muted {
-                    font-size: 0.75rem;
-                    display: block;
-                    margin-top: 0.25rem;
-                    opacity: 0.8;
-                    font-style: italic;
-                }
-
-                /* ===== BALANCED SPACING FIX ===== */
-
-                /* Remove extra padding and margins */
-                .row.g-3 {
-                    margin-left: -8px;
-                    margin-right: -8px;
-                }
-
-                .row.g-3>[class*="col-"] {
-                    padding-left: 8px;
-                    padding-right: 8px;
-                    margin-bottom: 0.5rem;
-                }
-
-                /* Specific column widths with balanced spacing */
-                @media (min-width: 768px) {
-
-                    /* Year field - 23% width */
-                    .col-md-3 {
-                        flex: 0 0 auto;
-                        width: 23%;
-                    }
-
-                    /* Category field - 23% width */
-                    .col-md-3:nth-child(2) {
-                        width: 23%;
-                    }
-
-                    /* School field - 32% width (more space for long names) */
-                    .col-md-4 {
-                        flex: 0 0 auto;
-                        width: 32%;
-                    }
-
-                    /* Level field - 22% width */
-                    .col-md-2 {
-                        flex: 0 0 auto;
-                        width: 22%;
-                    }
-
-                    /* Remove the vertical dividers */
-                    .row.g-3>[class*="col-"]:not(:last-child)::after {
-                        display: none;
-                    }
-
-                    /* Add subtle spacing between fields */
-                    .row.g-3>[class*="col-"] {
-                        position: relative;
-                    }
-
-                    /* Optional: Very subtle right border for separation */
-                    .row.g-3>[class*="col-"]:not(:last-child) {
-                        border-right: 1px solid rgba(222, 226, 230, 0.3);
-                    }
-
-                    /* Remove the left padding from level field */
-                    .col-md-2 {
-                        padding-left: 8px !important;
-                    }
-
-                    /* Remove the special background from level field */
-                    .col-md-2 .form-select {
-                        background-color: #ffffff;
-                        border-left-width: 1px;
-                    }
-                }
-
-                /* Mobile responsiveness */
-                @media (max-width: 767px) {
-                    .row.g-3>[class*="col-"] {
-                        width: 100%;
-                        margin-bottom: 1rem;
-                    }
-
-                    .col-md-2 {
-                        margin-top: 0;
-                        padding-top: 0;
-                        border-top: none;
-                    }
-                }
-
-                /* Better visual hierarchy with subtle box shadows on focus */
-                .form-select:focus {
-                    position: relative;
-                    z-index: 1;
-                }
-
-                /* Hover effect */
-                .form-select:hover,
-                .form-control:hover {
-                    border-color: #287c44;
-                }
-
-                /* Button hover effect */
-                .btn:hover {
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                }
-
-                .btn:active {
-                    transform: translateY(0);
-                }
-            </style>
-
         </div>
     </div>
     </div>
@@ -567,7 +612,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('gradingFilterForm').addEventListener('submit', function(e) {
+        document.getElementById('gradingFilterForm').addEventListener('submit', function (e) {
 
             e.preventDefault();
 
